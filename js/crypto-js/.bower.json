@@ -1,0 +1,45 @@
+{
+  "name": "crypto-js",
+  "version": "4.0.0",
+  "description": "JavaScript library of crypto standards.",
+  "license": "MIT",
+  "homepage": "http://github.com/brix/crypto-js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/brix/crypto-js.git"
+  },
+  "keywords": [
+    "security",
+    "crypto",
+    "Hash",
+    "MD5",
+    "SHA1",
+    "SHA-1",
+    "SHA256",
+    "SHA-256",
+    "RC4",
+    "Rabbit",
+    "AES",
+    "DES",
+    "PBKDF2",
+    "HMAC",
+    "OFB",
+    "CFB",
+    "CTR",
+    "CBC",
+    "Base64"
+  ],
+  "main": "index.js",
+  "dependencies": {},
+  "ignore": [],
+  "_release": "4.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "4.0.0",
+    "commit": "2d0dfe1a95134c736b3a2c531fffb8cdd78768a5"
+  },
+  "_source": "https://github.com/brix/crypto-js.git",
+  "_target": "^4.0.0",
+  "_originalSource": "crypto-js",
+  "_direct": true
+}

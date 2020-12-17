@@ -1,0 +1,15 @@
+{
+  "name": "histojs",
+  "version": "1.0.0",
+  "description": "A user interface for whole slide image channel desing, analysis and registration. ",
+  "main": "js/nodelib.js",
+  "scripts": {
+    "start": "browserify js/node-lib/nodelib.js > js/node-lib/bundle.js & python RestApi.py & live-server "
+  },
+  "author": "Mohamed Masoud (mmasoud2@outlook.com)",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^16.5.2",
+    "live-server": "^1.2.1"
+  }
+}

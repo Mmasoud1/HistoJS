@@ -1,0 +1,564 @@
+<!-- 
+=========================================================
+* HistoJS Demo - v1.0.0  | 2020
+=========================================================
+
+* Github:  https://github.com/Mmasoud1
+* GitLab:  https://gitlab.com/mmasoud1
+* Discription:  A user interface for whole slide image channel design, analysis and registration. 
+*               It is based on DSA as backbone server
+* 
+*
+* Coded by Mohamed Masoud ( mmasoud2@outlook.com )
+
+=========================================================
+-->
+
+
+
+<!DOCTYPE HTML>
+<html>
+<meta charset="utf-8">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="stylesheet" href="//cdn.webix.com/edge/webix.css" type="text/css">
+  <link rel="stylesheet"   href="css/animate.css/animate.min.css"   />  
+  <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css/w3.css">    
+  <link rel="stylesheet" type="text/css" href="css/spectrum.css">  
+  <link rel="stylesheet" href="css/d3-context-menu.css" />
+  <link rel="stylesheet" href="css/sceneviewerextpxvw.css">  
+
+  <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script>
+  <script src="js/plotly-latest.min.js"></script>
+
+  <!-- chart plot library option 1 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+  <!-- chart plot library option 2 -->
+  <script src="js/Highcharts-8.2.2/code/highcharts.js"></script>
+  <script src="js/Highcharts-8.2.2/code/highcharts-more.js"></script>
+  <script src="js/Highcharts-8.2.2/code/modules/exporting.js"></script>
+  <script src="js/Highcharts-8.2.2/code/modules/export-data.js"></script>
+  <script src="js/Highcharts-8.2.2/code/modules/accessibility.js"></script>  
+  <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+  <script type="text/javascript" src="js/spectrum.js"></script>
+  <script src="js/mainParametersv2.js" type="text/javascript"></script>  
+  <script src="js/designFunctionsv4.js" type="text/javascript"></script>  
+  <script src="js/analysisFunctions.js" type="text/javascript"></script> 
+  <script src="https://unpkg.com/mathjs@5.2.3/dist/math.min.js"></script>   
+  <script src="js/node-lib/bundle.js"></script>    
+  <script src="js/d3-context-menu.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="lib/d3.js"></script>
+  <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/openseadragon/build/openseadragon/openseadragon.min.js"></script>
+  <script src="js/svg-overlay-master/openseadragon-svg-overlay.js"></script>
+
+</head>
+
+
+<body style="background-color:black" onload="docLoaded()">
+
+<div class="navbar" >
+  <p style="text-shadow: 4px 3px  grey"><b>HistoJS </b></p>
+  <a href="javascript:void(0)" onclick="openLayout(this.id)" id="Browse">☰ Open</a>   
+
+  <div class="dropdown" >
+    <button class="dropbtn" id="modeBtn" ><i class="fa fa-tasks" aria-hidden="true"></i> Mode
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content" id="modeDropDownMenu"  >
+       <a href="javascript:void(0)" onclick="openLayout(this.id)" id="Design"><i class='fa fa-magic'></i> Design Mode</a>
+      <a href="javascript:void(0)" style="color: white;" onclick="openLayout(this.id)" id="Analysis"><i class="fa fa-bar-chart" aria-hidden="true"></i> Analysis Mode</i></a>
+      <a href="javascript:void(0)" style="color: gray;" onclick="runMode()" id="RunMode"><i class="fa fa-play-circle" aria-hidden="true"></i> Run Mode</i></a> 
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn" id="viewBtn"><i class="fa fa-eye-slash" aria-hidden="true"></i> View
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content" id="viewDropDownMenu"  >
+      <a href="javascript:void(0)" style="color: gray;"  onclick="showHidePanels()" id="showHidePanels"> Hide Panels </a>
+      <a href="javascript:void(0)" style="color: gray;" onclick="showHideCoordinates()" id="showHideCoordinates"> Hide Coordinates</i></a>
+    </div>
+  </div>   
+
+  <div class="dropdown">
+    <button class="dropbtn" id="helpBtn"><i class="fa fa-question-circle" aria-hidden="true"></i> Help
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content" id="helpDropDownMenu"  >
+      <a href="javascript:void(0)" onclick="goToDsaServerPage()" id="dsaLocalHostInstall"><i class="fa fa-wrench" aria-hidden="true"></i> Install LocalHost </a>
+        <a href="javascript:void(0)" onclick="runDemo()" id="onlineDemoBtn"><i class="fa fa-television" aria-hidden="true"></i> Online Demo</a> 
+        <a href="javascript:void(0)" onclick="toggleOfflineDemoForm()" id="offlineDemoBtn"><i class="fa fa-video-camera" aria-hidden="true"></i>  Offline Demo</a>  
+        <hr>
+        <a href="javascript:void(0)" onclick="openExtIssueForm()" ><i class="fa fa-bug" aria-hidden="true"></i> Report Issue</a> 
+
+    </div>
+  </div>     
+
+ <a style="position:absolute; right:15.5vw" href="javascript:void(0)" onclick="openSettingsForm()"><i class="fa fa-cog" ></i> Settings</a> 
+ <a style="position:absolute; right:9vw" href="javascript:void(0)" onclick="openExtFeedbackForm()"><i class="fa fa-compress" aria-hidden="true"></i> Feedback</a>
+ <div id="login-out">
+    <a  style="position:absolute; right:4vw; color: gray;" id="navLoginBtn" href="javascript:void(0)" onclick="openLoginForm()"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Login</a>
+ </div>  
+  <a class="right" target="_blank" href="https://github.com/Mmasoud1">
+      <i style="font-size:1vw"  class="fa fa-github"></i>
+  </a>
+</div>
+
+<!-- Browse Layout sideviews -->
+<div id="itemTreeView" class="panel itemtreepanel" layout="Browse" >
+  <p class="just">
+  <font style="font-size:0.86vw" id="collectionTreeName" ><i style="font-size:1.5vw"  class="fa fa-tree" ></i> &nbsp Collection Tree</font></p> 
+  <hr>
+    <ul id="treeList" >
+      <!-- Loaded dynamically  -->
+    </ul>
+</div>
+
+<!--  Bars   -->
+<div id="itemTreeViewBar" class="bar itemtreebar" >
+   <!--  Loaded dynamically -->
+</div>
+
+
+
+
+<div id="hostCollectView" class="panel hostlistpanel" layout="Browse">
+  <p class="just" style="margin-left: 0.5vw; font-size:0.85vw"><i class="fa fa-server"></i> &nbsp Host-Collection </p> 
+  <hr>
+  <p class="just" style="font-weight: bold;">Select Host:</p>
+    <ul class="just" id="hostsList" style="line-height: 50%">
+       <!-- Loaded dynamically  -->
+    </ul>
+
+  <p class="just" id="collectionsTitle" style="font-weight: bold;"></p>
+    <ul class="just" id="collectionsList" style="line-height: 100%">
+      <!--  Loaded dynamically -->
+    </ul>
+</div>
+
+<div id="hostCollectViewBar" class="bar hostlistbar" >
+  <!--  Loaded dynamically -->
+</div>
+
+
+
+<!-- Info Panel right  -->
+<div id="infoPanel" class="panel infopanel" layout="Browse">
+  <p class="just"><i style="font-size:1.4vw;"  class="fa fa-info-circle" ></i> <font style="font-size:0.86vw" id="infoTitle" >&nbsp METADATA</font></p> 
+  <hr>
+  <p class="just" style="font-weight: bold;" id="imageInfoTitle"></p>
+  <ul class="just" id="infoList">
+       <!-- Loaded dynamically  -->
+  </ul>
+</div>
+
+
+
+<!------------------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------- Design Layout ------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------->
+
+<!-- Design Layout sideviews -->
+
+<div id="channelListView" class="panel channellistpanel" layout="Design">
+  <p class="just">
+    <font style="font-size:0.86vw" id="channelsName" ><i style="font-size:1.4vw"  class="fa fa-sliders" ></i> &nbsp&nbsp OME FileName</font>
+  </p> 
+  <hr>
+    <ul id="channelList" class="just" style="list-style-type: none">
+      <!-- Loaded dynamically  -->
+    </ul>
+  <hr>
+</div>
+
+<!--  Bar   -->
+<div id="channelListViewBar" class="bar channellistbar" >
+   <!--  Loaded dynamically -->
+</div>
+
+
+
+<div id="grpListView" class="panel grplistpanel" layout="Design">
+  <p class="just" style="margin-left: 0.5vw"><font style="font-size:0.86vw" ><i style="font-size:1.2vw"  class="fa fa-sitemap"></i> &nbsp OME Group Set </font></p> 
+  <hr>
+  <p class="just" style="font-weight: bold;">Tilesource:</p>
+    <ul class="just" id="currentTileSource" style="line-height: 30%; margin-left: 0.5vw">
+       <!-- Loaded dynamically  -->
+    </ul>
+
+  <p class="just" id="itemGroupTitle" style="font-weight: bold;">Groups:</p>
+    <ul class="just" id="itemGroupsList" style="line-height: 100%; margin-left: 0.5vw">
+      <!--  Loaded dynamically -->
+    </ul>
+</div>
+
+<!--  Bars   -->
+<div id="grpListViewBar" class="bar grplistbar" style="line-height: 50%">
+  <!--  Loaded dynamically -->
+</div>
+
+
+
+<!-- Open Color Sliders -->
+<div id="chColorContrastPanel" class="chnlsettingsright" layout="Design">
+  <p class="just" style="margin-left: 0.5vw"><font style="font-size:0.86vw" ><i style="font-size:1.2vw" class="fa fa-sliders"></i> &nbsp CHNL SETTINGS </font></p> 
+  <hr> 
+
+    <table>
+        <colgroup>
+          <!-- Width of each column -->
+        <col style="width:40%">
+        <col style="width:60%">
+        </colgroup>   
+         
+      <tr>
+        <th style="text-align: left"><label>Color:</label></th>      
+        <th ><div class="tooltip"><input id="chColorInputId" onchange="chColorChanged()"  onmouseover="onColorPickerMouseover()"><span class="tooltiptext" style="width: 50%; left: 50%;" id="chColorInputTooltip"></span></div> </th>
+      </tr>
+
+      <tr>
+        <th style="text-align: left"><label>Contrast-Max:</label></th>      
+        <th ><div class="tooltip"><input type="range" min="1000" max="65000" value="32500" class="slider" id="maxContrastRange" onchange="contrastChanged()" onmouseover="onContrastMaxSliderMouseover()"  ><span class="tooltiptext" style="width: 50%; left: 50%;" id="contrastMaxValueTooltip"></span></div></th>
+      </tr>
+      <tr>
+        <th style="text-align: left"><label>Contrast-Min:</label></th>      
+        <th><div class="tooltip"> <input type="range" min="1" max="10000" value="500" class="slider" id="minContrastRange" onchange="contrastChanged()" onmouseover="onContrastMinSliderMouseover()" ><span class="tooltiptext" style="width: 50%; left: 50%;" id="contrastMinValueTooltip"></span></div> </th>
+      </tr>      
+    </table>  
+
+   <hr>
+    <table>
+        <colgroup>
+          <!-- Width of each column -->
+        <col style="width:33%">
+        <col style="width:34%">
+        <col style="width:33%">    
+      </colgroup>
+      <tr>
+        <th><i style="font-size:1vw"  onclick="comfirmChColorContrastChanges()"  class="fa fa-check-circle"></i></th>      
+        <th><i style="font-size:1vw"  onclick="cancelChColorContrastChanges()" class="fa fa-times-circle"></i></th>
+        <th><i style="font-size:1vw"  onclick="resetChColorContrastChanges()" class="fa fa-undo"></i></th>
+      </tr>
+
+    </table>   
+</div>
+
+
+
+
+
+<!------------------------------------------------------------------------------------------------------------------->
+<!----------------------------------------------Analysis Layout------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------->
+
+<!-- Analysis Layout sideviews -->
+<div id="grpOptionsView" class="panel groupoptionspanel" layout="Analysis">
+  <p class="just">
+    <font style="font-size:0.86vw"  ><i style="font-size:1.4vw"  class="fa fa-sliders" ></i> &nbsp&nbsp CHNL OPTIONS</font>
+  </p> 
+  <hr>
+    <ul id="channelOptionsList" class="just" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
+      <!-- Loaded dynamically  -->
+    </ul>
+  <hr>
+</div>
+
+<!--  Bar   -->
+<div id="grpOptionsViewBar" class="bar groupoptionsbar" >
+   <!--  Loaded dynamically -->
+</div>
+
+
+
+<div id="grpFeaturesView" class="panel grpfeaturespanel" layout="Analysis">
+  <p class="just" style="margin-left: 0.5vw"><font style="font-size:0.86vw" ><i style="font-size:1.2vw"  class="fa fa-th-list"></i> &nbsp Group Features </font></p> 
+  <hr>
+
+  <p class="just" style="font-weight: bold;" id="currentGrpTitle">Group:</p>
+    <ul class="just" id="currentGroup" style="line-height: 30%; margin-left: 0.5vw">
+      <!--  Loaded dynamically -->
+    </ul>
+
+    <ul class="just" id="grpBoundaryOptions" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
+      <!--  Loaded dynamically -->
+    </ul>
+
+    <ul class="just" id="grpFeatureOptions" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
+      <!--  Loaded dynamically -->
+    </ul>
+
+    <ul class="just" id="grpChnlDisplyOptions" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
+      <!--  Loaded dynamically -->
+    </ul>    
+
+</div>
+
+<!--  Bars   -->
+<div id="grpFeaturesViewBar" class="bar grpfeaturesbar" style="line-height: 50%">
+  <!--  Loaded dynamically -->
+</div>
+
+
+
+<!-- Open plot Histogram  -->
+<div id="chPlotsPanel" class="chnlplotsright" layout="Analysis">
+  <table>
+    <colgroup>
+      <!-- Width of each column -->
+      <col style="width:50%">
+      <col style="width:50%">
+    </colgroup>
+    <tr>
+      <th >
+         <font style="font-size:0.86vw; font-weight: lighter;" ><i style="font-size:1.2vw" class="fa fa-bar-chart"></i> &nbsp CHNL PLOTS </font>
+      </th>      
+      <th id="chartOperationsTableSpace"> </th>
+    </tr>
+  </table> 
+  <hr style="margin-bottom: 0;"> 
+  <div id="chartContainer" style="height: 60%">
+    <canvas id="chartDrawCanvas" width="100%" height="60%" >
+     <!--  Loaded dynamically -->
+    </canvas>   
+  </div>  
+</div>
+
+
+<!-- Open Coordinate Panel -->
+<div id="coordinates" class="panel coordinatespanel" style=" margin-left: 34vw; " layout="Analysis" >
+  <div class="coordinates-item"><i style="font-size:1.5vw"  class="fa fa-map-marker" ></i></div>
+  <div class="coordinates-item"><p class="just" style="font-weight: bold;" id="imagePointId">Image :</p> </div>
+  <div class="coordinates-item"> <p class="just" style="font-weight: bold;" id="containerPointId">Container :</p></div>   
+  <div class="coordinates-item"> <p class="just" style="font-weight: bold;" id="currentTile">Tile :</p></div>  
+</div>  
+
+<div id="cellFilterNavigator" class="panel navigatorpanel" style=" margin-left: 44vw; " layout="Analysis" >
+  <div class="navigator-item"><p class="just" style="font-weight: bold;" id="cellTitle">Cells:</p></div>
+  <div class="navigator-item">
+     <a href="javascript:void(0)" onclick="goToStartFilteredCell()">
+         <i style="font-size:1vw; padding-top:1.2vh"  class="fa fa-fast-backward"></i> 
+     </a>      
+  </div>
+  <div class="navigator-item">
+     <a href="javascript:void(0)" onclick="prevFilteredCell()">
+         <i style="font-size:1vw; padding-top:1.2vh"  class="fa fa-step-backward"></i>
+     </a>     
+  </div>   
+  <div class="navigator-item">
+     <a href="javascript:void(0)" onclick="nextFilteredCell()">
+        <i style="font-size:1vw; padding-top:1.2vh"  class="fa fa-step-forward"></i>
+     </a>            
+  </div>  
+  <div class="navigator-item">
+        <p class="just" style="font-weight: bold;" id="currentCell">-/-</p>
+  </div>  
+</div> 
+<!------------------------------------------------------------------------------------------------------------------->
+<!----------------------------------------------  Forms ------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------->
+
+
+
+
+<!-- Channels New Group Labeling Form -->
+<div class="form-container grpform" id="grpLabelForm" layout="Design">
+  <div class="formtopnav">
+    <p >New Group</p>
+    <a href="javascript:void(0)" class="icon" onclick="closeGrpForm()">×</a>
+  </div>
+  <input type="text" id="grpName" placeholder="Title...">
+  <span onclick="addNewGrpBtn()" class="addGrpBtn" >Add</span>
+</div>
+
+
+
+<!-- Toolbar Settings Form -->
+<div class="form-container settingsform" id="settingsForm" >
+  <div class="formtopnav">
+    <p >Settings</p>
+    <a href="javascript:void(0)" class="icon" onclick="closeSettingsForm()">×</a>
+  </div>
+    <button class="tablink" id="defaultOpenSettingsTab" onclick="openSettingsTab('Servers', this, 'black')">DSA Hosts</button>
+    <button class="tablink" onclick="openSettingsTab('Options', this, 'black')">Options</button>    
+    <button class="tablink" onclick="openSettingsTab('Interface', this, 'black')">Interface</button>       
+    <button class="tablink" onclick="openSettingsTab('About', this, 'black')">About</button>
+    <div id="Servers" class="tabcontent">
+      <div id="settingsFormServerList" style="padding: 1.2vh 0.8vw; " >
+        <!--  Loaded dynamically -->
+      </div>  
+    </div>
+
+    <div id="Options" class="tabcontent">
+      <div id="settingsFormOptionsList" style="padding: 1.2vh 0.8vw; " >
+        <!--  Loaded dynamically -->
+      </div>      
+    </div>
+
+    <div id="Interface" class="tabcontent">
+      <div id="settingsFormInterfaceList" style="padding: 1.2vh 0.8vw; " >
+        <!--  Loaded dynamically -->
+      </div>      
+    </div>    
+
+    <div id="About" class="tabcontent" style = "font-size:0.7vw">
+      <p>Version:  HistoJS  v1.0.0</p>
+      <p>Author:   Mohamed Masoud</p>
+      <p>E-Mail:   mmasoud2@outlook.com</p>      
+    </div>
+</div>
+
+
+<!-- Login Form -->
+<div class="form-container loginform" id="loginForm" >
+  <div class="formtopnav">
+    <p >Host Login</p>
+    <a href="javascript:void(0)" class="icon" onclick="closeLoginForm()">×</a>
+  </div>
+      <div id="loginFormContents" style="padding: 1.2vh 0.8vw;  " >
+            <table>
+              <colgroup>
+                <!-- Width of each column -->
+              <col style="width:40%">
+              <col style="width:60%">
+              </colgroup>   
+               
+            <tr>
+              <th style="text-align: left"><label for="user" style="color: black">User or Email</label></th>      
+              <th >    <input type="text" placeholder="Enter Username" onFocus="this.select();"   id="userNameId" name="user" style="border: 0.05vw solid" ></th>
+            </tr>
+            <tr>
+              <th style="text-align: left"><label for="pass" style="color: black">Password</label></th>      
+              <th><input type="password" placeholder="Enter Password" id="passwordId" name="pass" style="border: 0.05vw solid" ></th>
+            </tr>      
+          </table>  
+
+         <hr>
+          <table>
+              <colgroup>
+                <!-- Width of each column -->
+              <col style="width:25%">
+              <col style="width:25%">
+              <col style="width:25%">
+              <col style="width:25%">    
+            </colgroup>
+            <tr>
+              <th></th>        
+              <th><i style="font-size: 1vw"  onclick="comfirmLogin()"  class="fa fa-check-circle"></i></th>      
+              <th><i style="font-size: 1vw"  onclick="cancelLogin()" class="fa fa-times-circle"></i></th>
+              <th></th>
+            </tr>
+
+          </table>  
+      </div>  
+</div>
+
+
+<div class="form-container demoform" id="demoForm" >
+  <div class="formtopnav">
+    <p>Offline Demo</p>
+    <a href="javascript:void(0)" class="icon" onclick="closeDemoForm()">×</a>
+  </div>
+  <div id="demoContent">
+
+  </div>
+</div>
+
+
+
+
+<div id="openseadragon1" >
+</div>
+
+
+<div class="screenlogocontainer" id="screenLogoContainer" >
+</div>
+
+
+<div id="hint" class="panel hintpanel" >
+    <span id="hintCloseSign" onclick="closeHint()" title="close">x</span>
+    <p id="hintParagraph"></p>
+</div>  
+
+<script>
+
+//-----------------OpenSeadragon--------------------------------//  
+
+
+
+    var viewer = OpenSeadragon({
+        id: "openseadragon1",
+        prefixUrl: "//openseadragon.github.io/openseadragon/images/",
+        tileSources: "",
+        showNavigationControl: false,
+        preserveViewport: true ,
+        debugMode :false 
+    });
+
+
+     var overlay = viewer.svgOverlay();
+     var svgOverlay = viewer.svgOverlay();
+     var rootNode = d3.select(svgOverlay.node());  
+     viewer.gestureSettingsMouse.clickToZoom = false;  
+
+     function onMouseTrackerMove(event) {
+      if(viewer.world.getItemCount()){
+        var tile = viewer.world.getItemAt(0);
+        var windowPoint = event.position;
+        var viewportPoint = viewer.viewport.windowToViewportCoordinates(windowPoint);
+        var currentImage = viewer.world.getItemAt(viewer.world.getItemCount()-1);
+        var imagePoint = currentImage.viewportToImageCoordinates(viewportPoint);
+        if(((imagePoint.x >= 0) && (imagePoint.x <= tile.getContentSize().x)) && ((imagePoint.y >= 0) && (imagePoint.y <= tile.getContentSize().y))) {
+            document.getElementById("imagePointId").innerHTML="Image: " + "(" + Math.round(imagePoint.x) + "," + Math.round(imagePoint.y) + ")";  
+        }    
+
+        document.getElementById("containerPointId").innerHTML="Container: " + "(" + Math.round(windowPoint.x) + "," + Math.round(windowPoint.y) + ")"; 
+
+        }}
+
+      mouseTracker = new OpenSeadragon.MouseTracker({
+          element: viewer.container,
+          moveHandler: onMouseTrackerMove,
+
+      }).setTracking(Opts.defaultOsdMouseTracking); 
+
+    // viewer.addHandler("tile-loaded", tileLoadedHandler);
+   //-------------------------------------------------//        
+
+    var mainUI =  { view: "template", gravity: 3, content: "openseadragon1" };
+
+    webix.ready(function () {
+
+        webix.ui(mainUI);
+        
+    })
+
+
+   var Settings = []
+   Settings.dsaServers = initServerList(); 
+   Settings.options = [];
+   Settings.options = initOptionsList(); 
+   Settings.interface = [];
+   Settings.interface = initInterfaceList();  
+  
+    if(Settings.dsaServers.length){
+           initHostList(); // load first tile with first group
+
+    }
+
+
+</script>
+
+
+   
+</body>
+</html> 

@@ -1,0 +1,23 @@
+OPENSEADRAGON SVG OVERLAY CHANGELOG
+===================================
+
+0.0.5:
+
+* Supporting import/require-style loading of OpenSeadragon (#23)
+
+0.0.4:
+
+* Fixed: overlay off when OSD viewport margins set (#9)
+
+0.0.3:
+
+* Fixed onClick on mobile (#5)
+
+0.0.2:
+
+* BREAKING CHANGE: Refactored API
+* SVG elements no longer obscure scroll zoom (#3)
+
+0.0.1:
+
+* First version

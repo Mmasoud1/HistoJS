@@ -1,0 +1,25 @@
+{
+  "name": "openseadragonthreejsoverlay",
+  "version": "0.0.1",
+  "description": "ThreeJS overlay for OpenSeaDragon",
+  "main": "openseadragon-threejs-overlay.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slntRohit/OpenSeadragonThreejsOverlay.git"
+  },
+  "keywords": [
+    "OpenSeaDragon",
+    "Threejs",
+    "dzi"
+  ],
+  "author": "slntRohit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slntRohit/OpenSeadragonThreejsOverlay/issues"
+  },
+  "homepage": "https://github.com/slntRohit/OpenSeadragonThreejsOverlay#readme",
+  "dependencies": {}
+}

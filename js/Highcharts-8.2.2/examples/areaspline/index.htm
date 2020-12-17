@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Highcharts Example</title>
+
+		<style type="text/css">
+#container {
+    height: 400px; 
+}
+
+.highcharts-figure, .highcharts-data-table table {
+    min-width: 310px; 
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+.highcharts-data-table th {
+	font-weight: 600;
+    padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+    padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+		</style>
+	</head>
+	<body>
+<script src="../../code/highcharts.js"></script>
+<script src="../../code/modules/exporting.js"></script>
+<script src="../../code/modules/export-data.js"></script>
+<script src="../../code/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+        This demo shows a smoothed area chart with an x-axis plot band
+        highlighting an area of interest at the last two points. Plot bands
+        and plot lines are commonly used to draw attention to certain areas or
+        thresholds.
+    </p>
+</figure>
+
+
+		<script type="text/javascript">
+Highcharts.chart('container', {
+    chart: {
+        type: 'areaspline'
+    },
+    title: {
+        text: 'Average fruit consumption during one week'
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 150,
+        y: 100,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
+    },
+    xAxis: {
+        categories: [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
+        ],
+        plotBands: [{ // visualize the weekend
+            from: 4.5,
+            to: 6.5,
+            color: 'rgba(68, 170, 213, .2)'
+        }]
+    },
+    yAxis: {
+        title: {
+            text: 'Fruit units'
+        }
+    },
+    tooltip: {
+        shared: true,
+        valueSuffix: ' units'
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        areaspline: {
+            fillOpacity: 0.5
+        }
+    },
+    series: [{
+        name: 'John',
+        data: [3, 4, 3, 5, 4, 10, 12]
+    }, {
+        name: 'Jane',
+        data: [1, 3, 4, 3, 3, 5, 4]
+    }]
+});
+		</script>
+	</body>
+</html>

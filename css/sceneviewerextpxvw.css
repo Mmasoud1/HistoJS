@@ -1,0 +1,1377 @@
+/*
+=========================================================
+* HistJS Demo - v1.0.0  |  2020
+=========================================================
+
+* Github:  https://github.com/Mmasoud1
+* GitLab:  https://gitlab.com/mmasoud1
+* Discription:  A user interface for whole slide image channel design, analysis and registration. 
+*               It is based on DSA as backbone server
+* 
+*
+* Coded by Mohamed Masoud ( mmasoud2@outlook.com )
+
+=========================================================
+
+
+=========================================================
+                      HistoJS CSS 
+=========================================================
+*/
+
+:root {
+  --body-bg-color: black;                                                 /*      var(--body-bg-color)             */
+  --body-font-color: white;                                               /*      var(--body-font-color)           */
+  --body-font-size: 0.7vw;                                                /*      var(--body-font-size)            */ 
+  --div-opacity: 0.5;                                                     /*      var(--div-opacity)               */     
+  --div-bg-color: rgba(0,0,0,var(--div-opacity));                         /*      var(--div-bg-color)              */
+  --div-font-color: white;                                                /*      var(--div-font-color)            */ 
+  --div-accordion-bg-color: rgba(60,60,60,var(--div-opacity));            /*      var(--div-accordion-bg-color)    */  
+  --div-accordion-font-color: white;                                      /*      var(--div-accordion-font-color)  */   
+  --form-opacity: 0.5;                                                    /*      var(--form-opacity)              */   
+  --form-bg-color:rgba(255,255,255,var(--form-opacity));                  /*      var(--form-bg-color)             */
+  --form-tabcontent-bg-color : rgba(60,60,60,var(--form-opacity));        /*      var(--form-tabcontent-bg-color)  */
+  --form-font-color: white;                                               /*      var(--form-font-color)           */
+  --form-navbar-bg-color: rgba(0,0,0,var(--form-opacity));                /*      var( --form-navbar-bg-color)     */
+  --form-flashing-duration: 0.3s;                                         /*      var(--form-flashing-duration)    */
+  --form-flashing-repeat: 2;                                              /*      var(--form-flashing-repeat)      */ 
+  --form-nav-x-hover-color: rgba(127,127,127,var(--form-opacity));        /*      var(--form-nav-x-hover-color)    */
+  --scrollbar-color: rgba(255,255,255,var(--div-opacity));                /*      var(--scrollbar-color)           */
+  --scrollbar-width: thin;                                                /*      var(--scrollbar-width)           */
+  --cursor-type: pointer;                                                 /*      var(--cursor-type)               */
+  --navbar-opacity: 1;                                                    /*      var(--navbar-opacity)            */
+  --navbar-menu-opacity: 0.5;                                             /*      var(--navbar-menu-opacity)       */
+  --screen-ref-availWidth: 2071;                                          /*      var(--screen-ref-availWidth)     */
+  --screen-ref-availHeigth: 1179;                                         /*      var(--screen-ref-availHeigth)    */
+  --screen-curAvailWidth: 0;                                              /*      var(--screen-curAvailWidth)      */
+  --screen-curAvailHeigth: 0;                                             /*      var(--screen-curAvailHeigth)     */
+  --icon-margin-left: 0.3vw;                                              /*      var(--icon-margin-left)          */
+  --icon-margin-right: var(--icon-margin-left);                           /*      var(--icon-margin-right)         */  
+}
+
+body {
+     font-size: var(--body-font-size)
+     color: var(--body-font-color);
+
+     }
+*:focus {
+    outline: none;
+}    
+
+#treeList {
+          margin: 0;
+          padding: 0;
+          color: var(--div-font-color);
+        }
+
+        ul, #treeList {
+                        list-style-type: none;
+                        color: var(--div-font-color);
+                      }
+
+
+.caret {
+        cursor: var(--cursor-type) ;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none;
+
+      }
+
+.caret::before {
+                content: "\25B6";
+                color: var(--div-font-color);
+                display: inline-block;
+                margin-right: var(--icon-margin-right);
+                margin-left: var(--icon-margin-left);
+                font-size:0.77vw;
+              }
+
+
+.caret-down::before {
+                      -ms-transform: rotate(90deg); /* IE 9 */
+                      -webkit-transform: rotate(90deg); /* Safari */'
+                      transform: rotate(90deg);  
+                    }
+
+.nested {
+          display: none;
+        }
+
+.active {
+          display: block;
+        }
+
+.fa-file-text-o::before {
+                        margin-right: var(--icon-margin-right);
+                        margin-left: var(--icon-margin-left);
+    /*                    font-size:0.77vw;*/
+                       }
+
+.fa-refresh::before {
+                    margin-right: var(--icon-margin-right);
+                    margin-left: var(--icon-margin-left);
+     /*               font-size:0.77vw;*/
+                   }                       
+/* --------panels ----------*/
+.panel{
+      position: fixed;
+      z-index: 1;
+      background-color: var(--div-bg-color) ;
+      scrollbar-color: var(--scrollbar-color);
+      scrollbar-width: var(--scrollbar-width);
+      transition: 0.5s;
+    }
+
+    .panel a {
+              text-decoration: none;
+              color: var(--div-font-color);
+              transition: 0.2s;
+            }
+
+.itemtreepanel{
+              height: calc(900px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+              width: 14.5vw;
+              top: calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+              left: 0; 
+              margin-left: -15.5vw;
+              overflow-x: auto;
+              overflow-y: auto;  
+              white-space: nowrap;
+              /*overflow-wrap: normal;     */
+
+            }
+
+            .itemtreepanel a:hover {
+                                    color: #888;
+                                   }
+            .itemtreepanel span:hover {
+                                    color: #888;
+                                   }                                   
+
+.channellistpanel{
+                  height: calc(900px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                  width: 14.5vw;
+                  top: calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                  left: 0; 
+                  margin-left: -15.5vw;
+                  overflow-x: auto;
+                  overflow-y: auto;  
+                  white-space: nowrap;
+                }
+
+                .channellistpanel a:hover {
+                                            color: #888;
+                                          }
+
+
+.groupoptionspanel {
+                  height: auto;
+                  max-height: calc(900px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                  width: 14.5vw;
+                  top: calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                  left: 0; 
+                  margin-left: -15.5vw;
+                  overflow-x: auto;
+                  overflow-y: auto;  
+                  white-space: nowrap;
+                }
+
+                .groupoptionspanel a:hover {
+                                            color: #888;
+                                          }
+
+
+
+/*----------panel  right ------------------*/
+.hostlistpanel {
+                height: calc(450px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                width: 17vw;
+                top: calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                right: 1vw;  
+                margin-right: -18vw;  
+                overflow-x: hidden;
+              }
+
+              .hostlistpanel a {
+                padding-top: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   
+                padding-right : 0.4vw ;
+                padding-bottom: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                padding-left: 0.5vw; 
+                font-size: 1.2vw;
+                display: block;
+              }
+
+              .hostlistpanel a:hover {
+                color: #666;    
+              }
+
+.grplistpanel {
+                height:  calc(450px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                width: 17vw;
+                top:   calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                right: 1vw;  
+                margin-right: -18vw;  
+                overflow-x: hidden;
+              }
+
+            .grplistpanel a {
+                            padding-top: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   
+                            padding-right : 0.4vw ;
+                            padding-bottom: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                            padding-left: 0.5vw; 
+                            font-size: 1.2vw;
+                            display: block;
+                            }
+
+            .grplistpanel a:hover {
+                                    color: #666;
+                                  }
+
+
+
+.grpfeaturespanel {
+                height:  calc(450px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                width: 17vw;
+                top:   calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                right: 1vw;  
+                margin-right: -18vw;  
+                overflow-x: hidden;
+              }
+
+            .grpfeaturespanel a {
+                            padding-top: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   
+                            padding-right : 0.4vw ;
+                            padding-bottom: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                            padding-left: 0.5vw; 
+                            font-size: 1.2vw;
+                            display: block;
+                            }
+
+            .grpfeaturespanel a:hover {
+                                    color: #666;
+                                  }
+
+ /* Left  Side Bars for itemTreeViewBar, channelListViewBar, grpChannelOptionsBar */        
+.bar  {
+      position: absolute;
+      z-index: 1;
+      background-color: var(--div-bg-color);
+      overflow-x: hidden;
+      scrollbar-color: var(--scrollbar-color);
+      scrollbar-width: var(--scrollbar-width);             
+      transition: 0.5s;
+      padding-top: 0;
+    }
+
+    .bar a {
+            padding-top: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   
+            padding-right : 0.4vw ;
+            padding-bottom: calc(8px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+            padding-left: 1.5vw; 
+            text-decoration: none;
+            color: var(--div-font-color);
+            display: block;
+            transition: 0.3s;
+          }
+
+    .bar  a:hover {
+                    color: #444;
+                  }
+
+.itemtreebar {
+              height:  calc(380px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+              top:  calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+              left: 1vw;
+             }
+
+            .itemtreebar a {
+                            font-size: 1.2vw;
+                          }
+
+
+.channellistbar  {
+                  height: auto ; /*32.2vh; */
+                  min-height: calc(380px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                  top:  calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                  left: 1vw;
+                }
+
+              .channellistbar a {
+                                  font-size: 1.2vw;
+                                }
+
+
+.groupoptionsbar  {
+                  height: auto ; /*32.2vh; */
+                  min-height: calc(380px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                  top:  calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                  left: 1vw;
+                }
+
+              .groupoptionsbar a {
+                                  font-size: 1.2vw;
+                                }
+
+/* Right bars for itemTreeViewBar and grpListViewBar */
+.hostlistbar{
+            height: calc(350px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+            top:  calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+            right: 1vw; 
+          }
+
+          .hostlistbar a {
+                            font-size: 0.67vw;
+                         } 
+
+.grplistbar {
+              height: auto; /*29.7vh; */
+              min-height: calc(350px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+              top:  calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+              right: 1vw;
+            }
+
+          .grplistbar span:hover {
+                                  opacity: 0.7;
+                                 }
+
+          .grplistbar a {
+                          font-size: 0.67vw;
+                        }
+
+
+
+.grpfeaturesbar {
+                  height: auto; /*29.7vh; */
+                  min-height: calc(350px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                  top:  calc(90px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                  right: 1vw;
+                }
+
+          .grpfeaturesbar span:hover {
+                                     opacity: 0.7;
+                                     }
+
+          .grpfeaturesbar a {
+                             font-size: 0.67vw;
+                             }
+
+
+.hintpanel{
+/*          height: calc(100px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  */
+          height: auto;
+          width: 20vw;
+          margin-right:-22vw;
+          top: calc(900px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+          right: 1vw;
+          color: var(--div-font-color);
+          overflow-x: hidden;
+          padding-left: 0.5vw;
+          }   
+
+.hintpanel span{
+                position: relative;
+                float: right;
+                padding-top: 0;  
+                margin-right: 0.2vw; 
+               }                              
+     
+.hintpanel span:hover{
+
+                      opacity: 0.7;
+                      cursor: var(--cursor-type);
+                     }
+
+/***** **********  to remove *********************************//*
+.osdcaptionpanel{
+          height: calc(100px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                height: auto;
+                width: 20vw;
+                margin-left:22vw;
+                top: calc(900px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                top: 90vh;
+                right: 1vw;
+                color: var(--div-font-color);
+                overflow-x: hidden;
+                padding-left: 0.5vw;
+                }   
+
+.osdcaptionpanel span{
+                      position: relative;
+                      float: right;
+                      padding-top: 0;  
+                      margin-right: 0.2vw; 
+                     }                              
+     
+.osdcaptionpanel span:hover{
+                            opacity: 0.7;
+                            cursor: var(--cursor-type);
+                           }  
+                           */
+/***** *******************************************/
+
+.coordinatespanel{
+/*                display: grid;*/
+                display: none;
+                grid-template-columns: 2vw 12vw 12vw 12vw ; 
+
+                height: auto;
+                width: 38vw;
+                margin-left: 31vw; /* 50-(38/2) */
+                top: calc(100px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                color: var(--div-font-color);
+                overflow-x: hidden;
+                padding-left: 0.2vw;
+                }   
+.coordinates-item {
+  padding: 0.3vw;
+  text-align: left;
+  font-weight: bold;
+}
+                                             
+
+.navigatorpanel{
+/*                display: grid;*/
+                display: none;
+                grid-template-columns: 6vw 2vw 2vw 2vw 6vw ; 
+
+                height: auto;
+                width: 18vw;
+                margin-left: 41vw;  /* 50-(width/2)*/
+                top: calc(950px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                color: var(--div-font-color);
+                overflow-x: hidden;
+                padding-left: 0.2vw;
+                }   
+.navigator-item {
+  padding: 0.3vw;
+  text-align: left;
+  font-weight: bold;
+}                                             
+/* -------paragraph justification ----*/
+
+.just{
+      text-align: justify;
+      text-justify: inter-word;
+      list-style-type: disc;  
+      margin-left: 1.5vw;
+      color: var(--div-font-color);
+      font-size: 0.67vw;
+    }
+
+/* Info panel right  */
+
+.infopanel{
+          height: calc(300px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+          width: 14.5vw;
+          top: calc(570px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+          right: 1vw;
+          margin-right: -18vw;
+          overflow-x: hidden;
+        }
+ 
+
+
+/* Left coordinates panel  */
+/*
+.coordinatesbarleft{
+                    height: 18.66vh;
+                    width: 14.5vw;
+                    position: fixed;
+                    z-index: 1;
+                    margin-left: -15.5vw;
+                    top: 67.9vh;
+                    left: 1vw;
+                    background-color: var(--div-bg-color);
+                    overflow-x: hidden;
+                    scrollbar-color: var(--scrollbar-color);
+                    scrollbar-width: var(--scrollbar-width);
+                    transition: 0.5s;
+                    padding-top: 0.85vh;
+                  }*/
+
+
+
+ /*  General Form styling */
+.form-container {
+                margin: auto;
+                background-color: var(--form-bg-color);
+                color: var(--form-font-color) ;
+                border-radius: 0.5vw;
+                display: none;
+                overflow-x: hidden;
+                position: fixed;                                    
+                z-index: 1;
+                scrollbar-color: var(--scrollbar-color);
+                scrollbar-width: var(--scrollbar-width);                                     
+              }
+
+
+
+.formtopnav {
+            overflow: hidden;
+            background-color: var(--form-navbar-bg-color) ;
+            position: relative;
+            z-index: 1;
+
+          }
+
+
+.formtopnav a {
+              color: var(--form-font-color);
+              padding-top: calc(14px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   /*1.2vh; */
+              padding-right: 0.8vw;
+              padding-bottom: calc(14px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   /*0.8vw;*/
+              padding-left: 0.8vw;
+              text-decoration: none;
+              font-size: 1.3vw;
+              display: block;
+            }
+
+.formtopnav p {
+              color: var(--form-font-color);
+              padding-top: calc(1px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;    /*0.1vh; */
+/*              padding-right: calc(16px * var(--screen-curAvailWidth)/var(--screen-ref-availWidth) ) ;   /*0.8vw;*/
+              /*padding-bottom: calc(14px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;   /*0.8vw;*/
+              padding-left: 0.8vw;            
+              text-decoration: none;
+              font-size: 0.82vw;
+              display: block;
+            }
+
+.formtopnav a.icon {
+                    background: black;
+                    display: block;
+                    position: absolute;
+                    z-index: 1;
+                    right: 0;
+                    top: 0;
+                  }
+
+.formtopnav a:hover {
+                    background-color: var(--form-nav-x-hover-color);
+                    color: var(--form-font-color);
+                   }
+
+.form-container.zoomform{
+                          transform: scale(1);
+                         }                                  
+
+.form-container.formflashanimation{
+                                  animation-name: formflashkeyframes;
+                                  animation-duration: var(--form-flashing-duration);
+                                  animation-iteration-count: var(--form-flashing-repeat);
+                                 }
+
+
+
+.grpform {
+          max-width: 32.8vw;
+          margin-top: calc(400px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+          margin-left: 48.3vw;
+          height: calc(150px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+        }                                    
+
+/* Style the "Add" button */
+.addGrpBtn {
+            padding: calc(10.5px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+            margin-left: 0;
+            margin-top: calc(20px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+            width: 15%;
+            background: rgba(0,0,0,var(--form-opacity));
+            color: white;
+            float: left;
+            text-align: center;
+            font-size: 0.77vw;
+            cursor: var(--cursor-type) ;
+            transition: 0.3s;
+            border-radius: 0;
+          }
+
+          .addGrpBtn:hover {
+                              background-color: rgba(60,60,60,var(--form-opacity));
+                            }
+
+
+
+
+/*   Popup window for toolbar Settings form*/
+.settingsform{
+              max-width: 40%;
+              max-height: calc(450px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+              margin: auto;
+              height: calc(450px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+              width: 35%;
+              overflow-x: hidden;                                    
+              /*transition: 1.5s;*/
+            }
+
+
+/* Style tab links */
+.tablink {
+          background-color: #555;  /*Tab bg color*/
+          color: var(--form-font-color);            /*font color*/
+          float: left; 
+          border: none;
+          outline: none;
+          cursor: var(--cursor-type) ;
+          padding-top: calc(14px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+          padding-right: 0.8vw;
+          font-size: 0.82vw;
+          width: 25%;
+          height:  calc(60px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+        }
+
+        .tablink:hover {
+                        background-color: #777;
+                       }
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+            color: var(--form-font-color);
+            display: none;
+            padding-top: calc(50px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+            padding-right: 1vw;
+            padding-left: 1vw;            
+            height: 85%;
+            }
+
+#Servers{background-color: var(--form-tabcontent-bg-color);}
+#Options{background-color: var(--form-tabcontent-bg-color);}   
+#Interface{background-color: var(--form-tabcontent-bg-color);}                      
+#About{background-color: var(--form-tabcontent-bg-color);}
+
+
+
+/*   popup window for login form*/
+.loginform {
+            max-width: calc(600px * var(--screen-curAvailWidth)/var(--screen-ref-availWidth) ) ; 
+            max-height: calc(300px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+            height: calc(300px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+            width: 30%;
+            /*transition: all 1s;*/
+            /*transform: scale(0);*/
+          }
+                      
+
+.demoform{
+          height: 78%;
+          width: 70%;
+          overflow: hidden;
+         } 
+
+input {
+      margin-left:  2vw;
+      margin-top: calc(20px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+      border: none;
+      border-radius: 0;
+      width: 60%;
+      padding: calc(10px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+      float: left;
+      font-size: 0.77vw;
+      background: rgba(255,255,255,var(--form-opacity));
+    }
+
+
+
+/*Tooltip  style*/
+  .tooltip {
+            position: relative;
+            display: inline-block;
+          }
+
+  .tooltip .tooltiptext {
+                        visibility: hidden;
+                        width: 100%;
+                        background-color: rgba(60,60,60,0.7);
+                        color: #fff;
+                        text-align: center;
+                        font-size: 0.67vw;
+                        border-radius: 2.9vw;
+                        position: absolute;
+                        z-index: 1;
+                        bottom: 100%;
+                        left: 0;
+                        margin-left: 0;
+                        transition: opacity 1.3s;
+                      }
+
+  .tooltip:hover .tooltiptext {
+                                visibility: visible;
+                              }
+
+
+  .slider {
+           -webkit-appearance: none;
+           width: 60%;
+           height: calc(1px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+           background: #d3d3d3;
+           outline: none;
+           opacity: 0.7;
+          -webkit-transition: .2s;
+           transition: opacity .2s;
+        }
+
+  .slider:hover {
+                  opacity: 1;
+                }
+
+             
+   /* For Chromium */
+  .slider::-webkit-slider-thumb {
+                               -webkit-appearance: none;
+                                appearance: none;
+                                width: 0.5vw;
+                                height: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+                                background: #4CAF50;
+                                cursor: var(--cursor-type) ;
+                              }
+
+  /* for FireFox*/
+  .slider::-moz-range-thumb {
+                            width: 0.5vw;
+                            height: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+                            background: #4CAF50;
+                            cursor: var(--cursor-type) ;
+                          }    
+
+  .chnlsettingsright{
+                    height: auto;
+                    width: 17vw;
+                    position: fixed;
+                    z-index: 1;
+                    top: calc(570px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+                    right: 1vw;
+                    margin-right: -18vw;
+                    background-color: var(--div-bg-color);
+                    overflow-x: hidden;
+                    scrollbar-color: var(--scrollbar-color);
+                    scrollbar-width: var(--scrollbar-width);
+                    transition: 0.5s;
+                    padding-top: calc(10px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                  }
+
+                 .chnlsettingsright.formflashanimation{
+                                                      animation-name: formflashkeyframes;
+                                                      animation-duration: var(--form-flashing-duration);
+                                                      animation-iteration-count: var(--form-flashing-repeat);
+                                                   }
+
+  .chnlplotsright{
+                    height: auto;
+                    width: 17vw;
+                    position: fixed;
+                    z-index: 1;
+                    top: calc(570px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+                    right: 1vw;
+                    margin-right: -18vw;
+                    background-color: var(--div-bg-color);
+                    overflow-x: hidden;
+                    scrollbar-color: var(--scrollbar-color);
+                    scrollbar-width: var(--scrollbar-width);
+                    transition: 0.5s;
+                    padding-top: calc(10px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                  }
+
+                 .chnlplotsright.formflashanimation{
+                                                      animation-name: formflashkeyframes;
+                                                      animation-duration: var(--form-flashing-duration);
+                                                      animation-iteration-count: var(--form-flashing-repeat);
+                                                   }                                                   
+
+
+  table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+  td, th {
+          border: 0vw solid white;
+          text-align: center;
+          padding: 0vh;
+          color: white;
+        }
+        th i:hover{
+                  color: #444;
+                  cursor: var(--cursor-type) ;
+                }
+
+
+label {
+      font-size: 0.67vw;
+      font-weight: 700;
+      color: white;
+      text-align: right;
+      clear: both;
+      float:left;
+      margin-left: 1.69vw;
+      margin-top: calc(20px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+    }
+
+legend{
+      font-size: 0.67vw;
+      font-weight: 700;
+      color: white;
+    }
+
+a {
+  /* To remove underline from link*/
+   text-decoration: none;
+  }
+
+
+
+.navbar {
+          overflow: hidden;
+          background-color: rgba(0,0,0,var(--navbar-opacity));
+        }
+
+        .navbar a {
+                  float: left;
+                  display: block;
+                  color: #f2f2f2;
+                  text-align: center;
+                            padding-top: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                            padding-right: 1.26vw; 
+                            padding-bottom: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                            padding-left: 1.26vw;   
+
+                  text-decoration: none;
+                  font-size: 0.67vw;
+                }
+        .navbar p {
+                    float: left;
+                    display: block;
+                    color: #f2f2f2;
+                    text-align: center;
+                    padding: calc(9px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                    margin: 0.5vw;
+                    text-decoration: none;
+                    font-size: 1vw;
+                  }
+
+        .navbar a:hover {
+                          background-color: #ddd;
+                          color: black;
+                        }
+
+        .navbar a:active {
+                          background-color: rgba(255,255,255,var(--navbar-menu-opacity));
+                          color: black;
+                        }
+
+        a.right {
+                position: absolute;
+                right: 0;
+              } 
+
+
+.dropdown {
+          float: left;
+          overflow: hidden;
+         }
+
+        .dropdown .dropbtn {
+                            font-size: 0.67vw;  
+                            border: none;
+                            outline: none;
+                            color: white;
+                            padding-top: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                            padding-right: 1.26vw;   
+                            padding-bottom: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                            padding-left: 1.26vw;                              
+                            background-color: inherit;
+                            font-family: inherit;
+                            margin-left: 0.5vw;
+                          }
+
+        .navbar a:hover, .dropdown:hover .dropbtn {
+                                                    background-color: #ddd;
+                                                    color: black;
+                                                    cursor: pointer;
+                                                   }
+
+
+
+        .dropdown-content {
+                            display: none;
+                            position: absolute;
+                            background-color: rgba(0,0,0,0.3);
+                            min-width: 7.73vw;
+                            box-shadow: 0vh 0.4vw 1.36vh 0vw rgba(0,0,0,0.2);
+                            z-index: 3;
+                          }
+
+        .dropdown-content a {
+                              float: none;
+                              color: white;
+                              padding-top: calc(12px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                              padding-right:  0.77vw;
+                              text-decoration: none;
+                              display: block;
+                              text-align: left;
+                            }
+
+        .dropdown-content a:hover {
+                                      background-color: rgba(255,255,255,0.8);
+                                      display: block;
+                                  }
+
+        .dropdown:hover .dropdown-content {
+                       /*                    display: block;*/
+/*                                           cursor: var(--cursor-type) ;*/
+                                          }
+
+                          .show {
+                                 display: block;
+                                }
+ 
+ /*------  screen logo --------*/
+.screenlogocontainer{
+                      height: auto;
+                      width: 40%;
+                      position: absolute;
+                      margin: auto;
+                      top: 0;
+                    } 
+
+ .screen-logo {
+                padding-top: 0%;
+                text-align: center;
+              } 
+
+/*.screen-logo.zoomscreenlogo{
+                transition:  3s;
+                transform: scale(1);
+               }  
+*/
+
+
+                                                      #openseadragon1 {
+                                                        width: 100%;
+                                                        height: 93%;
+                                                        background-color: black;
+                                /*                        transform: skewY(20deg);  */
+
+                                                      /*  display: flex;*/
+                                                      /*  align-items: center;    */  
+                                                      /*  display: grid;
+                                                        grid-template-columns: repeat( 5, 1fr);
+                                                        grid-template-rows: repeat( 5, 1fr);*/
+                                                      }
+
+                                                      /*.screen-logo  {
+                                                        align-self: center;
+                                                        text-align: center;
+                                                      }*/
+
+                                                      /*#loaderContainer {
+                                                        align-self: center;
+                                                      }*/
+
+
+
+
+                                                      button.accordion {
+                                                        background-color: var(--div-accordion-bg-color)  ;
+                                                        color: white;
+                                                        cursor: pointer;
+                                                        padding: 0.8vw;
+                                                        width: 100%;
+                                                        border: none;
+                                                        text-align: left;
+                                                        outline: none;
+                                                        font-size: 0.75vw;
+                                                        font-weight: bold;                                                        
+                                                        transition: 0.3s;
+                                                      }
+
+
+                                                      button.accordion.active, button.accordion:hover {
+                                                        background-color: rgba(255,255,255,0.5);
+                                                        color: black;
+
+                                                      }
+
+                                                       button.accordion:after {
+                                                        /*  content: '\02795'; /* Unicode character for "plus" sign (+) */
+                                                          content: '\f067';
+                                                          font-family: FontAwesome;                                                          
+                                                          font-size: 0.7vw;
+                                                          color: white;
+                                                          float: right;
+                                                         /* margin-left: 5px;*/
+                                                      }
+
+                                                      button.accordion.active:after {
+                                                       /*   content: "\2796"; /* Unicode character for "minus" sign (-) */
+                                                       content: '\f068';
+                                                      }
+
+                                                      div.accordionpanel {
+                                                        padding: 1vh 0.8vw;
+                                                        background-color: var(--div-bg-color);
+                                                        color: white;
+                                                        max-height: 0;
+                                                        overflow: hidden;
+                                                        transition: 0.3s ease-in-out;
+                                                        opacity: 0;
+                                                      }
+
+                                                      div.accordionpanel input {
+                                                          margin-left:  1.5vw;
+                                                          margin-top: calc(10px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+
+                                                      }   
+
+                                                     div.accordionpanel label {
+                                                          margin-top: calc(10px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+
+                                                      }                                                                                                          
+
+                                                      div.accordionpanel.show {
+                                                          opacity: 0.7;
+                                                          max-height: 20%; /* Whatever you like, as long as its more than the height of the content (on all screen sizes) */
+                                                      }
+
+/*                                                      div.accordionpanel input[type="radio"] {
+                                                          background-color: #ddd;
+ 
+                                                      }   
+
+                                                       div.accordionpanel input[type="radio"]:checked:after {
+                                                          background-color: black;
+ 
+                                                      }  
+
+                                                      div.accordionpanel input[type="radio"]:after {
+                                                          background-color: white;
+                                                      }    */                                                      
+
+
+      
+
+
+                                                                .switch {
+                                                                  position: relative;
+                                                                  display: block;
+                                                                  vertical-align: top;
+                                                                  width: 4vw;
+                                                                  height: calc(25px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;
+                                                                  padding: 3px;
+                                                                  margin: 0 10px 10px 0;
+                                                                  background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+                                                                  background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+                                                                  border-radius: 1vw;
+                                                                  box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+                                                                  cursor: pointer;
+                                                                  box-sizing:content-box;
+                                                                }
+                                                                .switch-input {
+                                                                  position: absolute;
+                                                                  top: 0;
+                                                                  left: 0;
+                                                                  opacity: 0;
+                                                                  box-sizing:content-box;
+                                                                }
+                                                                .switch-label {
+                                                                  position: relative;
+                                                                  display: block;
+                                                                  height: inherit;
+                                                                  font-size: 0.75vw;
+                                                                  text-transform: uppercase;
+                                                                  background: black;
+                                                                  border-radius: inherit;
+                                                                  box-sizing:content-box;
+                                                                }
+                                                                .switch-label:before, .switch-label:after {
+                                                                  position: absolute;
+                                                                  top: 50%;
+                                                                  margin-top: -.5em;
+                                                                  line-height: 1;
+                                                                  -webkit-transition: inherit;
+                                                                  -moz-transition: inherit;
+                                                                  -o-transition: inherit;
+                                                                  transition: inherit;
+                                                                  box-sizing:content-box;
+                                                                }
+                                                                .switch-label:before {
+                                                                  content: attr(data-off);
+                                                                  right: 0.55vw;
+                                                                  color: white;
+
+                                                                }
+                                                                .switch-label:after {
+                                                                  content: attr(data-on);
+                                                                  left: 0.55vw;
+                                                                  color: white;
+
+                                                                  opacity: 0;
+                                                                }
+                                                                .switch-input:checked ~ .switch-label {
+                                                                  background: black;
+                                                                  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+                                                                }
+                                                                .switch-input:checked ~ .switch-label:before {
+                                                                  opacity: 0;
+                                                                }
+                                                                .switch-input:checked ~ .switch-label:after {
+                                                                  opacity: 1;
+                                                                }
+                                                                .switch-handle {
+                                                                  position: absolute;
+                                                                  top: 6px;
+                                                                  left: 0.4vw;
+                                                                  width: 0.9vw;
+                                                                  height: 18px;
+                                                                  background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+                                                                  background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+                                                                  border-radius: 100%;
+                                                                  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+                                                                }
+                                                                .switch-handle:before {
+                                                                  content: "";
+                                                                  position: absolute;
+                                                                  top: 50%;
+                                                                  left: 50%;
+                                                                  margin: -6px 0 0 -6px;
+                                                                  width: 12px;
+                                                                  height: 12px;
+                                                                  background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
+                                                                  background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
+                                                                  border-radius: 6px;
+                                                                  box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+                                                                }
+                                                                .switch-input:checked ~ .switch-handle {
+                                                                  left: 3vw;
+                                                                  box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+                                                                }
+                                                                 
+                                                                /* Transition
+                                                                ========================== */
+                                                                .switch-label, .switch-handle {
+                                                                  transition: All 0.3s ease;
+                                                                  -webkit-transition: All 0.3s ease;
+                                                                  -moz-transition: All 0.3s ease;
+                                                                  -o-transition: All 0.3s ease;
+                                                                }
+
+
+
+
+
+
+                                      /* The input stylish */
+                                      .inputcontainer {
+                                        display: block;
+                                        position: relative;
+                             /*           vertical-align: bottom;*/
+                                        padding-left: 2rem;
+                                        /*margin-bottom: 1rem;*/
+                                        cursor: pointer;
+                            /*            font-size: 0.75vw;*/
+                                        -webkit-user-select: none;
+                                        -moz-user-select: none;
+                                        -ms-user-select: none;
+                                        user-select: none;
+                                      }
+
+                                      /* Hide the browser's default radio button */
+                                      .inputcontainer input {
+                                        position: absolute;
+                                        opacity: 0;
+                                        cursor: pointer;
+                                      }
+
+                                      /* Create a custom radio button */
+                                      .checkmark {
+                                        position: absolute;
+                                        top: 0.5rem;
+                                        left: 0;
+                                        height: 1rem;
+                                        width: 1rem;
+                                        background-color: #eee;
+                                        border-radius: 50%;
+                                      }
+
+                                      /* On mouse-over, add a grey background color */
+                                      .inputcontainer:hover input ~ .checkmark {
+                                        background-color: #ccc;
+                                      }
+
+                                      /* When the radio button is checked, add a blue background */
+                                      .inputcontainer input:checked ~ .checkmark {
+                                        background-color: white;
+                                     /*   border: 0.2rem solid #eee;*/
+                                      }
+
+                                      /* Create the indicator (the dot/circle - hidden when not checked) */
+                                      .checkmark:after {
+                                        content: "";
+                                        position: absolute;
+                                        display: none;
+                                      }
+
+                                      /* Show the indicator (dot/circle) when checked */
+                                      .inputcontainer input:checked ~ .checkmark:after {
+                                        display: block;
+                                      }
+
+                                      /* Style the indicator (dot/circle) */
+                                      .inputcontainer .checkmark:after {
+                                        top: 0.25rem;
+                                        left: 0.25rem;
+                                        width: 0.5rem;
+                                        height: 0.5rem;
+                                        border-radius: 50%;
+                                        background: black;
+                                      }
+
+
+
+
+                                      /* Create a custom checkbox */
+                                      .checkmarkrect {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        height: 1.5rem;
+                                        width: 1.5rem;
+                                        background-color: #eee;
+                                      }
+
+                                      /* On mouse-over, add a grey background color */
+                                      .inputcontainer:hover input ~ .checkmarkrect {
+                                        background-color: #ccc; 
+                                      }
+
+                                      /* When the checkbox is checked, add a blue background */
+                                      .inputcontainer input:checked ~ .checkmarkrect {
+                                        background-color: #eee;
+                                      }
+
+                                      /* Create the checkmark/indicator (hidden when not checked) */
+                                      .checkmarkrect:after {
+                                        content: "";
+                                        position: absolute;
+                                        display: none;
+                                      }
+
+                                      /* Show the checkmark when checked */
+                                      .inputcontainer input:checked ~ .checkmarkrect:after {
+                                        display: block;
+                                      }
+
+                                      /* Style the checkmark/indicator */
+                                      .inputcontainer .checkmarkrect:after {
+                                          left: 0.4rem;
+                                          top: 0.2rem;
+                                          width: 0.4rem;
+                                          height: 0.7rem;
+                                          border: solid black;
+
+                                          border-width: 0 0.2rem 0.2rem 0;
+                                          -webkit-transform: rotate(30deg);
+                                          -ms-transform: rotate(30deg);
+                                          transform: rotate(30deg);
+                                      }
+
+                                                                            
+/*                                                                              rect {
+                                                                                fill: rgba(70, 130, 180, 0.5);
+                                                                                stroke: steelblue;
+                                                                                stroke-width: 3px;
+                                                                                vector-effect: non-scaling-stroke;
+                                                                              }*/
+
+                                      /* Create a custom checkbox */
+                                       .chkboxlabel {
+                                         padding-left: 0;
+                                        /* margin-left: 0;*/
+                                         font-weight: bold;
+                                       }
+
+
+                          /*  no current use */
+                          .disabled {
+                            opacity: 0.6;
+                            cursor: not-allowed;
+                          }
+
+  /* highcharts table style */
+  .highcharts-figure, .highcharts-data-table table {
+      min-width: 310px; 
+      max-width: 800px;
+      margin: 1em auto;
+  }
+
+  .highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+  }
+  .highcharts-data-table caption {
+      padding: 1em 0;
+      font-size: 1.2em;
+      color: #555;
+  }
+  .highcharts-data-table th {
+    font-weight: 600;
+      padding: 0.5em;
+  }
+  .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+      padding: 0.5em;
+  }
+  .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+      background: #f8f8f8;
+  }
+  .highcharts-data-table tr:hover {
+      background: #f1f7ff;
+  }
+
+  #button-bar {
+      min-width: 310px;
+      max-width: 800px;
+      margin: 0 auto;
+  }
+
+  /* End of highcharts table style */
+
+                                            select#chartOperations {
+                                                font-size: 0.52vw;
+                                                -webkit-appearance: none;
+                                            }
+
+
+  @keyframes formflashkeyframes {
+                                0%    {opacity: 1;}
+                                50%   {opacity: 0.5;}
+                                100%  {opacity: 1;}
+                              }
+
+
+/* This turns off antialiasing, which is fast*/
+@media (min-resolution: 2ddpx) {
+  svg {
+    shape-rendering: optimizeSpeed;
+  }
+}
+
+
+  @media only screen and (max-width:500px) {
+    /* For mobile phones: */
+    .itemtreepanel, .channellistpanel, .hostlistpanel, .grplistpanel {
+/*      width: 100%;*/
+    }
+
+    .itemtreebar, .channellistbar, .hostlistbar, .grplistbar {
+    /*  width: 0%;*/
+    }
+
+  }

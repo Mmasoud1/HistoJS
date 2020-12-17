@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OpenSeadragon Canvas Overlay Demo</title>
+    <script src="openseadragon/openseadragon.js"></script>
+    <script src="js/openseadragon-viewerinputhook.js"></script>
+    <script src="js/openseadragon-imaginghelper.js"></script>
+    <script src="openseadragon-threejs-overlay.js"></script>
+    <script src="js/openseadragon-scalebar.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/wheel.js"></script>
+    <script src="js/eventify.js"></script>
+    <script src="js/kinetic.js"></script>
+    <!-- <script src="js/panzoom.js"></script> -->
+    <script src="js/stats.min.js"></script>
+
+
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <style type="text/css">
+        html,
+        body,
+        .openseadragon1 {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+    <script>
+
+        // ----------
+        App = {
+            // ----------
+            init: function () {
+                var self = this;
+
+                var tileSource = {
+                    Image: {
+                        xmlns: "http://schemas.microsoft.com/deepzoom/2008",
+                        Url: "http://openseadragon.github.io/example-images/highsmith/highsmith_files/",
+                        Format: "jpg",
+                        Overlap: "2",
+                        TileSize: "256",
+                        Size: {
+                            Height: "9221",
+                            Width: "7026"
+                        }
+                    }
+                };
+
+                this.viewer = OpenSeadragon({
+                    id: "contentDiv",
+                    debugMode: false,
+                    panVertical: false,
+                    panHorizontal: false,
+                    gestureSettingsMouse: { clickToZoom: false, dblClickToZoom: false },
+                    prefixUrl: "openseadragon/images/",
+                    tileSources: tileSource,
+                    showReferenceStrip: false,
+                    referenceStripSizeRatio: 0.2,
+                    showNavigator: true,
+                    maxZoomPixelRatio: 10
+                });
+
+                this.viewer.viewport.fitVertically(true);
+
+                var overlay = this.viewer.threejsOverlay();
+                console.log(overlay);
+                // Initialize Threejs variables
+                var renderer = overlay.renderer();
+                var camera = overlay.camera();
+                var scene = overlay.scene();
+
+                // Performance Monitor
+                var stats = overlay.stats();
+
+                // openseadragon Imaging helper
+                var imagingHelper = overlay.imagingHelper(); // onImageViewChanged already attached
+
+                // declare variables to draw points on overlay
+                var geometry, material, index = 0, mesh;
+                var toggle = true;
+
+                setup();
+
+                // Threejs animate loop
+                animate();
+
+                // Key events
+                var viewerInputHook = this.viewer.addViewerInputHook({
+                    hooks: [
+                        {
+                            tracker: 'viewer', handler: 'keyDownHandler', hookHandler: event => { // Disable mouse click drawing
+                                console.log(event);
+                                toggle = !toggle;
+                            }
+                        },
+                        {
+                            tracker: 'viewer', handler: 'clickHandler', hookHandler: event => { // Draw lines on overlay
+                                if (toggle) {
+                                    let touch = { x: Math.round(event.position.x), y: Math.round(event.position.y) };
+
+                                    var pos = overlay.sceneToWorld(touch.x, touch.y);
+                                    var positions = mesh.geometry.attributes.position.array;
+
+                                    positions[index++] = pos.x;
+                                    positions[index++] = pos.y;
+                                    positions[index++] = 0;
+
+                                    mesh.geometry.setDrawRange(0, index / 3);
+                                    mesh.geometry.computeBoundingSphere();
+
+                                    mesh.geometry.attributes.position.needsUpdate = true; // required after the first render
+                                }
+                            }
+                        }
+                    ]
+                });
+
+                $(window).resize(function () {
+                    overlay.resize();
+                });
+
+                function setup() {
+                    let MAX_POINTS = 500000;
+
+                    let width = self.viewer.container.clientWidth;
+                    let height = self.viewer.container.clientHeight;
+
+                    // Threejs Geometry
+                    geometry = new THREE.BufferGeometry();
+
+                    var positions = new Float32Array(MAX_POINTS * 3); // 3 vertices per point
+                    geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                    self.viewer.scalebar({ pixelsPerMeter: 20000000 });
+
+                    // Threejs Material
+                    material = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+
+                    mesh = new THREE.Line(geometry, material);
+                    scene.add(mesh);
+
+                    var points = [
+                        new THREE.Vector2(-2765.1767578125, 1656.832763671875),
+                        new THREE.Vector2(2562.02099609375, 1656.832763671875),
+                        new THREE.Vector2(3284.352783203125, 1284.38037109375),
+                        new THREE.Vector2(3239.20703125, -103.85124969482422),
+                        new THREE.Vector2(-3374.644287109375, -115.13768768310547),
+                        new THREE.Vector2(-3431.076416015625, 1295.666748046875),
+                        new THREE.Vector2(-2765.1767578125, 1656.832763671875),
+                        new THREE.Vector2(3239.20703125, -103.85124969482422),
+                        new THREE.Vector2(2539.447998046875, 1645.5462646484375),
+                        new THREE.Vector2(-3374.644287109375, -115.13768768310547),
+                        new THREE.Vector2(-2765.1767578125, 1645.5462646484375)
+                    ];
+
+                    let materialSub = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+                    let meshSub = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(points), materialSub);
+                    meshSub.geometry.computeBoundingSphere();
+                    scene.add(meshSub);
+
+                }
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    stats.update();
+                    renderer.render(scene, camera);
+                }
+            }
+        };
+
+        // ----------
+        $(document).ready(function () {
+            App.init();
+        });
+
+    </script>
+</head>
+
+<body>
+    <div id="contentDiv" class="openseadragon1"></div>
+</body>
+
+</html>
