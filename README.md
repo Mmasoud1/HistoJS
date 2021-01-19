@@ -32,4 +32,4 @@ For creating OME channel groups, browse to your server file and click design mod
 
 ## Demo
 
-![App Interface](https://github.com/Mmasoud1/OME-Channels-Organizer/blob/master/Demo/showMe.gif)
+![App Interface](https://github.com/Mmasoud1/HistoJS/blob/main/Demo/showMe.gif)
