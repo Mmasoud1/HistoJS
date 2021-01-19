@@ -6,7 +6,7 @@ An interactive tool to manage, manipulate, store and analysis the multi-channels
 
 The tool is using Digital Slide Archive as a backbone to update the image metadata remotely or locally.
 
-To run locally, just start up a simple local server from the root level of the repository with available port number 8xxx (e.g. 8010)
+To run locally, just start up a simple local server from the root level of the repository with the available port number 8xxx (e.g. 8010)
 
 `python -m SimpleHTTPServer 8xxx`
 
@@ -19,9 +19,9 @@ Then browse to local host
 
 `http://localhost:8xxx/`
 
-A dockerized version will release soon for the api. 
+A dockerized version will be released soon for the api. 
 
-For DSA server, you need to create your account on any DSA servers and upload your OME image, cells mask, and channels metadata CSV file as in this link:
+For using the backbone DSA server, you need to create a user account on any DSA servers and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
 
 `https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11`
 
