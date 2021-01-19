@@ -678,6 +678,7 @@ downloadUserData = (data, fileName) =>{
               return 0;
            }
            
+          allSelection = [];  
           //*** later to be modified such that  : 
           //*** let boundarData = readJsonFile getItemBoundariesFileName(), getBoundariesLocalPath() )
           //function addOverlay(tiles, overlayHandler) 
@@ -2518,7 +2519,7 @@ function onSelectedTile (d, i) { // Add interactivity
      
     
   
-    if( !isSuperPixel() ){
+    // if( !isSuperPixel() ){
           let prevTileId = getLastSelectedTileId();
           let prevTile = d3.select("#" + prevTileId);
           // let strokeWidth = 10;
@@ -2536,7 +2537,7 @@ function onSelectedTile (d, i) { // Add interactivity
 
          setLastSelectedTileId( curTile.attr('id') );
          
-    }   
+    // }   
        
     
     curTile.style("fill-opacity", Opts.selectedTileFillOpacity);
@@ -2547,7 +2548,7 @@ function onSelectedTile (d, i) { // Add interactivity
 
     if (entry == null) { 
        Boundary_box.push({id: this.attributes.id.nodeValue, index: this.attributes.index.nodeValue,
-                         xcent: this.attributes.Xcentroid.nodeValue, ycent:this.attributes.Ycentroid.nodeValue,
+                         // xcent: this.attributes.Xcentroid.nodeValue, ycent:this.attributes.Ycentroid.nodeValue,
                          left: bbox['left'], top: bbox['top'], width: bbox['width'], height:bbox['height']});
     }
 

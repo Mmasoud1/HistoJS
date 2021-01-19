@@ -22,7 +22,10 @@ from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 import pandas as pd
 import math
-
+if sys.version_info[0] < 3: 
+    from StringIO import StringIO
+else:
+    from io import StringIO
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # To avoid PIL.Image.DecompressionBombError: 
@@ -456,7 +459,14 @@ def is_grey_scale(image):
     else:
         return True
 
-
+def str_to_array(points):
+    pair_points = []
+    
+    for px in points.split(" "):
+        pair_points.append(map(int, px.split(",")))
+    
+    return pair_points
+    
 @app.route('/createAllSpxTilesFeature')
 def createAllSpxTilesFeature():
 
@@ -478,9 +488,6 @@ def createAllSpxTilesFeature():
   path_to_boundaries_file = os.path.join(boundaries_folder, boundaries_file_name)
   path_to_features_file = os.path.join(out_features_folder, features_file_name)
   path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
-
-  if (os.path.isdir(out_boxplot_folder ) == False):
-      os.makedirs(out_boxplot_folder)   
 
 
   group_data_dic = json.loads(group_data_json_string)
@@ -536,7 +543,7 @@ def createAllSpxTilesFeature():
         boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
 
       # Get features for each SPX
-      tile_points =[] 
+      tile_points = [] 
 
       tiles_counter = 0
 
@@ -546,22 +553,52 @@ def createAllSpxTilesFeature():
 
               tile_points = find_bbox(tile["spxBoundaries"])[0]
               imgTile = image[tile_points["top"] : tile_points["top"] + tile_points["height"] , tile_points["left"]: tile_points["left"] + tile_points["width"] ];
-              try:            
-                  tile_mean = np.mean(imgTile, axis = (0, 1));
-                  tile_std = np.std(imgTile, axis = (0, 1));
-                  tile_max = np.max(imgTile, axis = (0, 1));
+
+              # To create cell mask and crop each cell
+              spx_points = np.array([str_to_array(tile["spxBoundaries"])])
+              spx_points_shift = spx_points.copy()            
+              for pt in spx_points_shift[0]:
+                  pt[0] = pt[0] - tile_points["left"]
+                  pt[1] = pt[1] - tile_points["top"]    
+
+              mask = np.zeros(imgTile.shape[0:2], dtype=np.uint8) 
+              cv2.drawContours(mask, [spx_points_shift], -1, (255, 255, 255), -1, cv2.LINE_AA)
+              res = cv2.bitwise_and(imgTile,imgTile,mask = mask)
+
+              rect = cv2.boundingRect(spx_points_shift) # returns (x,y,w,h) of the rect
+              cropped_cell = res[rect[1]: rect[1] + rect[3], rect[0]: rect[0] + rect[2]] 
+
+              try:   
+                  tile_mean = np.mean(cropped_cell, axis = (0, 1));
+                  tile_std = np.std(cropped_cell, axis = (0, 1));
+                  tile_max = np.max(cropped_cell, axis = (0, 1));  
+                                       
+                  # tile_mean = np.mean(imgTile, axis = (0, 1));
+                  # tile_std = np.std(imgTile, axis = (0, 1));
+                  # tile_max = np.max(imgTile, axis = (0, 1));
 
               except ValueError:  #raised if `y` is empty.
                   print(' index  {}'.format(tile["label"]))
                   error_tiles_counter += 1
                   continue
 
+              # tile_features = {"id": tile["label"], "mean": tile_mean.tolist(), "max": tile_max.tolist(), "std": tile_std.tolist(), "OSDLayer": marker["OSDLayer"], "Frame": marker["frameName"]  }
+                          
+              # tile_entry = [tile_record for tile_record in allTilesFeatures if tile_record["id"] == tile["label"] ]
+            
+              # if tile_entry == []:
+              #       allTilesFeatures.append({"id": tile["label"], "coordinates": [], "features": [tile_features] })               
+              # else:
+              #       tile_entry[0]["features"].append(tile_features)   
 
               tiles_split_channel_features.append({"id": "spx-" + str(tile["label"]), "coordinates": tile_points, "features": {'Frame':  marker["frameName"],   'OSDLayer': marker["OSDLayer"],  'max': tile_max.tolist(),  'mean': tile_mean.tolist(),  'std': tile_std.tolist()} })               
 
+              # curTileFeatures.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
+              # allTilesFeatures.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
               tiles_counter = tiles_counter + 1
 
   print('Number of valid cells = {}'.format(tiles_counter))
+  # print( 'tiles_split_channel_features [{}] Data  = {}'.format(tiles_counter-1, tiles_split_channel_features[tiles_counter-1]))
 
   # Convert dic to dataframe to fast process big data
   df = pd.DataFrame.from_dict(tiles_split_channel_features)
@@ -574,7 +611,7 @@ def createAllSpxTilesFeature():
   # Create boxplot Json file 
   if not (os.path.isfile(path_to_boxplot_file)): 
       if not (os.path.isdir(out_boxplot_folder )):
-          os.makedirs(out_boxplot_folder) 
+          os.makedirs(out_boxplot_folder)     
       with open(path_to_boxplot_file, 'w') as f:
           json.dump(boxplot_data, f)    
 
