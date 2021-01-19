@@ -1101,6 +1101,28 @@ def downloadFile():
   else:
       return "File exists"
 
+@app.route('/readRemoteCsvFile')
+def readRemoteCsvFile():
+  base_url = request.args.get('baseUrl', 0)
+  request_url = request.args.get('requestUrl', 0)
+  api_key = request.args.get('apiKey', 0)
+
+  gc = girder_client.GirderClient(apiUrl = base_url)
+
+  if( api_key ):
+      gc.authenticate(apiKey = api_key)
+
+  csv_file = gc.get( request_url, jsonResp = False)
+  # CSV Read
+  raw_data = StringIO(csv_file.content)
+  df = pd.read_csv(raw_data)
+  # Convert to JSON
+  to_json = df.to_json(orient="records")
+  json_data = json.loads(to_json)
+
+  return Response(json.dumps(json_data))
+        
+
 @app.route('/saveDSAFormat')
 def saveDSAFormat():
   xDSAFormatData = request.args.get('DSAFormatData', 0)
