@@ -26,9 +26,6 @@ The Channel metadata CSV file must have at least two columns: 'channel_number' a
 
 For creating OME channel groups, browse to your server file and click design mode with the tool as in Demo section below.
 
-For citation:
-
-`https://github.com/Mmasoud1/HistoJS`
 
 ## License.
 [CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/3.0/) license
