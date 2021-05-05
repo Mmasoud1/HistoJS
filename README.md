@@ -1,4 +1,4 @@
-# HistJS 
+# HistoJS 
 Copyright 2021 Mohamed Masoud
 
 
