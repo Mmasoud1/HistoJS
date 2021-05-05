@@ -1,5 +1,5 @@
-# HistJS v1.0.0
-Copyright 2020 Mohamed Masoud
+# HistJS 
+Copyright 2021 Mohamed Masoud
 
 
 An interactive tool to manage, manipulate, store and analysis the multi-channels OME-Tiff files .
