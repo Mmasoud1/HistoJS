@@ -1,5 +1,11 @@
-# HistJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]() [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors)
-Copyright 2021 Mohamed Masoud
+# HistoJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]() [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors)
+<div align="center">
+
+[![HistoJS logo](https://lh3.googleusercontent.com/Q3eYJfpQMety3sUUTLKeZKLkJBzx-NmLZNn1NphdWs9hBNYmfHCzZTphddpXDcfUxjtaHTXTr89R57LieZflqUsGHM3TxtIbVNoQOKf3ZbPjB01C8gYANmezAzq4JgUU=w1823)]()
+
+**Copyright 2021 Mohamed Masoud**
+
+</div>
 
 
 An interactive tool to manage, manipulate, store and analysis the multi-channels OME-Tiff files .
