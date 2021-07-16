@@ -1,4 +1,4 @@
-# HistoJS 
+# HistJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]() [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors)
 Copyright 2021 Mohamed Masoud
 
 
