@@ -1,4 +1,23 @@
+#=========================================================
+#* HistoJS Demo - v1.0.0  | 2020
+#=========================================================
+#
+# Github:  https://github.com/Mmasoud1
+# Description:  A user interface for whole slide image channel design and analysis. 
+#               It is based on DSA as backbone server.
+# 
+#
+# Coded by Mohamed Masoud ( mmasoud2@outlook.com )
+#
+#=========================================================
+#
+#=========================================================
+#                      Rest Api
+#=========================================================
+#
 #!env/bin/python
+from __future__ import print_function, unicode_literals, absolute_import, division
+from stardist.models import StarDist2D 
 from flask import Flask, request, Response,  render_template, jsonify
 from flask_cors import CORS
 import json
@@ -6,7 +25,7 @@ import girder_client
 import PIL
 from PIL import Image, ImageFile
 import os,sys,io
-from io import BytesIO, StringIO 
+from io import BytesIO 
 import numpy as np
 import re
 import requests
@@ -16,16 +35,31 @@ import glob
 import h5py
 import cv2
 import base64
+from csbdeep.utils import Path, normalize
+from csbdeep.io import save_tiff_imagej_compatible
+from stardist import random_label_cmap, _draw_polygons, export_imagej_rois
+from sklearn.preprocessing import MinMaxScaler   
 from skimage import data, img_as_float
 from skimage import measure
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
+from scipy.ndimage import find_objects
+from scipy.spatial import Delaunay, ConvexHull, convex_hull_plot_2d
+from skimage import measure
+from skimage.measure import label, regionprops, approximate_polygon
+from collections import defaultdict
+import itertools
 import pandas as pd
 import math
+import codecs
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+import seaborn as sns
 if sys.version_info[0] < 3: 
     from StringIO import StringIO
 else:
     from io import StringIO
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # To avoid PIL.Image.DecompressionBombError: 
@@ -310,6 +344,446 @@ def readJsonFile():
   else:
     return jsonify("notExist") 
 
+# @app.route('/readBoundaries')
+# def readBoundaries():
+#   file_name = request.args.get('filename', 0)
+#   out_folder = request.args.get('outfolder', 0)  
+#   path_to_file = os.path.join(out_folder, file_name)
+#   print("Please wait while reading boundaries file .....", path_to_file)
+#   if (os.path.isfile(path_to_file)):  
+#     file = open(out_folder + file_name, "r")  
+#     boundaries = file.read()
+#     file.close()
+#     return boundaries
+#   else:
+#     return "notExist" 
+
+#-------------------------------------------------------------------------------#
+############################## Boundaries from Dapi #############################
+#-------------------------------------------------------------------------------#
+
+# Scale contour, resize it smaller or larger to include for the example the cytoplasom
+def scale_contour(cnt, scale):
+    M = cv2.moments(cnt)
+    cx = int(M['m10']/M['m00'])
+    cy = int(M['m01']/M['m00'])
+
+    cnt_norm = cnt - [cx, cy]
+    cnt_scaled = cnt_norm * scale
+    cnt_scaled = cnt_scaled + [cx, cy]
+    cnt_scaled = cnt_scaled.astype(np.int32)
+
+    return cnt_scaled
+
+
+# source code inspired from cellpose 
+def masks_to_outlines(masks):
+
+    if masks.ndim > 3 or masks.ndim < 2:
+        raise ValueError('masks_to_outlines takes 2D or 3D array, not %dD array'%masks.ndim)
+    outlines = np.zeros(masks.shape, np.bool)
+    
+    if masks.ndim==3:
+        for i in range(masks.shape[0]):
+            outlines[i] = masks_to_outlines(masks[i])
+        return outlines
+    else:
+        slices = find_objects(masks.astype(int))
+        for i,si in enumerate(slices):
+            if si is not None:
+                sr,sc = si
+                mask = (masks[sr, sc] == (i+1)).astype(np.uint8)
+                contours = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+                pvc, pvr = np.concatenate(contours[-2], axis=0).squeeze().T            
+                vr, vc = pvr + sr.start, pvc + sc.start 
+                outlines[vr, vc] = 1
+        return outlines
+
+
+@app.route('/createBoundariesFromDapiChannel')
+def createBoundariesFromDapiChannel():
+
+  #Flag to determine which approach to extract boundaries from mask ie. contour based or regionprops based
+  # if contour approach is False then regionprops will be used 
+  is_boundary_extraction_contours_based = request.args.get('isBoundaryExtractionContoursBased', type=bool)
+  print("Boundary extraction is contours based: ", is_boundary_extraction_contours_based)
+
+  # if remove outliers is need
+  is_remove_outliers_required = request.args.get('isRemoveOutliersRequired', type=bool)
+  print("Remove outliers is required: ", is_remove_outliers_required)
+
+  # if removing all outliers of all morphologies  are need
+  all_features_outliers_considered = request.args.get('allFeaturesOutliersConsidered', type=int)
+  print("Remove all Features outliers is required: ", all_features_outliers_considered)  
+
+  reset_boundaries_label_after_outlier_filter = request.args.get('resetBoundaryLabelAfterOutlierFilter', type=bool)
+  print("Reset boundaries label after outlier filter: ", reset_boundaries_label_after_outlier_filter)
+
+  approximation_requested = request.args.get('contourApproxRequest', type=bool)
+  print("approximation_requested: ", approximation_requested)
+
+  use_95_05_percentile = request.args.get('use95_05Percentile', type=bool)
+  percentile_lower = float(request.args.get('percentileLower', 0))
+  percentile_upper = float(request.args.get('percentileUpper', 0))
+  print("use_95_05_percentile requested: ", use_95_05_percentile)
+  if use_95_05_percentile:
+    print("percentile_lower requested: ", percentile_lower)
+    print("percentile_upper requested: ", percentile_upper)
+
+  file_name = request.args.get('filename', 0)
+  out_folder = request.args.get('outfolder', 0)  
+  base_url = request.args.get('baseUrl', 0)
+  item_id = request.args.get('itemId', 0)
+  api_key = request.args.get('apiKey', 0)
+
+  dapi_ch_index = request.args.get('dapiChannelIdx', type=int)
+  print("dapi_ch_index: ", dapi_ch_index)
+
+  contour_scale_factor = float(request.args.get('contourScaleFactor', 0))
+  print("contour scale factor: ", contour_scale_factor)
+
+  contour_approx_factor = float(request.args.get('nuclContourApproxFactor', 0))
+  print("contour approximation factor: ", contour_approx_factor)
+
+  invalid_nucl_area_threshold = request.args.get('invalidNuclAreaThreshold', type=int)
+  print("invalid nucl area threshold: ", invalid_nucl_area_threshold)
+
+  # is_boundary_extraction_contours_based = False
+
+  # is_remove_outliers_required = True
+
+  # all_features_outliers_considered = False
+
+  # reset_boundaries_label_after_outlier_filter = True    
+
+  raw_contours_file_name = file_name.split(".json")[0] + '_raw_contours.json'
+  # cells_label_file_name = file_name.split(".json")[0] + '_labels.json'
+  
+  if (not os.path.isfile(out_folder + raw_contours_file_name)) or (not is_boundary_extraction_contours_based):
+
+    print("Please wait while creating boundaries from Dapi Channel ................")
+
+    request_url = "item/" + item_id + "/tiles/region?units=base_pixels&exact=false&frame=" + str(dapi_ch_index) + "&encoding=JPEG&jpegQuality=95&jpegSubsampling=0"
+     
+    gc = girder_client.GirderClient(apiUrl = base_url)
+
+    if( api_key ):
+        gc.authenticate(apiKey = api_key)  
+        girder_response = gc.get(request_url, jsonResp=False) 
+    else:
+        girder_response = requests.get(base_url + request_url)  
+
+    dapi_channel_raw = Image.open(io.BytesIO(girder_response.content))
+    dapi_channel = np.array(dapi_channel_raw)    
+
+    # Check or Convert to grey scale channel
+    dapi_channel_gray = []
+    if  len(dapi_channel.shape) > 2 :
+        dapi_channel_gray = cv2.cvtColor(dapi_channel, cv2.COLOR_BGR2GRAY)
+        dapi_channel =  dapi_channel_gray
+
+
+    n_channel = 1 if dapi_channel.ndim == 2 else dapi_channel.shape[-1]
+    axis_norm = (0,1)   # normalize channels independently
+
+    if n_channel > 1:
+        print("Normalizing image channels %s." % ('jointly' if axis_norm is None or 2 in axis_norm else 'independently'))
+
+    # Normalize channel
+    dapi_channel_norm = normalize(dapi_channel, 1,99.8, axis=axis_norm)
+    print("Dapi normalization done..")
+
+    # creates a pretrained model
+    model = StarDist2D.from_pretrained('2D_versatile_fluo')
+
+    # Get labels and polys for the image/ DAPI channel
+    dapi_channel_labels, dapi_channel_polys = model.predict_instances_big(dapi_channel_norm, axes='YX', block_size=4096, min_overlap=128, context=128, n_tiles=(4,4))
+    print("Dapi labels prediction done..")
+
+    ##  Convert starDist polys to contours 
+    ### Method #1 to convert (faster)
+    print("Convert dapi channel polys to contours in progress..")
+    contours = []
+    for poly in tqdm(dapi_channel_polys['coord']):
+        merge_coord = list(zip(poly[1], poly[0]))
+
+        contours.append(np.around(merge_coord).astype(int))    
+    print("Total number of converted dapi channel polys--> contours : {}".format(len(contours))) 
+
+    # save  contours array as Json
+    if not (os.path.isdir(out_folder)):
+      os.makedirs(out_folder)        
+    contours_arr = np.asarray(contours)
+    contours_list = contours_arr.tolist()
+    json.dump(contours_list, codecs.open(out_folder + raw_contours_file_name, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4) 
+
+
+    # save  labels array as Json
+    # contours_arr = np.asarray(contours)
+    # contours_list = contours_arr.tolist()
+    # json.dump(contours_list, codecs.open(out_folder + raw_contours_file_name, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4) 
+
+
+  else:
+    # if is_boundary_extraction_contours_based: 
+    print("Wait reading raw contours from saved json file")
+
+    contours_text = codecs.open(out_folder + raw_contours_file_name, 'r', encoding='utf-8').read()
+    contours_json = json.loads(contours_text)
+    contours = list(np.array(contours_json))
+
+  # else:
+  #    print("Wait reading labels from saved json file")
+  #    labels_text = codecs.open(out_folder + cells_label_file_name, 'r', encoding='utf-8').read()
+  #    labels_json = json.loads(labels_text)
+  #    dapi_channel_labels = list(np.array(labels_json)) 
+
+
+  # if there is a need to scale countour to enlarge or shrink it 
+  if contour_scale_factor != 1:
+    print("Contours scaling in progress..")
+    scaled_contours = []
+
+    for cont in tqdm(contours):
+        scaled_contours.append(scale_contour(cont, contour_scale_factor))  
+    
+    contours = scaled_contours
+  
+  #check if contours need reverse order
+  # mask_height = dapi_channel.shape[0]
+  # mask_width = dapi_channel.shape[1]
+
+  # contours_reverse_flag = True
+
+  # polygon = Polygon([(0, 0), (0, mask_width/2), (mask_height/2, mask_width/2), (mask_height/2, 0)])
+
+  # for vertex in contours[0]:
+  #     point = Point(vertex[0][0], vertex[0][1])
+  #     if polygon.contains(point) :
+  #         contours_reverse_flag = False
+
+  # if contours_reverse_flag :
+  #     contours.reverse()         
+
+
+  # Get contours/Regions properties
+  maskBoundariesData = []
+  idx = 1
+
+  if all_features_outliers_considered:
+      features_to_remove_outliers = ['area', 'eccentricity', 'extent', 'major_axis_length', 'minor_axis_length', 'orientation', 'perimeter', 'solidity']
+  else:
+      features_to_remove_outliers = ['area', 'perimeter']
+  #     features_to_remove_outliers = ['area']    
+
+  if is_boundary_extraction_contours_based:
+
+      nearest_decimal = 2
+      invalid_contour_num = 0
+      # Conversion loop 
+      for contour in tqdm(contours):
+          spxBoundaries = []
+          if approximation_requested :
+              approx = cv2.approxPolyDP(contour, contour_approx_factor * cv2.arcLength(contour, True), True) 
+              cnt = approx
+          else:
+              cnt = contour
+          # check for valid vertex
+          invalid_vertex = False    
+          if len(cnt) > 2 :
+              for vertex in cnt:
+                  spxBoundaries.append(str(vertex[0][0]) + ',' + str(vertex[0][1])) 
+                  if (vertex[0][0] < 0) or (vertex[0][1] < 0):
+                    invalid_vertex = True
+              if invalid_vertex:
+                invalid_contour_num += 1
+                continue
+                    
+          else:
+              continue
+
+          # compute the center of the contour
+          M = cv2.moments(contour)    
+          if M["m00"] != 0:
+              x_cent = int(M["m10"] / M["m00"])
+              y_cent = int(M["m01"] / M["m00"])
+          else:
+              # set values as what you need in the situation
+              #print(cnt)
+      #         x_cent, y_cent = 0, 0
+              continue
+
+      #     maskBoundariesData.append({"label": idx, "x_cent": x_cent, "y_cent": y_cent, "spxBoundaries":' '.join(spxBoundaries)  })
+      #     idx += 1
+
+          # contour area
+          area = round(cv2.contourArea(contour), nearest_decimal)
+
+          if area < invalid_nucl_area_threshold :
+            continue
+
+
+          # contour perimeter    
+          perimeter = round(cv2.arcLength(contour,True), nearest_decimal)
+
+          #Extent is the ratio of contour area to bounding rectangle area.
+          x,y,w,h = cv2.boundingRect(contour)
+          rect_area = w*h
+          extent = round( float(area)/rect_area, nearest_decimal)   
+
+          #calculating Solidity and eccentricity  
+          #Solidity is the ratio of contour area to its convex hull area.
+          ## Usually Tumor has higher solidity value than normal tissue        
+          # If the eccentricity is one, it will be a straight line and if it is zero, it will be a perfect circle
+          try:
+              ## For Solidity we need to calculate hull area first
+              hull = cv2.convexHull(contour)
+              hull_area = cv2.contourArea(hull)
+              
+              ## center, axis_length and orientation of ellipse
+              (center, axes, orientation)  =  cv2.fitEllipse(contour)
+          except:
+              #print("An exception occurred during calculating eccentricity") 
+              continue  
+
+          solidity = round( float(area)/hull_area, nearest_decimal)             
+          major_axis_length = round( max(axes), nearest_decimal)
+          minor_axis_length = round( min(axes), nearest_decimal)
+
+          ## eccentricity = sqrt( 1 - (ma/MA)^2) --- ma= minor axis --- MA= major axis
+          eccentricity = round( np.sqrt(1-(minor_axis_length/major_axis_length)**2), nearest_decimal)  
+
+
+          # area, eccentricity, solidity, extent , euler_number, perimeter, major_axis_length, minor_axis_length,    centroid, orientation   
+
+          maskBoundariesData.append({"label": idx, "area": area, "eccentricity": eccentricity, "orientation": round(orientation, nearest_decimal),  "perimeter" : perimeter, "extent": extent, "solidity": solidity, "major_axis_length": major_axis_length, "minor_axis_length": minor_axis_length,  "x_cent": x_cent, "y_cent": y_cent, "neighbors": None, "spxBoundaries":' '.join(spxBoundaries)  })
+          idx += 1
+
+      print(' Num of invalid contour found:  {}'.format(invalid_contour_num))    
+
+  #------------------------------------------------------------------------------------------------------#         
+  #-----------------------------------------Region based boundaries -------------------------------------#  
+  #------------------------------------------------------------------------------------------------------# 
+  # boundaries are regionprops based, but the points can be very large, need approximation  
+  else:    
+      print("regionprops based cell morphology calculations: ")
+      print("Please wait ...")
+      props = measure.regionprops(dapi_channel_labels)
+      
+      invalid_region_num = 0
+      invalid_area_num = 0      
+      # Conversion loop 
+      for  prop in tqdm(props):
+
+          spxBoundaries  = []
+
+          try:
+              # to get the boundaries, get convex hull of region points (prop.coords is area points not perimeter point) 
+              hull = ConvexHull(prop.coords)
+              hull_indices = hull.vertices
+              hull_pts = prop.coords[hull_indices, :]   
+          except:
+              continue         
+
+          if approximation_requested :
+              approx =  approximate_polygon(hull_pts, tolerance = 1.5) 
+          else:     
+              approx = hull_pts
+
+          invalid_vertex = False
+          for vertex in approx:        
+              spxBoundaries.append(str(vertex[1]) + ',' + str(vertex[0])) 
+              if (vertex[1] < 0) or (vertex[0] < 0):
+                invalid_vertex = True
+          if invalid_vertex:
+            invalid_region_num += 1
+            continue  
+
+          if prop.area < invalid_nucl_area_threshold:
+            invalid_area_num += 1
+            continue                          
+
+
+          maskBoundariesData.append({"label": idx, "area":  prop.area, "eccentricity": prop.eccentricity, "solidity": prop.solidity, "extent":  prop.extent, "perimeter": prop.perimeter, "major_axis_length":  prop.major_axis_length, "minor_axis_length": prop.minor_axis_length, "orientation": math.degrees(prop.orientation),  "x_cent": round(prop.centroid[1]), "y_cent": round(prop.centroid[0]),  "spxBoundaries":' '.join(spxBoundaries) })
+          idx += 1    
+ 
+      print(' Num of invalid region found:  {}'.format(invalid_region_num))  
+      print(' Num of invalid areas found:  {}'.format(invalid_area_num))            
+
+  if len(maskBoundariesData):   
+      # if remove outliers option is set
+      if is_remove_outliers_required:
+          print("Wait for outliers to remove ...")
+          df = pd.DataFrame.from_dict(maskBoundariesData)
+          df_after_filter = df
+          
+          for feature in features_to_remove_outliers:
+              if use_95_05_percentile:
+                  P_lower = df[feature].quantile(percentile_lower)
+                  P_upper = df[feature].quantile(percentile_upper)
+                  filter = (df_after_filter[feature] >= P_lower) & (df_after_filter[feature] <= P_upper)
+              else:    
+                  Q1 = df[feature].quantile(0.25)
+                  Q3 = df[feature].quantile(0.75)
+                  IQR = Q3 - Q1    #IQR is interquartile range. 
+                  filter = (df_after_filter[feature] >= Q1 - 1.5 * IQR) & (df_after_filter[feature] <= Q3 + 1.5 *IQR)
+
+              df_after_filter = df_after_filter.loc[filter]  
+              
+          maskBoundariesData_update = df_after_filter.to_dict('records')
+          # reset labels to start from 1 to len(maskBoundariesData_update
+          if reset_boundaries_label_after_outlier_filter:
+              for index, item in enumerate(maskBoundariesData_update):
+                  item['label'] = index +1
+      else:   
+          maskBoundariesData_update = maskBoundariesData
+
+      
+      
+      # convert x_cent and y_cent to array of points
+      print("Wait while calculating neighbors ...")
+      all_points = [];
+
+      for contour in maskBoundariesData_update:
+          all_points.append([contour['x_cent'], contour['y_cent']]);
+
+
+      tri = Delaunay(all_points)
+      neiList = defaultdict(set)
+      for p in tri.vertices:
+          for i,j in itertools.combinations(p,2):
+              neiList[i].add(j)
+              neiList[j].add(i)
+
+
+      for key in sorted(neiList.keys()):
+          neighbor_array = list(neiList[key])
+          for index in range(len(neighbor_array)):
+              neighbor_array[index] += 1
+          # maskBoundariesData_update[key]['neighbors'] = neighbor_array    
+          # we need to convert to np.arrary and then to list again to overcome the issue of :
+          # TypeError: Object of type int64 is not JSON serializable
+          maskBoundariesData_update[key]['neighbors'] =(np.array(neighbor_array, dtype=np.int32)).tolist()
+      # Verify the created file    
+      print('Total num of extracted boundaries :',len(maskBoundariesData_update))
+      print('Total num of contours :',len(contours))
+
+
+      # Create Json file 
+      if not (os.path.isdir(out_folder)):
+              os.makedirs(out_folder)  
+      with open(out_folder + file_name, 'w') as f:
+          json.dump(maskBoundariesData_update, f)  
+      
+
+      if (os.path.isfile(out_folder + file_name)):  
+        return "Created successfully"
+      else:
+        return "Failed"               
+
+#-------------------------------------------------------------------------------#
+############################## Boundaries from Mask #############################
+#-------------------------------------------------------------------------------#
 
 @app.route('/createBoundariesFromMask')
 def createBoundariesFromMask():
@@ -419,7 +893,7 @@ def createBoundariesFromMask():
   with open(out_folder + file_name, 'w') as f:
       json.dump(maskBoundariesData, f)  
   
-  print ' Number of invalid contours : ', num_of_invalid_contours
+  print(' Number of invalid contours : ', num_of_invalid_contours)
 
   if (os.path.isfile(out_folder + file_name)):  
     return "Created successfully"
@@ -459,14 +933,21 @@ def is_grey_scale(image):
     else:
         return True
 
+
 def str_to_array(points):
     pair_points = []
     
     for px in points.split(" "):
-        pair_points.append(map(int, px.split(",")))
+        if sys.version_info[0] < 3:
+          # For python 2
+            pair_points.append(map(int, px.split(",")))
+        else:
+          # For python 3          
+            pair_points.append(list(map(int, px.split(","))))
     
     return pair_points
-    
+
+
 @app.route('/createAllSpxTilesFeature')
 def createAllSpxTilesFeature():
 
@@ -474,25 +955,34 @@ def createAllSpxTilesFeature():
   item_id = request.args.get('itemId', 0)
   api_key = request.args.get('apiKey', 0)
 
+  is_channel_normalize_required = request.args.get('isChannelNormalizeRequired', 0, type=bool)
+
+  cell_feature_to_normalize = request.args.get('cellFeatureToNormalize', 0)
+
   group_data_json_string = request.args.get('grp_data', 0)
 
   features_file_name = request.args.get('features_file', 0)
   out_features_folder = request.args.get('features_folder', 0)    
 
-  boxplot_file_name = request.args.get('boxplot_file', 0)
-  out_boxplot_folder = request.args.get('boxplot_folder', 0)   
+  # boxplot_file_name = request.args.get('boxplot_file', 0)
+  # out_boxplot_folder = request.args.get('boxplot_folder', 0) 
+  # # If true means consider only the channel values above zero
+  # neglect_zero_pixels = request.args.get('neglect_zero', 0, type=bool)
+  # print("is zero pixels neglected for boxplot:  ", neglect_zero_pixels)  
 
   boundaries_file_name = request.args.get('boundaries_file', 0)
   boundaries_folder = request.args.get('boundaries_folder', 0)    
 
   path_to_boundaries_file = os.path.join(boundaries_folder, boundaries_file_name)
   path_to_features_file = os.path.join(out_features_folder, features_file_name)
-  path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
+  # path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
 
 
   group_data_dic = json.loads(group_data_json_string)
 
   #tile_prop_list = { 'mean': '', 'max': '', 'std': ''}
+
+  # if not (os.path.isfile(path_to_features_file.split(".json")[0] + '_markers_morphology.csv')): 
 
   print("Please wait while creating features for boundaries ................")
 
@@ -508,12 +998,14 @@ def createAllSpxTilesFeature():
 
   allTilesFeatures = []
   tiles_split_channel_features = []
-  boxplot_data = []
-  tiles_counter = 0
+  # boxplot_data = []
+  valid_tiles_counter = 0
 
   for marker in group_data_dic:
 
-      print(" Current channel to extract features : {}".format(marker["frameNum"]))
+      # print(" Current channel to extract features : {}".format(marker["frameNum"]))
+      print("channel Name: {}, channel number: {}".format(marker["frameName"], marker["frameNum"]))
+      print("Wait reading {} channel..".format(marker["frameName"]))      
 
       request_url = "item/" + item_id + "/tiles/region?units=base_pixels&exact=false&frame=" + str(marker["frameNum"]) + "&encoding=JPEG&jpegQuality=95&jpegSubsampling=0"
 
@@ -536,68 +1028,102 @@ def createAllSpxTilesFeature():
             return jsonify("Failed");    
             # return jsonify("Not a valide gray channel");     
 
-      # Get boxplot data for each channel
-      if not (os.path.isfile(path_to_boxplot_file)): 
-        df = pd.DataFrame(image.flatten(), columns=[marker["frameName"]])
-        stats = df.describe()
-        boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
+
+      if is_channel_normalize_required:
+          n_channel = 1 if image.ndim == 2 else image.shape[-1]
+          axis_norm = (0,1)   # normalize channels independently
+          # axis_norm = (0,1,2) # normalize channels jointly
+          # normalize the image
+          image_norm = normalize(image, 1,99.8, axis=axis_norm)
+          #scale image for the range 0 to 255
+          sc = MinMaxScaler(feature_range=(0, 255))        
+          image_norm_scaled = sc.fit_transform(image_norm).astype('uint8')        
+          
+          preprocess_image = image_norm_scaled
+          
+      else:
+          preprocess_image = image
+
+
+
+      # # Get boxplot data for each channel
+      # if not (os.path.isfile(path_to_boxplot_file)): 
+      #   df = pd.DataFrame(image.flatten(), columns=[marker["frameName"]])
+      #   # Filter channel data for pixels > 0          
+      #   if neglect_zero_pixels : 
+      #     df_marker_positive = df.loc[df[marker["frameName"]] > 0]   
+      #     stats = df_marker_positive.describe()   
+      #   else:
+      #     stats = df.describe()
+
+      #   boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
 
       # Get features for each SPX
       tile_points = [] 
 
-      tiles_counter = 0
+      valid_tiles_counter = 0
 
       error_tiles_counter = 0
 
-      for tile in all_spx_boundaries:
+      for tile in tqdm(all_spx_boundaries):
 
-              tile_points = find_bbox(tile["spxBoundaries"])[0]
-              imgTile = image[tile_points["top"] : tile_points["top"] + tile_points["height"] , tile_points["left"]: tile_points["left"] + tile_points["width"] ];
+            try:
+                 tile_points = find_bbox(tile["spxBoundaries"])[0]
 
-              # To create cell mask and crop each cell
-              spx_points = np.array([str_to_array(tile["spxBoundaries"])])
-              spx_points_shift = spx_points.copy()            
-              for pt in spx_points_shift[0]:
-                  pt[0] = pt[0] - tile_points["left"]
-                  pt[1] = pt[1] - tile_points["top"]    
+                 if (tile_points["top"] < 0) or (tile_points["left"] < 0):
+                    print(' index with invalide coord  {}'.format(tile["label"]))
+                    error_tiles_counter += 1
+                    continue                 
 
-              mask = np.zeros(imgTile.shape[0:2], dtype=np.uint8) 
-              cv2.drawContours(mask, [spx_points_shift], -1, (255, 255, 255), -1, cv2.LINE_AA)
-              res = cv2.bitwise_and(imgTile,imgTile,mask = mask)
+                 imgTile = preprocess_image[tile_points["top"] : tile_points["top"] + tile_points["height"] , tile_points["left"]: tile_points["left"] + tile_points["width"] ];
 
-              rect = cv2.boundingRect(spx_points_shift) # returns (x,y,w,h) of the rect
-              cropped_cell = res[rect[1]: rect[1] + rect[3], rect[0]: rect[0] + rect[2]] 
+                 # To create cell mask and crop each cell
+                 spx_points = np.array([str_to_array(tile["spxBoundaries"])])
+                 spx_points_shift = spx_points.copy()            
+                 for pt in spx_points_shift[0]:
+                    pt[0] = pt[0] - tile_points["left"]
+                    pt[1] = pt[1] - tile_points["top"]    
 
-              try:   
-                  tile_mean = np.mean(cropped_cell, axis = (0, 1));
-                  tile_std = np.std(cropped_cell, axis = (0, 1));
-                  tile_max = np.max(cropped_cell, axis = (0, 1));  
-                                       
-                  # tile_mean = np.mean(imgTile, axis = (0, 1));
-                  # tile_std = np.std(imgTile, axis = (0, 1));
-                  # tile_max = np.max(imgTile, axis = (0, 1));
+                 mask = np.zeros(imgTile.shape[0:2], dtype=np.uint8) 
+                 cv2.drawContours(mask, [spx_points_shift], -1, (255, 255, 255), -1, cv2.LINE_AA)
+                 res = cv2.bitwise_and(imgTile,imgTile,mask = mask)
 
-              except ValueError:  #raised if `y` is empty.
-                  print(' index  {}'.format(tile["label"]))
-                  error_tiles_counter += 1
-                  continue
+                 rect = cv2.boundingRect(spx_points_shift) # returns (x,y,w,h) of the rect
+                 cropped_cell = res[rect[1]: rect[1] + rect[3], rect[0]: rect[0] + rect[2]] 
 
-              # tile_features = {"id": tile["label"], "mean": tile_mean.tolist(), "max": tile_max.tolist(), "std": tile_std.tolist(), "OSDLayer": marker["OSDLayer"], "Frame": marker["frameName"]  }
-                          
-              # tile_entry = [tile_record for tile_record in allTilesFeatures if tile_record["id"] == tile["label"] ]
-            
-              # if tile_entry == []:
-              #       allTilesFeatures.append({"id": tile["label"], "coordinates": [], "features": [tile_features] })               
-              # else:
-              #       tile_entry[0]["features"].append(tile_features)   
 
-              tiles_split_channel_features.append({"id": "spx-" + str(tile["label"]), "coordinates": tile_points, "features": {'Frame':  marker["frameName"],   'OSDLayer': marker["OSDLayer"],  'max': tile_max.tolist(),  'mean': tile_mean.tolist(),  'std': tile_std.tolist()} })               
+                 tile_mean = np.mean(cropped_cell, axis = (0, 1))
+                 tile_nonzero_mean = cropped_cell[np.nonzero(cropped_cell)].mean()
+                 tile_std = np.std(cropped_cell, axis = (0, 1))
+                 tile_max = np.max(cropped_cell, axis = (0, 1))  
+                 # tile_mean = np.mean(imgTile, axis = (0, 1));
+                 # tile_std = np.std(imgTile, axis = (0, 1));
+                 # tile_max = np.max(imgTile, axis = (0, 1));
+            except ValueError:
+            	 #raised if `y` is empty.
+                 print(' index  {}'.format(tile["label"]))
+                 error_tiles_counter += 1
+                 continue
 
-              # curTileFeatures.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
-              # allTilesFeatures.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
-              tiles_counter = tiles_counter + 1
+          # tile_features = {"id": tile["label"], "mean": tile_mean.tolist(), "max": tile_max.tolist(), "std": tile_std.tolist(), "OSDLayer": marker["OSDLayer"], "Frame": marker["frameName"]  }
+                      
+          # tile_entry = [tile_record for tile_record in allTilesFeatures if tile_record["id"] == tile["label"] ]
+        
+          # if tile_entry == []:
+          #       allTilesFeatures.append({"id": tile["label"], "coordinates": [], "features": [tile_features] })               
+          # else:
+          #       tile_entry[0]["features"].append(tile_features) 
 
-  print('Number of valid cells = {}'.format(tiles_counter))
+          # For nonzero mean, add:  'nonzero_mean': tile_nonzero_mean.tolist(),
+          # The final return of id should start with spx-number e.g. spx-1, so we make it befor return as {"id": "spx-" + str(tile["label"]),  ..}
+            tiles_split_channel_features.append({"id": tile["label"], "coordinates": tile_points, "features": {'Frame':  marker["frameName"],   'OSDLayer': marker["OSDLayer"],  'max': tile_max.tolist(),  'mean': tile_mean.tolist(), 'nonzero_mean': tile_nonzero_mean.tolist(),  'std': tile_std.tolist()} })               
+
+          # curTileFeatures.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
+          # allTilesFeatures.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
+            valid_tiles_counter = valid_tiles_counter + 1
+
+  print('Number of valid cells = {}'.format(valid_tiles_counter))
+  print('Number of invalid cells = {}'.format(error_tiles_counter))
   # print( 'tiles_split_channel_features [{}] Data  = {}'.format(tiles_counter-1, tiles_split_channel_features[tiles_counter-1]))
 
   # Convert dic to dataframe to fast process big data
@@ -608,14 +1134,126 @@ def createAllSpxTilesFeature():
 
   allTilesFeatures = df_grouped_by_id.to_dict('records')
 
-  # Create boxplot Json file 
-  if not (os.path.isfile(path_to_boxplot_file)): 
-      if not (os.path.isdir(out_boxplot_folder )):
-          os.makedirs(out_boxplot_folder)     
-      with open(path_to_boxplot_file, 'w') as f:
-          json.dump(boxplot_data, f)    
 
-  return Response(json.dumps(allTilesFeatures)) 
+  # Create a dataframe with different markers values mean, max, nonzero mean
+  columnNames = ['id']
+  for marker in allTilesFeatures[0]['features']:
+      columnNames.append(marker["Frame"]+"_max")
+      columnNames.append(marker["Frame"]+"_mean")
+      columnNames.append(marker["Frame"]+"_nonzero_mean")
+      columnNames.append(marker["Frame"]+"_std")
+
+  df_cell_markers = pd.DataFrame(columns=columnNames)  
+
+  # Fill the dataframe with values form dict
+  print('Wait while converting features to dataframe...')
+  for tile_features in  tqdm(allTilesFeatures):
+      marker_features = {}
+      marker_features['id'] = tile_features['id']
+      for frame_features in tile_features['features']:
+          marker_features[frame_features['Frame']+"_max"]= frame_features['max']
+          marker_features[frame_features['Frame']+"_mean"]=frame_features['mean']
+          marker_features[frame_features['Frame']+"_nonzero_mean"]=frame_features['nonzero_mean'] 
+          marker_features[frame_features['Frame']+"_std"]=frame_features['std']        
+      df_cell_markers = df_cell_markers.append(marker_features, ignore_index=True)   
+      
+
+  # convert column Cell id to data type int
+  df_cell_markers['id'] = df_cell_markers['id'].astype(int)
+
+  # fill any null with zero
+  df_cell_markers = df_cell_markers.fillna(0)  
+
+  # read cell morphology file having cells boundary, area, extent .. etc
+  df_cell_morphology = pd.read_json(path_to_boundaries_file)  
+
+  ##  Merge cell markers values(e.g. mean max std ..) and cell morphology values (e.g. cell area, eccenticity, ..)
+  print('Merging dataframes in progress...')
+  df_cell_markers_morphology = pd.merge(df_cell_markers, df_cell_morphology, how='left', left_on=['id'], right_on=['label'])
+
+  # save dataframe to csv file
+  print('Save dataframe to csv file...')
+  if not (os.path.isdir(out_features_folder )):
+     os.makedirs(out_features_folder)    
+  df_cell_markers_morphology.to_csv(path_to_features_file.split(".json")[0] + '_markers_morphology.csv', index=False) 
+
+  # print('Save allTilesFeatures to basic json file...')
+  # with open(path_to_features_file.split(".json")[0] + '_basic.json', 'w') as f:
+	 #   json.dump(allTilesFeatures, f)
+
+  # else:
+	 #  print('Read markers morphology csv file...')  	
+	 #  df_cell_markers_morphology = pd.read_csv(path_to_features_file.split(".json")[0] + '_markers_morphology.csv')
+	 #  df_cell_morphology = pd.read_json(path_to_boundaries_file) 
+	 #  allTilesFeatures = pd.read_json(path_to_features_file.split(".json")[0] + '_basic.json')
+
+
+  # Normalize marker mean values
+  print('Normalizing markers in progress...')
+  markers_norm_col = []
+  for marker in allTilesFeatures[0]['features']:
+      markers_norm_col.append(marker["Frame"]+"_norm")
+      df_cell_markers_morphology[marker["Frame"]+"_norm"] = df_cell_markers_morphology[marker["Frame"] + cell_feature_to_normalize ].transform(lambda x: (x-x.mean())/x.std()).fillna(-1)#.reset_index()
+  
+  # scale marker normalized values to the range from 0-255
+  sc = MinMaxScaler(feature_range=(0, 255))        
+  df_cell_markers_morphology[markers_norm_col] = sc.fit_transform(df_cell_markers_morphology[markers_norm_col])
+
+
+ 
+
+
+  print("Converting cells features dataframe to compatible histojs dictionary ..")
+  dict_cell_markers_morphology = df_cell_markers_morphology.to_dict('records')
+  allCellFeatures = []
+  for marker in tqdm(group_data_dic):
+      for tile in dict_cell_markers_morphology:
+          allCellFeatures.append({"id": "spx-" + str(tile["id"]),
+                                   'area': tile["area"],
+                                   'eccentricity': tile["eccentricity"],
+                                   'extent': tile["extent"],
+                                   'label': tile["label"],
+                                   'major_axis_length': tile["major_axis_length"],
+                                   'minor_axis_length': tile["minor_axis_length"],
+                                   'neighbors': tile["neighbors"],
+                                   'orientation': tile["orientation"],
+                                   'perimeter': tile["perimeter"],
+                                   'solidity': tile["solidity"],  
+                                   'x_cent': tile["x_cent"],
+                                   'y_cent': tile["y_cent"],                                
+                                   "features": {'Frame':  marker["frameName"],   'OSDLayer': marker["OSDLayer"],  'max': tile[marker["frameName"]+"_max"],  'mean': tile[marker["frameName"]+"_mean"],  'std': tile[marker["frameName"]+"_std"], 'mean_norm': tile[marker["frameName"]+"_norm"]  } })               
+
+
+  df_allCellFeatures = pd.DataFrame.from_dict(allCellFeatures)
+  df_allCellFeatures_grouped_by_label = df_allCellFeatures.groupby(['label'])["features"].agg(lambda x: list(x) if len(x) > 1 else x.iloc[0]).reset_index()
+  df_allCellFeatures_update = pd.merge(df_allCellFeatures_grouped_by_label, df_cell_morphology, how='left', left_on=['label'], right_on=['label'])
+  df_allCellFeatures_update['id'] = df_allCellFeatures_update['label'].apply(lambda x: "spx-" + str(x))
+  # df_allCellFeatures_update.drop('type', axis=1)
+  allTilesFeaturesWithMorphs = df_allCellFeatures_update.to_dict('records')
+
+  print("-------------------------------------------------------------------------------------------------")
+  print(allTilesFeaturesWithMorphs[0])
+  print("-------------------------------------------------------------------------------------------------")
+
+  # correlation and heatmap
+  # print('Create and save correlation heatmap...')
+  # correlation =  df_cell_markers_morphology.loc[:, df_cell_markers_morphology.columns.difference(['id', 'label', 'type', 'spxBoundaries', 'neighbors'])].corr()
+  # fig = plt.figure(figsize = (8,8))
+  # sns.heatmap(correlation, cbar=True, square=True, fmt='.1f',annot=True, annot_kws={'size':8}, cmap='Blues')
+  # fig.savefig(path_to_features_file.split(".json")[0] + '_feat_correlation.png', dpi=600,  bbox_inches='tight', pad_inches=0.01)
+
+
+  # Create features JSON file 
+  # if not (os.path.isfile(path_to_boxplot_file)): 
+  # if not (os.path.isdir(out_features_folder )):
+  #     os.makedirs(out_features_folder)     
+  # with open(path_to_features_file, 'w') as f:
+  #     json.dump(allTilesFeaturesWithMorphs, f)    
+
+  # with open(path_to_features_file, 'w') as f:
+  #   json.dump(allTilesFeaturesWithMorphs, f) 
+
+  return Response(json.dumps(allTilesFeaturesWithMorphs))   
 
 
 @app.route('/createAllGridTilesFeature')
@@ -632,14 +1270,18 @@ def createAllGridTilesFeature():
   features_file_name = request.args.get('features_file', 0)
   out_features_folder = request.args.get('features_folder', 0)   
 
-  boxplot_file_name = request.args.get('boxplot_file', 0)
-  out_boxplot_folder = request.args.get('boxplot_folder', 0)   
+  # boxplot_file_name = request.args.get('boxplot_file', 0)
+  # out_boxplot_folder = request.args.get('boxplot_folder', 0)   
+  # If true means consider only the channel values above zero
+  neglect_zero_pixels = request.args.get('neglect_zero', 0, type=bool)
+  print("is zero pixels neglected for boxplot:  ", neglect_zero_pixels)  
 
   path_to_features_file = os.path.join(out_features_folder, features_file_name)
-  path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
+  # path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
 
   group_data_dic = json.loads(group_data_json_string)
 
+  #tile_prop_list = { 'mean': '', 'max': '', 'std': ''}
 
   print("Please wait while creating features for grids ................")
 
@@ -651,7 +1293,7 @@ def createAllGridTilesFeature():
 
   allTilesFeatures = []
   tiles_split_channel_features = []
-  boxplot_data = []
+  # boxplot_data = []
   tiles_counter = 0
   error_tiles_counter = 0  
 
@@ -680,12 +1322,19 @@ def createAllGridTilesFeature():
         except ValueError:  #raised if `y` is empty.
             print(' error converting channel to gray  {}'.format(ValueError))
             return jsonify("Failed");    
+            # return jsonify("Not a valide gray channel");      
 
-      # Get boxplot data for each channel
-      if not (os.path.isfile(path_to_boxplot_file)): 
-        df = pd.DataFrame(image.flatten(), columns=[marker["frameName"]])
-        stats = df.describe()
-        boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
+      # # Get boxplot data for each channel
+      # if not (os.path.isfile(path_to_boxplot_file)): 
+      #   df = pd.DataFrame(image.flatten(), columns=[marker["frameName"]])
+      #   # Filter channel data for pixels > 0           
+      #   if neglect_zero_pixels : 
+      #     df_marker_positive = df.loc[df[marker["frameName"]] > 0]   
+      #     stats = df_marker_positive.describe()   
+      #   else:
+      #     stats = df.describe()
+
+      #   boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
 
       tile_points = [] 
       diff_width = 0
@@ -724,6 +1373,7 @@ def createAllGridTilesFeature():
 
   print('Number of invalid cells = {}'.format(error_tiles_counter))
   print('Number of valid cells = {}'.format(tiles_counter))
+  # print( 'tiles_split_channel_features [{}] Data  = {}'.format(tiles_counter-1, tiles_split_channel_features[tiles_counter-1]))
 
   # Convert dic to dataframe to fast process big data
   df = pd.DataFrame.from_dict(tiles_split_channel_features)
@@ -733,11 +1383,11 @@ def createAllGridTilesFeature():
 
   allTilesFeatures = df_grouped_by_id.to_dict('records')
 
-  if not (os.path.isfile(path_to_boxplot_file)): 
-      if not (os.path.isdir(out_boxplot_folder )):
-          os.makedirs(out_boxplot_folder)    
-      with open(path_to_boxplot_file, 'w') as f:
-          json.dump(boxplot_data, f)  
+  # if not (os.path.isfile(path_to_boxplot_file)): 
+  #     if not (os.path.isdir(out_boxplot_folder )):
+  #         os.makedirs(out_boxplot_folder)     
+  #     with open(path_to_boxplot_file, 'w') as f:
+  #         json.dump(boxplot_data, f)  
 
   return Response(json.dumps(allTilesFeatures)) 
 
@@ -750,14 +1400,21 @@ def createChannelsStatisticalData():
   item_id = request.args.get('itemId', 0)
   api_key = request.args.get('apiKey', 0)
 
+  is_channel_normalize_required = request.args.get('isChannelNormalizeRequired', 0, type=bool)
+
   group_data_json_string = request.args.get('grp_data', 0)
 
   boxplot_file_name = request.args.get('boxplot_file', 0)
   out_boxplot_folder = request.args.get('boxplot_folder', 0)   
+  # If true means consider only the channel values above zero
+  neglect_zero_pixels = request.args.get('neglect_zero', 0, type=bool)
+  print("is zero pixels neglected for boxplot:  ", neglect_zero_pixels)
 
   path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
 
   group_data_dic = json.loads(group_data_json_string)
+
+  #tile_prop_list = { 'mean': '', 'max': '', 'std': ''}
 
   print("Please wait while creating statistics  for group channels ................")
 
@@ -781,6 +1438,8 @@ def createChannelsStatisticalData():
       image_raw = Image.open(io.BytesIO(girder_response.content))
       image = np.array(image_raw)
 
+      # image_width, image_height = image_raw.size 
+      
       if not is_grey_scale(image):
         print("channel is not a valide gray scale image, converting  it to gray in progress... ")
 
@@ -790,25 +1449,78 @@ def createChannelsStatisticalData():
         except ValueError:  #raised if `y` is empty.
             print(' error converting channel to gray  {}'.format(ValueError))
             return jsonify("Failed");    
+            # return jsonify("Not a valide gray channel");     
+
+
+      if is_channel_normalize_required:
+          n_channel = 1 if image.ndim == 2 else image.shape[-1]
+          axis_norm = (0,1)   # normalize channels independently
+          # axis_norm = (0,1,2) # normalize channels jointly
+          # normalize the image
+          image_norm = normalize(image, 1,99.8, axis=axis_norm)
+          #scale image for the range 0 to 255
+          sc = MinMaxScaler(feature_range=(0, 255))        
+          image_norm_scaled = sc.fit_transform(image_norm).astype('uint8')        
+          
+          preprocess_image = image_norm_scaled
+          
+      else:
+          preprocess_image = image
+
+
 
       # Get boxplot data for each channel
+      image_flatten = preprocess_image.flatten()
+      image_flatten_nonzero = image_flatten.ravel()[np.flatnonzero(image_flatten)]      
 
-      df = pd.DataFrame(image.flatten(), columns=[marker["frameName"]])
-      stats = df.describe()
+      # df_marker_positive = pd.DataFrame(image_flatten_nonzero, columns=[marker["frameName"]])
+
+      if neglect_zero_pixels : 
+        # df_marker_positive = df.loc[df[marker["frameName"]] > 0]
+        # stats = df_marker_positive.describe()   
+        stats = pd.DataFrame(image_flatten_nonzero, columns=[marker["frameName"]]).describe()
+      # Filter channel data for pixels > 0   
+      else:
+        # stats = df.describe()
+        stats = pd.DataFrame(image_flatten, columns=[marker["frameName"]]).describe()
+
       boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
 
 
-
   if not (os.path.isdir(out_boxplot_folder )):
-      os.makedirs(out_boxplot_folder)  
+      os.makedirs(out_boxplot_folder) 
   with open(path_to_boxplot_file, 'w') as f:
       json.dump(boxplot_data, f)  
 
-  return Response(json.dumps(boxplot_data))   
+  # if not (os.path.isfile(path_to_boxplot_file)): 
+  #   return "Failed"
+
+  return Response(json.dumps(boxplot_data)) 
       
+# @app.route('/TEST')
+# def TEST():
+#   return jsonify("notExist"); 
 
 
-@app.route('/checkFile')              #----------------------Ok---------------------#
+# @app.route('/readFeatures')
+# def readFeatures():
+#   file_name = request.args.get('filename', 0)
+#   out_folder = request.args.get('outfolder', 0)
+#   path_to_file = os.path.join(out_folder, file_name)
+
+#   print("Please wait while reading Features file .....", path_to_file)
+
+#   if (os.path.isfile(path_to_file)):  
+#     file = open(out_folder + file_name, "r")  
+#     features = file.read()
+#     file.close()
+#     return features
+#   else:
+#     return "notExist"
+   
+
+
+@app.route('/checkFile')
 def checkFile():
  file_name = request.args.get('filename', 0)
  out_folder = request.args.get('outfolder', 0)
@@ -819,7 +1531,7 @@ def checkFile():
  else:
   return "false"
 
-@app.route('/removeFile')         #----------------------Ok---------------------#
+@app.route('/removeFile')
 def removeFile():
  file_name = request.args.get('filename', 0)
  out_folder = request.args.get('outfolder', 0)
@@ -835,7 +1547,7 @@ def removeFile():
    
 
 
-@app.route('/saveFeatures')     #----------------------Ok---------------------#
+@app.route('/saveFeatures')
 def saveFeatures():
   xfeatures = request.args.get('featuresDicData', 0)
   xlastChunkFlag = request.args.get('lastChunkFlag', 0, type=int)
@@ -1074,7 +1786,7 @@ def uploadDSAFormat():
 
     return "Not uploaded need merging"
 
-@app.route('/downloadFile')             #----------------------Ok---------------------#
+@app.route('/downloadFile')
 def downloadFile():
   base_url = request.args.get('baseUrl', 0)
   request_url = request.args.get('requestUrl', 0)
@@ -1087,7 +1799,8 @@ def downloadFile():
   if( api_key ):
       gc.authenticate(apiKey = api_key)
 
-
+  # if(authentication):   
+  #    gc.authenticate(username = dsa_user, password = user_password)
   if not os.path.isdir(out_folder):
       os.makedirs(out_folder)
 
@@ -1121,7 +1834,7 @@ def readRemoteCsvFile():
   json_data = json.loads(to_json)
 
   return Response(json.dumps(json_data))
-        
+
 
 @app.route('/saveDSAFormat')
 def saveDSAFormat():

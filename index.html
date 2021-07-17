@@ -4,9 +4,8 @@
 =========================================================
 
 * Github:  https://github.com/Mmasoud1
-* GitLab:  https://gitlab.com/mmasoud1
-* Discription:  A user interface for whole slide image channel design, analysis and registration. 
-*               It is based on DSA as backbone server
+* Description:  A user interface for whole slide image channel design and analysis. 
+*               It is based on DSA as backbone server.
 * 
 *
 * Coded by Mohamed Masoud ( mmasoud2@outlook.com )
@@ -26,13 +25,22 @@
 
   <link rel="stylesheet" href="//cdn.webix.com/edge/webix.css" type="text/css">
   <link rel="stylesheet"   href="css/animate.css/animate.min.css"   />  
+<!--   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+  
+  <!-- w3.css must precede sceneviewerextpxvw.css -->
   <link rel="stylesheet" type="text/css" href="css/w3.css">    
+
   <link rel="stylesheet" type="text/css" href="css/spectrum.css">  
   <link rel="stylesheet" href="css/d3-context-menu.css" />
   <link rel="stylesheet" href="css/sceneviewerextpxvw.css">  
-
+<!--   <link href="css/toggle-switch.css" rel="stylesheet" type="text/css"> -->
+<!-- 
+  <script src="//openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+  <script src="js/svg-overlay-master/openseadragon-svg-overlay.js"></script>   -->
   <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script>
+
   <script src="js/plotly-latest.min.js"></script>
 
   <!-- chart plot library option 1 -->
@@ -41,24 +49,44 @@
   <!-- chart plot library option 2 -->
   <script src="js/Highcharts-8.2.2/code/highcharts.js"></script>
   <script src="js/Highcharts-8.2.2/code/highcharts-more.js"></script>
+  <script src="js/Highcharts-8.2.2/code/highcharts-3d.js"></script>
+  <script src="js/Highcharts-8.2.2/code/modules/cylinder.js"></script>  
   <script src="js/Highcharts-8.2.2/code/modules/exporting.js"></script>
   <script src="js/Highcharts-8.2.2/code/modules/export-data.js"></script>
   <script src="js/Highcharts-8.2.2/code/modules/accessibility.js"></script>  
+
+
   <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
   <script type="text/javascript" src="js/spectrum.js"></script>
-  <script src="js/mainParametersv2.js" type="text/javascript"></script>  
+  <script src="js/mainParametersv3.js" type="text/javascript"></script>  
   <script src="js/designFunctionsv4.js" type="text/javascript"></script>  
-  <script src="js/analysisFunctions.js" type="text/javascript"></script> 
+  <script src="js/analysisFunctionsv3.js" type="text/javascript"></script> 
   <script src="https://unpkg.com/mathjs@5.2.3/dist/math.min.js"></script>   
+<!--   <script src="js/OpenSeadragonThreejsOverlay-master/openseadragon-threejs-overlay.js" type="text/javascript"></script>    -->
+
   <script src="js/node-lib/bundle.js"></script>    
+
+
+
+
   <script src="js/d3-context-menu.js"></script>
+
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="lib/d3.js"></script>
+
   <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/openseadragon/build/openseadragon/openseadragon.min.js"></script>
+
+<!--   <script src="lib/openseadragon/openseadragon.min.js"></script>
+  <script src="lib/openseadragon/openseadragon.js"></script>
+  <script src="lib/openseadragon-filtering.js"></script>   -->
+
+      <script src="https://cdn.jsdelivr.net/npm/openseadragon/build/openseadragon/openseadragon.min.js"></script>
+
+<!--   <script src="js/d3-context-menu.js"></script> -->
   <script src="js/svg-overlay-master/openseadragon-svg-overlay.js"></script>
+
 
 </head>
 
@@ -289,14 +317,17 @@
       <!--  Loaded dynamically -->
     </ul>
 
+ <!--  <button class="accordion"><p id="grpBoundaryOptionsTitle" style="font-weight: bold;">Boundary Options</p></button> -->
     <ul class="just" id="grpBoundaryOptions" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
       <!--  Loaded dynamically -->
     </ul>
 
+<!--   <button class="accordion"><p class="just" id="grpFeatureOptionsTitle" style="font-weight: bold;">Feature Options</p></button> -->
     <ul class="just" id="grpFeatureOptions" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
       <!--  Loaded dynamically -->
     </ul>
 
+<!--   <button class="accordion"><p class="just" id="grpFramesTitle" style="font-weight: bold;">OSD Layers</p></button> -->
     <ul class="just" id="grpChnlDisplyOptions" style="list-style-type: none; line-height: 30%; margin-left: 0.5vw; padding-left: 0vw;">
       <!--  Loaded dynamically -->
     </ul>    
@@ -312,6 +343,7 @@
 
 <!-- Open plot Histogram  -->
 <div id="chPlotsPanel" class="chnlplotsright" layout="Analysis">
+<!--   <p class="just" style="margin-left: 0.5vw"><font style="font-size:0.86vw" ><i style="font-size:1.2vw" class="fa fa-sliders"></i> &nbsp CHNL PLOTS </font></p>  -->
   <table>
     <colgroup>
       <!-- Width of each column -->
@@ -333,35 +365,36 @@
   </div>  
 </div>
 
+<!-- Open Coordinate Panel -->
+<!-- <div id="myCoordinatesBarLeft" class="coordinatesbarleft">
+  <p class="just"><i style="font-size:30px"  class="fa fa-map-marker" ></i> <font size="4" id="coordinatesTitle" >&nbsp&nbsp OME-Map</font></p> 
+  <hr>
+  <p class="just" style="font-weight: bold;" id="imagePointId">Image:</p>  
+  <p class="just" style="font-weight: bold;" id="viewportPointId">Viewport:</p>  
+  <p class="just" style="font-weight: bold;" id="containerPointId">Container:</p>
+</div>   -->
+
+<!-- Open OSD Caption Panel to show SPX/Grid tile ids -->
+<!-- <div id="osdCaption" class="panel osdcaptionpanel" style="display: none" layout="Analysis">
+
+    <p id="osdCaptionParagraph">test</p>
+</div>   -->
 
 <!-- Open Coordinate Panel -->
 <div id="coordinates" class="panel coordinatespanel" style=" margin-left: 34vw; " layout="Analysis" >
   <div class="coordinates-item"><i style="font-size:1.5vw"  class="fa fa-map-marker" ></i></div>
   <div class="coordinates-item"><p class="just" style="font-weight: bold;" id="imagePointId">Image :</p> </div>
+<!--   <div class="coordinates-item"><p class="just" style="font-weight: bold;" id="viewportPointId">Viewport :</p> </div>  -->
   <div class="coordinates-item"> <p class="just" style="font-weight: bold;" id="containerPointId">Container :</p></div>   
   <div class="coordinates-item"> <p class="just" style="font-weight: bold;" id="currentTile">Tile :</p></div>  
 </div>  
 
-<div id="cellFilterNavigator" class="panel navigatorpanel" style=" margin-left: 44vw; " layout="Analysis" >
-  <div class="navigator-item"><p class="just" style="font-weight: bold;" id="cellTitle">Cells:</p></div>
-  <div class="navigator-item">
-     <a href="javascript:void(0)" onclick="goToStartFilteredCell()">
-         <i style="font-size:1vw; padding-top:1.2vh"  class="fa fa-fast-backward"></i> 
-     </a>      
-  </div>
-  <div class="navigator-item">
-     <a href="javascript:void(0)" onclick="prevFilteredCell()">
-         <i style="font-size:1vw; padding-top:1.2vh"  class="fa fa-step-backward"></i>
-     </a>     
-  </div>   
-  <div class="navigator-item">
-     <a href="javascript:void(0)" onclick="nextFilteredCell()">
-        <i style="font-size:1vw; padding-top:1.2vh"  class="fa fa-step-forward"></i>
-     </a>            
-  </div>  
-  <div class="navigator-item">
-        <p class="just" style="font-weight: bold;" id="currentCell">-/-</p>
-  </div>  
+
+
+
+<!-- Open cell Navigator Panel -->
+<div id="cellNavigator" class="panel navigatorpanel" style=" margin-left: 44vw; " layout="Analysis" >
+   <!--  Loaded dynamically -->
 </div> 
 <!------------------------------------------------------------------------------------------------------------------->
 <!----------------------------------------------  Forms ------------------------------------------------------------->
@@ -371,15 +404,27 @@
 
 
 <!-- Channels New Group Labeling Form -->
-<div class="form-container grpform" id="grpLabelForm" layout="Design">
+<div class="form-container grpform" id="grpLabelForm" layout="Design Form">
   <div class="formtopnav">
     <p >New Group</p>
     <a href="javascript:void(0)" class="icon" onclick="closeGrpForm()">×</a>
   </div>
+  <!-- <div> -->
   <input type="text" id="grpName" placeholder="Title...">
-  <span onclick="addNewGrpBtn()" class="addGrpBtn" >Add</span>
+  <span onclick="addNewGrpBtn()" class="addFormBtn" >Add</span>
 </div>
 
+
+<!--  DAPI Channel Confirm Form -->
+<div class="form-container channelform" id="DAPIChConfirmForm" layout="Design Form">
+  <div class="formtopnav">
+    <p >DAPI Channel</p>
+    <a href="javascript:void(0)" class="icon" onclick="closeDAPIChannelConfirmForm()">×</a>
+  </div>
+  <!-- <div> -->
+  <input type="text" id="DAPIChannelName" placeholder="Title..." readonly>
+  <span onclick="confirmDAPIChannelSelection()" class="addFormBtn" style="width:22%">Confirm</span>
+</div>
 
 
 <!-- Toolbar Settings Form -->
@@ -477,6 +522,11 @@
 
 
 <div id="openseadragon1" >
+<!--      <div id="screenLogo" class="screen-logo  animate__animated animate__zoomIn" >
+        <img src="Demo/HistoJS-logo.png"  alt="logo" width="10%" height="10%" />
+        <h1 style="color: white; font-size: 2.5rem">HistoJS Demo</h1>
+        <p class="lead" style="color: white; font-size: 1.2rem">A user interface for whole slide image channel design, analysis and registration.<br> It is based on DSA as backbone server.</p>
+     </div> -->
 </div>
 
 
@@ -488,6 +538,17 @@
     <span id="hintCloseSign" onclick="closeHint()" title="close">x</span>
     <p id="hintParagraph"></p>
 </div>  
+
+
+
+
+
+
+     <div id="loadingIcon" class ="panel" style="top: 50%; left: 50%; display: none" >
+         <i style="font-size:1.4vw; color: white; background-color: rgba(0,0,0,0);"  class="w3-xxxlarge w3-spin fa fa-refresh" ></i>
+
+     </div> 
+
 
 <script>
 
@@ -501,7 +562,8 @@
         tileSources: "",
         showNavigationControl: false,
         preserveViewport: true ,
-        debugMode :false 
+        debugMode :false,
+        maxZoomPixelRatio : 2.5 
     });
 
 
@@ -513,14 +575,20 @@
      function onMouseTrackerMove(event) {
       if(viewer.world.getItemCount()){
         var tile = viewer.world.getItemAt(0);
+        // openCoordinatesPanel();
+        // var viewerX = event.position.x;
+        // var viewerY = event.position.y;
         var windowPoint = event.position;
+        // var windowPoint = new OpenSeadragon.Point(viewerX, viewerY);
         var viewportPoint = viewer.viewport.windowToViewportCoordinates(windowPoint);
+        // console.log(viewer.viewport.pixelFromPoint(viewportPoint))
         var currentImage = viewer.world.getItemAt(viewer.world.getItemCount()-1);
         var imagePoint = currentImage.viewportToImageCoordinates(viewportPoint);
         if(((imagePoint.x >= 0) && (imagePoint.x <= tile.getContentSize().x)) && ((imagePoint.y >= 0) && (imagePoint.y <= tile.getContentSize().y))) {
             document.getElementById("imagePointId").innerHTML="Image: " + "(" + Math.round(imagePoint.x) + "," + Math.round(imagePoint.y) + ")";  
         }    
 
+        // document.getElementById("viewportPointId").innerHTML="Viewport:" + viewportPoint;
         document.getElementById("containerPointId").innerHTML="Container: " + "(" + Math.round(windowPoint.x) + "," + Math.round(windowPoint.y) + ")"; 
 
         }}
@@ -554,6 +622,8 @@
            initHostList(); // load first tile with first group
 
     }
+
+    // initScreenLogo();
 
 
 </script>

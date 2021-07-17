@@ -4,8 +4,7 @@
 =========================================================
 
 * Github:  https://github.com/Mmasoud1
-* GitLab:  https://gitlab.com/mmasoud1
-* Discription:  A user interface for whole slide image channel design, analysis and registration. 
+* Description:  A user interface for whole slide image channel design and analysis. 
 *               It is based on DSA as backbone server
 * 
 *
@@ -73,14 +72,14 @@
         document.getElementById("hint").style.marginRight = "0vw";
         document.getElementById("hint").style.width= "17vw";
         // To close hint of number of events defined at Opts.numOfMouseEventToCloseHint
-        // Opts.curMouseEventCount = 0;        
+        // Opts.curMouseEventCount = 0;
     }   
 
     closeHint = () => {
         document.getElementById("hint").style.marginRight= "-18vw";
         if(Opts.isHintCloseOnMouseEvent) {        
            Opts.isFirstClickEventAfterTrigger = true;
-        }
+        }        
     }
 
     triggerHint = ( hintMessage = "", messageType = 'info', expire = Opts.defaultOpeningTime) => { // if expire = 0 means no time expiration. Open always. 
@@ -105,6 +104,10 @@
          }
        }
 
+       // else {
+                 
+       //    document.getElementById("hintParagraph").innerHTML += '<a href="javascript:void(0)" onclick="closeHint()"><i style="font-size:0.7vw"  class="fa fa-chevron-circle-right" ></i></a>'
+       // }
     }
 
    isRestApiAvailable = () =>{ // check if Flask is running
@@ -123,11 +126,13 @@
    }
 
     getScreenWidth = () => {
+        // return screen.availWidth; 
         return window.innerWidth; 
     }
 
     getScreenHeight = () => {
         return screen.availHeight; 
+        // return window.innerHeight;
     }
 
     getScreenWidthRatio = () => {
@@ -147,7 +152,14 @@
         elemCoord = el.getBoundingClientRect();
         el.style.marginLeft = (getScreenWidth() - elemCoord.width)/2 +"px";
         el.style.marginTop  = (getScreenHeight() - elemCoord.height)/3 +"px";
-    }      
+    }    
+
+
+   getElementTopMiddleOnScreen = (el) => {
+        elemCoord = el.getBoundingClientRect();
+        el.style.marginLeft = (getScreenWidth() - elemCoord.width)/2 +"px";
+        el.style.marginTop  = (getScreenHeight() - elemCoord.height)/6 +"px";
+    }       
 
 
     getH = (height) => {
@@ -412,6 +424,67 @@
     }
 
 
+    confirmDAPIChannelSelection = () => {
+        if( document.getElementById("DAPIChannelName").value !== "" ) {
+            document.getElementById("DAPIChConfirmForm").style.display = "none";
+            // onSelectedChannel will change the DAPI channel index auto
+            let dapiChannelObj = getChannelObjByName(document.getElementById("DAPIChannelName").value);
+
+            if(dapiChannelObj && ( dapiChannelObj.length <= 1) ) {
+               setSelectedDAPIChannelIndex(dapiChannelObj[0].channel_number);
+               currentItemInfo.omeDataset.DapiChannel = dapiChannelObj
+
+            } else {
+                if( dapiChannelObj.length > 1 ){
+                   triggerHint("More than channel has same label","error", 7000);
+                }  
+
+                if(dapiChannelObj == null) {
+                    triggerHint("No index found for the channel, please report this bug.. ","error", 7000);                  
+                } 
+            }
+            resetActiveFormState();
+        } else {
+                  triggerHint("Please click on DAPI channel from Channel list");
+        }
+    }
+
+    // Open DAPI channel seletion form to choose DAPI channel form Channel list
+    openDAPIForm = () => {
+        if( !getActiveForm() ) {
+            // if( isDAPIChannelSelected() ) {
+
+              if( isDAPIChannelSelected() ) {
+                 document.getElementById("DAPIChannelName").value  = getSelectedDAPIChannelName();
+              } else {
+                 document.getElementById("DAPIChannelName").value  = "" 
+              }
+
+              var dapiForm = document.getElementById("DAPIChConfirmForm");
+              dapiForm.classList.remove("formflashanimation");
+              dapiForm.style.display = "block";
+              getElementTopMiddleOnScreen(dapiForm);
+              setActiveForm(dapiForm);
+            // } else {
+            //       triggerHint("Please click on DAPI channel from Channel list");
+            // }
+       }else {
+             getActiveForm().classList.toggle("formflashanimation"); 
+       } 
+    }
+
+
+  closeDAPIChannelConfirmForm = () => {
+      let dapiForm = document.getElementById("DAPIChConfirmForm");
+      dapiForm.style.display = "none";      
+      // resetSelectedDAPIChannelIndex();        
+      resetActiveFormState();
+
+      if( isScreenLogoActive() ) { 
+          showScreenLogo();
+      }         
+  }
+
 
    //------------ Channel bar left---------------//
    onCurGrpChOsdShowHide = ( grpChannelIndex) => {
@@ -639,9 +712,9 @@
         } 
    }
 
-    getSelectedGrpIndex = () => {
-        return lastItemSelectionStates.grpIndex ? lastItemSelectionStates.grpIndex : null;
-    }
+    // getSelectedGrpIndex = () => {
+    //     return lastItemSelectionStates.grpIndex ? lastItemSelectionStates.grpIndex : null;
+    // }
 
 
 
@@ -712,6 +785,8 @@
     } 
                                                                                                                                     
 
+
+
     updateItemMetadata = (hostApi, itemId, metadataObject, uploadType = "Array") => {
         switch (uploadType){
                case 'Object':
@@ -721,7 +796,7 @@
                               }
                 case 'Array':
                               {
-                                var metadata =[]
+                                var metadata = []
                                 var metadataObjToUpload =  metadataObject ? { metadata: metadataObject } : {};
                                 metadata.push(metadataObjToUpload);
                                 //console.log("metadata", metadata)
@@ -753,7 +828,7 @@
    }
   
 
-    deleteGrpFromList = (groupIndex) => {
+   deleteGrpFromList = (groupIndex) => {
         onCurTileSourceClick();
         var groupToRemove = currentItemInfo.omeDataset.Groups[groupIndex];
         tempGrpRemoved.push({ grpIndex: groupIndex, group: groupToRemove});
@@ -761,6 +836,42 @@
         initItemGroupsList();
         document.getElementById("undoGrpRemove").className = "fa  fa-undo";  
     }
+
+
+   // undoGrpListItemRemove = () => {
+   //    if(tempGrpRemoved.length) {
+   //      var grpToUndo = tempGrpRemoved.pop();
+   //      insertArrayElem(currentItemInfo.omeDataset.Groups, grpToUndo.group, grpToUndo.grpIndex);
+   //      initItemGroupsList();
+
+   //      if( isGrpSelected() ) {
+   //          document.getElementById("itemGrpLi"+ getSelectedGrpIndex()).style.backgroundColor = Opts.defaultElemBgColor;
+   //          document.getElementById("itemGrpFont"+ getSelectedGrpIndex()).style.color = Opts.defaultElemFontColor;          
+   //      }
+
+   //      if(tempGrpRemoved.length) {
+   //         document.getElementById("undoGrpRemove").className = "fa  fa-undo";  
+   //      }
+   //    }
+   // }
+  
+
+   // deleteGrpFromList = (groupIndex) => {
+   //      var groupToRemove = currentItemInfo.omeDataset.Groups[groupIndex];
+   //      tempGrpRemoved.push({ grpIndex: groupIndex-1, group: groupToRemove});
+   //      removeArrayElem(currentItemInfo.omeDataset.Groups, groupToRemove);
+
+   //      if(lastItemSelectionStates.grpIndex == groupIndex){
+   //         onCurTileSourceClick();
+   //         initItemGroupsList();           
+   //      } else {
+   //            var grpEntryToRemove =  document.getElementById("itemGrpEntry" + groupIndex);
+   //            grpEntryToRemove.parentNode.removeChild(grpEntryToRemove);
+   //      }
+
+   //      document.getElementById("undoGrpRemove").className = "fa  fa-undo";  
+   //  }
+ 
 
 
     initItemGroupsList = () => { 
@@ -845,6 +956,7 @@
      createOmeDataset = () => {
           return {
                     "Groups": [],
+                    "DapiChannel": [],
                     "Header": null,
                     "Images": [],
                     "Layout": {},
@@ -876,6 +988,9 @@
           }
           
           currentItemInfo.maxGroupLabelLen = getMaxGroupLabelLen();
+
+          // let tsInfo =  getTileSourceInfo( getHostApi(), getSelectedItemId());
+
 
           initItemGroupsList();
 
@@ -967,6 +1082,8 @@ centerViewportContent = () => {
      // viewerZoomHome();
      viewer.viewport.fitVertically();
      // viewer.viewport.fitHorizontally();
+
+
 }
 
 enablePreserveViewport = () => {
@@ -1006,7 +1123,7 @@ onSelectedTreeItem = (item) => {
   var hostAPI = getHostApi();
   // Next step is needed to avoid "SyntaxError: identifier starts immediately after numeric literal"
   var itemId = item.id.split('_')[1];
-  itemObj=getItemObject(hostAPI, itemId);
+  itemObj = getItemObject(hostAPI, itemId);
 
   if (itemObj.largeImage) {
       setSelectedItem(itemObj);
@@ -1028,6 +1145,13 @@ onSelectedTreeItem = (item) => {
       document.getElementById("itemFont"+itemId).style.fontWeight = Opts.selectedElemFontWeight
       setLastSelectedItemId(itemId);
       }
+
+      // --- Show metadata panel for only OME files -- //
+      // if((itemObj.name.includes(".ome.tif")) && (itemObj.meta.omeSceneDescription != null)) {
+      //     pastOmeMetaToInfoPanel(itemObj);
+      // } else if(!itemObj.name.includes(".ome.tif")) {
+      //     pastMetaToInfoPanel(itemObj);
+      // } 
 
       // check if selected item whether  is a multiplex or a singleplex
       if( isMultiPlexItem(itemObj) ) {
@@ -1058,6 +1182,11 @@ onSelectedTreeItem = (item) => {
 
       clearOSDViewer();
       removeScreenLogo();
+
+      /////////////////////////////////////////////
+      // temp location for reset functions                                     <<<<<<<<<<<<<-------------  
+      resetSelectedDAPIChannelIndex();
+      //////////////////////////////////////////////
 
       let curTileSource = getTileSource(hostAPI, itemObj._id);
 
@@ -1691,6 +1820,21 @@ getOMETileSourceColored = (hostApi, _id, frame, palette1="rgb(0,0,0)", palette2=
 }
 
 
+// function getOMETileSource(hostApi, _id, frame) {
+//       var tile=[];
+//       webix.ajax().sync().get(hostApi+"/item/" + _id + "/tiles", function(data) {
+//             tile = JSON.parse(data)
+//             tile['maxLevel'] = tile['levels'] - 1
+//             tile['minLevel'] = 0
+//             tile['width'] = tile['sizeX']
+//             tile['height'] = tile['sizeY']
+//             tile['getTileUrl'] = function(level, x, y) {
+//             return hostApi+"/item/" + _id + "/tiles/fzxy/" + frame + "/" + level + "/" + x + "/" + y + "?redirect=false"
+//              }
+//       })
+//     return tile
+//  }
+
 getOMETileSource = (hostApi, _id, frame) => {
       var tile=[];
       webix.ajax().sync().get(hostApi+"/item/" + _id + "/tiles", (data) => {
@@ -1722,6 +1866,13 @@ onSelectedChannel = (channelIndex) => {
           document.getElementById("Channel"+channelIndex).style.backgroundColor= Opts.selectedElemBgColor;
           document.getElementById("ChannelFont"+channelIndex).style.color = Opts.selectedElemFontColor;
           channelStates.lastIndex = channelIndex;
+
+          // if tring to allocat DAPI channel 
+          if( isActiveForm("DAPIChConfirmForm") ){
+              // setSelectedDAPIChannelIndex(channelIndex);
+              document.getElementById("DAPIChannelName").value = getChannelObjByIndex(channelIndex)[0].channel_name;
+          }
+
           let hostAPI = getHostApi();
           let item = getSelectedItem();
           if (item.largeImage) {
@@ -1733,6 +1884,7 @@ onSelectedChannel = (channelIndex) => {
                 success: (obj) => {
                      clearGrpBarRight();
                      resetGrpSelection();
+
                 }
               });
            } 
@@ -1811,8 +1963,9 @@ initChannelList = (omeChannels, itemName) => {
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="viewerZoomIn()"><i class="fa fa-search-plus"></i></a>'
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="viewerZoomOut()"><i class="fa fa-search-minus"></i></a>'
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="goToRemoteItem()"> <i class="fa fa-cloud"></i></a>'
+          nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="openDAPIForm()"><div class="tooltip"><i class="fa fa-object-group"></i><span class="tooltiptext">Select</span></div></a>'
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="createNewGroup()"><div class="tooltip"><i class="fa fa-stop-circle"></i><span class="tooltiptext">Add</span></div></a>'
-          nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="resetChannelCheckboxes()"><div class="tooltip"><i class="fa fa-repeat"></i><span class="tooltiptext">reset</span></div></a>'        
+          nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="resetChannelCheckboxes()"><div class="tooltip"><i class="fa fa-repeat"></i><span class="tooltiptext">Reset</span></div></a>'        
       }
 
       document.getElementById(barId).innerHTML = nodes;
@@ -1879,7 +2032,7 @@ initChannelList = (omeChannels, itemName) => {
   showPanel = (panelId, showPanelFlag = true) => {
 
          if(showPanelFlag) {
-             if(panelId === "coordinates" || panelId === "cellFilterNavigator") { 
+             if(panelId === "coordinates" || panelId === "cellNavigator") { 
                   document.getElementById(panelId).style.display = "grid";
                   return 0;
               }                    
@@ -1891,7 +2044,7 @@ initChannelList = (omeChannels, itemName) => {
              }
          } else {
 
-             if(panelId === "coordinates" || panelId === "cellFilterNavigator") { 
+             if(panelId === "coordinates" || panelId === "cellNavigator") { 
                   document.getElementById(panelId).style.display = "none";
                   return 0;
               } 
@@ -1912,6 +2065,13 @@ initChannelList = (omeChannels, itemName) => {
              
   }   
 
+  // function isPanelRightSide(panelId){
+  //     let panel = document.getElementById(panelId)
+  //     let rightPos = parseInt(window.getComputedStyle(panel, null).getPropertyValue("right").split("vw")[0])
+  //     let leftPos  = parseInt(window.getComputedStyle(panel, null).getPropertyValue("left").split("vw")[0])
+  //     return  (rightPos < leftPos)||(leftPos>(screen.width/2))?  true : false; 
+  //  }
+
   // For future use
   isElemMiddleOnScreen = (elemId) => {
       let elem = document.getElementById(elemId);
@@ -1929,10 +2089,17 @@ initChannelList = (omeChannels, itemName) => {
    }   
 
 
+
+  // e.g. "coordinates" panel in Analysis layout      
+  // isMiddlePanelActive = (panelId) => {
+  //       return  document.getElementById(panelId).style.display != "none" ? true : false;
+  // }      
+
+
   isPanelActive = (panelId) => {
       let panel = document.getElementById(panelId);
 
-           if(panelId === "coordinates" || panelId === "cellFilterNavigator") {  // "coordinates" panel is a middle panel in Analysis layout  
+           if(panelId === "coordinates" || panelId === "cellNavigator") {  // "coordinates" panel is a middle panel in Analysis layout  
                 return  document.getElementById(panelId).style.display == "grid" ? true : false;
             }   
 
@@ -1955,6 +2122,14 @@ initChannelList = (omeChannels, itemName) => {
 
   }
 
+  // toggleMiddlePanel = (panel) => {
+  //     if(isMiddlePanelActive(panel.id)) {
+  //         showPanel(panel.id, false);
+  //     } else {
+  //         showPanel(panel.id, true);
+  //     }
+
+  // }
 
   openBrowseLayout = () => {
        if( getSelectedItem() ){
@@ -1976,13 +2151,26 @@ initChannelList = (omeChannels, itemName) => {
   }
 
   hideLayout = (layoutId) => {
-        let allLayoutPanels = document.querySelectorAll('div[layout="'+layoutId+'"]')
+        let allLayoutPanels = document.querySelectorAll('div[layout="'+layoutId+'"]');
         allLayoutPanels.forEach( panel => {
              showPanel(panel.id, false);
              if(document.getElementById(panel.id +"Bar")){ 
                 destroyBar(panel.id +"Bar");
              }
          })
+
+        let allLayoutForms =  document.querySelectorAll('div[layout="'+layoutId+ " Form" +'"]');
+        allLayoutForms.forEach( form => {
+             if( isActiveForm(form.id) ) {
+                  document.getElementById(form.id).style.display = "none";
+                  resetActiveFormState();
+             }
+         })        
+        // if( getActiveForm() ) {
+        //     let formId = getActiveForm().id;
+
+        //     resetActiveFormState();
+        // }
   }
 
   openLayout = (layoutId) => {
@@ -2065,6 +2253,9 @@ initChannelList = (omeChannels, itemName) => {
 
     }
 
+    // function isElementsOverlap(el1, el2){
+    //    return (getElemTopPos(el1)  <= getElemBottomPos(el2) ) && (getElemRightPos(el1) >= getElemLeftPos(el2) ) ? true : false;
+    // }    
 
     navManuMouseOut = () => {
       var panelId = getLayoutLeftPanelId();
@@ -2194,12 +2385,14 @@ initChannelList = (omeChannels, itemName) => {
    openSettingsTab = (tabName, elm, color) => {
         var tabContent = document.getElementsByClassName("tabcontent");
 
+        // for (let i = 0; i < tabcontent.length; i++) {
         for(let content of tabContent) { 
            content.style.display = "none";
         }
 
         var tabLinks = document.getElementsByClassName("tablink");
 
+        // for (let i = 0; i < tablinks.length; i++) {
         for(let link of tabLinks){  
             link.style.backgroundColor = "";
         }
@@ -2246,7 +2439,7 @@ initChannelList = (omeChannels, itemName) => {
   closeSettingsForm = () => {
       let settingsForm = document.getElementById("settingsForm");
       settingsForm.style.display = "none";      
-      cancelSettingsFormChangess();        
+      cancelSettingsFormChanges();        
       resetActiveFormState();
 
       if( isScreenLogoActive() ) { 
@@ -2725,7 +2918,8 @@ initChannelList = (omeChannels, itemName) => {
 
 
   confirmSettingsFormChanges = () => {
-
+     // var settingsForm = document.getElementById("settingsForm");
+     // settingsForm.style.display = "none";
      if(isServerListChanged()) {      
         comfirmServerListChangesInSettings();     
      } 
@@ -2741,7 +2935,7 @@ initChannelList = (omeChannels, itemName) => {
      closeSettingsForm();
   }  
  
-  cancelSettingsFormChangess = () => {
+  cancelSettingsFormChanges = () => {
      if(isServerListChanged()) {    
         cancelServerListChangesInSettings();
      }   
@@ -2797,6 +2991,7 @@ initChannelList = (omeChannels, itemName) => {
       if( getSelectedItem() ){  // item is loaded with OSD 
           let item = getSelectedItem();
 
+          // if( (item.name.includes(".ome.tif") ) && (item.meta.omeSceneDescription != null)) {
           if( isMultiPlexItem(item) ) {            
               if(hasOmeSceneDescription(item)){
                   let itemName = item.name.split(".")[0];
@@ -2804,6 +2999,14 @@ initChannelList = (omeChannels, itemName) => {
                   initCurrentTileSource();
                   showPanel("channelListView",true);
                   showPanel("grpListView", true);
+                  if( ! isDAPIChannelSelected() ) {
+                  // if( !currentItemInfo.omeDataset.DapiChannel.length ) {  
+                      // if DAPI before selected for same item, DAPI form will not show up
+                      openDAPIForm();
+                      triggerHint("Specify DAPI or DNA channel by clicking on channel list","info", 7000);
+                  } else {
+                      setSelectedDAPIChannelIndex(currentItemInfo.omeDataset.DapiChannel[0].channel_number)
+                  }
                   return true;
               } else {
                  triggerHint(" No omeSceneDescription metadata", "error", 4000);
@@ -2822,7 +3025,8 @@ initChannelList = (omeChannels, itemName) => {
 
 
   openExtFeedbackForm = () => {
-      window.open("https://docs.google.com/forms/d/e/1FAIpQLSdHuO--mG00sKydQpJ7sPpDmhcJ4ECdj-wAB1kwXQExh_nUSg/viewform?usp=sf_link");
+     // window.open("https://forms.gle/8ze2aamxJueWYQqV6"); 
+     window.open("https://docs.google.com/forms/d/e/1FAIpQLSdHuO--mG00sKydQpJ7sPpDmhcJ4ECdj-wAB1kwXQExh_nUSg/viewform?usp=sf_link");
   }
 
   openExtIssueForm = () => {
@@ -3146,7 +3350,14 @@ isLocalHost = () => {
 
 
   isMultiPlexItem = (item) => {
-      return item.name.includes(Opts.multiPlexFileExtension) ? true : false;
+
+         return item.name.includes(Opts.multiPlexFileExtension) ? true : false;
+
+        // if((item.name.includes(Opts.multiPlexFileExtension)) && (item.meta.omeSceneDescription != null)) {
+        //   return true;
+        // } else if( !item.name.includes(Opts.multiPlexFileExtension) ) {
+        //   return false;
+        // } 
   }
 
   hasOmeSceneDescription = (item) => {
@@ -3157,6 +3368,10 @@ isLocalHost = () => {
   }
 
 //-----------------Screen Status--------------------------------// 
+ isActiveForm = (elmId) => {
+    return screenStatus.activeForm === document.getElementById(elmId)? true : false;
+ }
+
  setActiveForm = (elm) => {
      screenStatus.activeForm = elm;
  } 
@@ -3203,7 +3418,147 @@ isLocalHost = () => {
     return document.getElementById("screenLogo") ? true : false;
  }
 
-//--------------------------------------Hint extension -------------------------------------------//
+
+
+//----------------------- Widget events ----------------------// 
+
+
+//------------------------Preload Settings-------------------//
+
+     docLoaded = () => {
+         initScreenLogo();
+     // alert(window.screen.availHeight)   
+     // console.log(document.documentElement)
+     //try 
+     // window.innerHeight    // 1097  change with console change
+     // document.body.offsetHeight
+     // screen.height       // 1206
+     // document.documentElement.clientHeight   == window.innerHeight 
+     // document.body.clientHeight
+     // window.screen.availHeight  // 1179
+ 
+              // var allLayoutPanels = document.querySelectorAll('div[layout="'+layoutId+'"]')
+              // allLayoutPanels.forEach(function(panel) {
+       
+              //      if(document.getElementById(panel.id +"Bar")){ 
+              //         destroyBar(panel.id +"Bar")
+              //      }
+              //  })
+       
+
+    }
+
+
+
+    window.addEventListener('load', (event) => {
+        // alert(window.screen.availWidth);
+        document.documentElement.style.setProperty('--screen-curAvailWidth', window.screen.availWidth);
+        document.documentElement.style.setProperty('--screen-curAvailHeigth', window.screen.availHeight);      
+    });
+
+    window.addEventListener('resize', (event) => {
+        if(getActiveForm())
+           getElementCenterOnScreen(  getActiveForm()  )
+          // getActiveForm()   
+    });    
+
+    // preloadFunc = () => {
+    // 
+    //     // alert(window.screen.availWidth);
+    //     document.documentElement.style.setProperty('--screen-curAvailWidth', window.screen.availWidth);
+    //     document.documentElement.style.setProperty('--screen-curAvailHeigth', window.screen.availHeight);
+    // }
+    // window.onpaint = preloadFunc();
+
+    // windowResizeFunc = () => {
+    // 
+    //     // alert(window.screen.availWidth);
+
+    // }
+    // window.onresize = windResizeFunc();
+
+  // document.getElementsByClassName("navbar")[0].addEventListener('click', (event) => {    
+ document.onclick = (event) => {
+     // console.log(" event target parentElement ", event.target.parentElement)
+     if (event.target.matches('.dropbtn') ) {
+         var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
+         if (dropdown.classList.contains('show')) {
+               dropdown.classList.remove('show');
+        }else{
+             dropdown.classList.toggle("show");
+             navMenuBtnClicked(dropdown.id)
+        }
+     } else if(event.target.parentElement && event.target.parentElement.matches('.dropdown-content') ) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        // var i;
+         for(let openDropdown of dropdowns)  {
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+     } 
+
+     if(Opts.isHintCloseOnMouseEvent) {
+      
+         if( (event.target.id != "hint") && 
+             (event.target.parentElement.id != "hint") &&
+             (event.target.id != "hintParagraph") && 
+             (event.target.parentElement.id != "hintParagraph") ) {
+                   // console.log("outside isPanelActive")    
+                  if( isPanelActive("hint") ) {
+                     if(Opts.isFirstClickEventAfterTrigger) {                      
+                        setTimeout(() => { closeHint(); }, Opts.defaultOpeningTime ); 
+                        Opts.isFirstClickEventAfterTrigger = false;  
+                        // console.log("inside timer")                   
+                     } else {  
+                             closeHint(); 
+                             //Opts.isFirstClickEventAfterTrigger = true;  
+                            }
+          
+                  }
+
+         }
+      }
+     // console.log(" clicked elem : ", event.target.id)
+     // console.log(" clicked elem parent : ", event.target.parentElement.id)
+     //else if(event.target.id != "hint")
+     /*else {
+          console.log("event.target.parentElement", event.target.parentElement)
+          if(event.target.matches('svg') ){
+            if(isScreenLogoActive()){
+              console.log(" yes matches svg")
+               event.stopPropagation();
+            }
+          }
+
+     }   
+     */
+  }
+
+
+  document.onmouseout = (event) => {
+     if (event.target.matches('.dropbtn') || event.target.matches('.dropdown-content')) {
+         var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
+         var dropbtn = event.target.parentElement.querySelector('.dropbtn')   
+         if (dropdown && dropdown.classList.contains('show')) {
+          $('#'+ dropdown.id ).mouseleave( () => {
+              if (!($('#'+ dropbtn.id +':hover').length != 0)){ 
+                  dropdown.classList.remove('show');
+                  navManuMouseOut()
+              }    
+          })
+          $('#'+ dropbtn.id ).mouseleave( () => {
+              if (!($('#'+ dropdown.id +':hover').length != 0)) {
+                  dropdown.classList.remove('show');
+                  navManuMouseOut()
+              }    
+          })        
+        }
+     }
+     //onmouseover="navMenuBtnClicked()" onmouseout="navManuMouseOut()"
+  }
+
+////---------------------------------------------------------------------------------//////
    // e.g. "boundaries/TONSIL-1_40X/"
    getCsvChannelMetaDataLocalPath = () => {
        return getItemName() ? ( Opts.dockerMountingDir  + 
@@ -3227,7 +3582,7 @@ isLocalHost = () => {
                                  apiKey + "&requestUrl=" + requestUrl, (result) => {
                                  csvToJson = JSON.parse(result);
                                               })
-
+        // console.log("csvToJson : ",csvToJson)   
         return csvToJson ? csvToJson : null;
   }
 
@@ -3257,7 +3612,13 @@ isLocalHost = () => {
                          // check if the user has access to download the file
                          if( getApiKey() != null ) {
                               returnObj = readRemoteCsvFile( getCsvChannelMetaDataFileName() );
-
+                              // if(returnObj) {
+                              //      if( !returnObj[0].hasOwnProperty('channel_name') || !returnObj[0].hasOwnProperty('channel_number') ) {
+                              //         // trigerWizard () // 
+                              //      }
+                              // } else {
+                              //     triggerHint("Error reading remote " + getCsvChannelMetaDataFileName() + " CSV file" , "error", 5000); 
+                              // }
                           } else {
                               createApiKey();
                               // recall the function 
@@ -3269,6 +3630,7 @@ isLocalHost = () => {
               } else { // No remote CSV file with same collection
                   triggerHint("No " + getCsvChannelMetaDataFileName() + " remote CSV file found" , "error", 5000); 
 
+                   // trigerWizard () // 
               } 
          } else {
            triggerHint("Login to access the remote channels metadata CSV file ", "error", 5000);                
@@ -3276,96 +3638,6 @@ isLocalHost = () => {
 
          return returnObj;                 
    }
-
-//----------------------- Widget events ----------------------// 
-
-
-//------------------------Preload Settings-------------------//
-
-     docLoaded = () => {
-         initScreenLogo();
-    }
-
-
-
-    window.addEventListener('load', (event) => {
-        document.documentElement.style.setProperty('--screen-curAvailWidth', window.screen.availWidth);
-        document.documentElement.style.setProperty('--screen-curAvailHeigth', window.screen.availHeight);      
-    });
-
-    window.addEventListener('resize', (event) => {
-        if(getActiveForm())
-           getElementCenterOnScreen(  getActiveForm()  )
-    });    
-
- 
- document.onclick = (event) => {
-
-     if (event.target.matches('.dropbtn') ) {
-         var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
-         if (dropdown.classList.contains('show')) {
-               dropdown.classList.remove('show');
-        }else{
-             dropdown.classList.toggle("show");
-             navMenuBtnClicked(dropdown.id)
-        }
-     } else if(event.target.parentElement && event.target.parentElement.matches('.dropdown-content') ) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        // var i;
-         for(let openDropdown of dropdowns)  {
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-     } 
-     
-     if(Opts.isHintCloseOnMouseEvent) {
-      
-         if( (event.target.id != "hint") && 
-             (event.target.parentElement.id != "hint") &&
-             (event.target.id != "hintParagraph") && 
-             (event.target.parentElement.id != "hintParagraph") ) {
-                   // console.log("outside isPanelActive")    
-                  if( isPanelActive("hint") ) {
-                     if(Opts.isFirstClickEventAfterTrigger) {                      
-                        setTimeout(() => { closeHint(); }, Opts.defaultOpeningTime ); 
-                        Opts.isFirstClickEventAfterTrigger = false;  
-                        // console.log("inside timer")                   
-                     } else {  
-                             closeHint(); 
-                             //Opts.isFirstClickEventAfterTrigger = true;  
-                            }
-          
-                  }
-
-         }
-      }
-  }
-
-
-  document.onmouseout = (event) => {
-     if (event.target.matches('.dropbtn') || event.target.matches('.dropdown-content')) {
-         var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
-         var dropbtn = event.target.parentElement.querySelector('.dropbtn')   
-         if (dropdown && dropdown.classList.contains('show')) {
-          $('#'+ dropdown.id ).mouseleave( () => {
-              if (!($('#'+ dropbtn.id +':hover').length != 0)){ 
-                  dropdown.classList.remove('show');
-                  navManuMouseOut()
-              }    
-          })
-          $('#'+ dropbtn.id ).mouseleave( () => {
-              if (!($('#'+ dropdown.id +':hover').length != 0)) {
-                  dropdown.classList.remove('show');
-                  navManuMouseOut()
-              }    
-          })        
-        }
-     }
-  }
-
-
-
 
 
 })();

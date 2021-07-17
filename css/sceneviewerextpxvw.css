@@ -573,8 +573,14 @@ body {
           height: calc(150px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
         }                                    
 
+.channelform {
+          max-width: 32.8vw;
+          margin-top: calc(400px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+          margin-left: 48.3vw;
+          height: calc(150px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
+        } 
 /* Style the "Add" button */
-.addGrpBtn {
+.addFormBtn {
             padding: calc(10.5px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
             margin-left: 0;
             margin-top: calc(20px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
@@ -589,7 +595,7 @@ body {
             border-radius: 0;
           }
 
-          .addGrpBtn:hover {
+          .addFormBtn:hover {
                               background-color: rgba(60,60,60,var(--form-opacity));
                             }
 
