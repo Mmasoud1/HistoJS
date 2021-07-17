@@ -50,17 +50,22 @@ To run the localhost in the browser, just start up a simple local server from th
       
   
 
-A dockerized version will be released soon for the api. 
+A dockerized version will be released soon for the Rest api. 
+
 For using the backbone DSA server, you need to create a user account on any [DSA servers](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11) and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
 
 ```bash
     https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11
 ``` 
 
-Please note: if the name of the OME image file is $fileName$.ome.tif (e.g. TONSIL-1_40X.ome.tif), the cell mask must be $fileName$_cellMask.tiff (e.g. TONSIL-1_40X_cellMask.tiff), and the Channel metadata CSV file should be $fileName$_channel_metadata.csv (e.g. TONSIL-1_40X_channel_metadata.csv)
+### File naming conventions: 
 
-The Channel metadata CSV file must have at least two columns: 'channel_number' and 'channel_name'
-
+```bash
+- The OME image file must be $fileName$.ome.tif (e.g. TONSIL-1_40X.ome.tif).
+- The cell mask must be $fileName$_cellMask.tiff (e.g. TONSIL-1_40X_cellMask.tiff).
+- The Channel metadata CSV file should be $fileName$_channel_metadata.csv (e.g. TONSIL-1_40X_channel_metadata.csv)
+- The Channel metadata CSV file must have at least two columns: 'channel_number' and 'channel_name'
+```
 
 
 ## Offline Demo
