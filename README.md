@@ -54,9 +54,9 @@ A dockerized version will be released soon for the api.
 
 For using the backbone DSA server, you need to create a user account on any DSA servers and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
 
-```bash
+
     [https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11)
-``` 
+
 
 
 Please note: if the name of the OME image file is $fileName$.ome.tif (e.g. TONSIL-1_40X.ome.tif), the cell mask must be $fileName$_cellMask.tiff (e.g. TONSIL-1_40X_cellMask.tiff), and the Channel metadata CSV file should be $fileName$_channel_metadata.csv (e.g. TONSIL-1_40X_channel_metadata.csv)
