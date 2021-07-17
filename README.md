@@ -14,7 +14,7 @@
 
 HistoJS is an interactive tool to manage, manipulate, store and analysis the multi-channels OME-Tiff files .
 
-The tool is using [Digital Slide Archive](https://github.com/DigitalSlideArchive/digital_slide_archive/tree/master/ansible) as a backbone to update the image metadata remotely or locally.
+The tool is using [Digital Slide Archive (DSA)](https://styx.neurology.emory.edu/girder/#) as a backbone to host OME files and update the image metadata remotely or locally. 
 
 - Install requirements
 ```bash
@@ -50,13 +50,16 @@ To run the localhost in the browser, just start up a simple local server from th
       
   
 
-A dockerized version will be released soon for the Rest api. 
+A dockerized version for the RestApi will be released soon. 
 
-For using the backbone DSA server, you need to create a user account on any [DSA servers](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11) and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
+For using the backbone DSA server, you need to create a user account on any DSA servers such as [Styx](https://styx.neurology.emory.edu/girder/#) and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this [example](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11):
 
 ```bash
     https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11
 ``` 
+
+If you need to install DSA locally on you machine please follow this [link](https://github.com/DigitalSlideArchive/digital_slide_archive/tree/master/ansible).
+
 
 ### File naming conventions: 
 
