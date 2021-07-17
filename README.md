@@ -1,10 +1,10 @@
-<div align="center">
+#HistoJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]()
 
+<div align="center">
+  
 [![HistoJS logo](https://lh3.googleusercontent.com/Q3eYJfpQMety3sUUTLKeZKLkJBzx-NmLZNn1NphdWs9hBNYmfHCzZTphddpXDcfUxjtaHTXTr89R57LieZflqUsGHM3TxtIbVNoQOKf3ZbPjB01C8gYANmezAzq4JgUU=w1823)]()
 
-**HistoJS** [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]()
-  
-  [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors) [![licence ](https://img.shields.io/badge/license-BY--NC--ND-orange)](https://creativecommons.org/licenses/by-nc-nd/3.0/) [![Python ](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue)]()[![JS ](https://img.shields.io/badge/Types-JavaScript-blue)]()
+ [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors) [![licence ](https://img.shields.io/badge/license-BY--NC--ND-orange)](https://creativecommons.org/licenses/by-nc-nd/3.0/) [![Python ](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue)]()[![JS ](https://img.shields.io/badge/Types-JavaScript-blue)]()
 [![HW ](https://img.shields.io/badge/HardWare-GPU-green)]()
 
 
