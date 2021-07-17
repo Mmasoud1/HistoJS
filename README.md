@@ -1,9 +1,11 @@
-# HistoJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]() [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors)
 <div align="center">
 
 [![HistoJS logo](https://lh3.googleusercontent.com/Q3eYJfpQMety3sUUTLKeZKLkJBzx-NmLZNn1NphdWs9hBNYmfHCzZTphddpXDcfUxjtaHTXTr89R57LieZflqUsGHM3TxtIbVNoQOKf3ZbPjB01C8gYANmezAzq4JgUU=w1823)]()
 
-**Copyright 2021 Mohamed Masoud**
+**HistoJS**    
+[![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]() [![Github contributors](https://img.shields.io/badge/contributors-*-brightgreen)](https://github.com/Mmasoud1/HistoJS/graphs/contributors) [![licence ](https://img.shields.io/badge/license-BY--NC--ND-orange)](https://creativecommons.org/licenses/by-nc-nd/3.0/) [![Python ](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue)]()[![JS ](https://img.shields.io/badge/Types-JavaScript-blue)]()
+[![HW ](https://img.shields.io/badge/HardWare-GPU-green)]()
+
 
 </div>
 
@@ -45,3 +47,12 @@ For creating OME channel groups, browse to your server file and click design mod
 ## Demo
 
 ![App Interface](https://github.com/Mmasoud1/HistoJS/blob/main/Demo/showMe.gif)
+
+
+<div align="center">
+
+[![Google Doc](https://img.shields.io/badge/HistoJS-Feedback-blue)](https://docs.google.com/forms/d/e/1FAIpQLSdHuO--mG00sKydQpJ7sPpDmhcJ4ECdj-wAB1kwXQExh_nUSg/viewform?usp=sf_link)   
+[![CC BY-NC-ND ](https://img.shields.io/badge/license-BY--NC--ND-orange)](https://creativecommons.org/licenses/by-nc-nd/3.0/) 
+
+**Copyright 2021 Mohamed Masoud**
+</div>
