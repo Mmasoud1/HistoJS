@@ -34,15 +34,17 @@ To run locally, just start up a simple local server from the root level of the r
 
 Also, from the root level of the repository open a new terminal and run the python Api:
 
-    `
+```bash
     conda activate histojs
     python RestApi.py
-    `
+    ```
 
 -In the browser url type: 
-       
+
+```bash
+   http://localhost:8020/
+    ```       
       
-     `http://localhost:8020/`
 
 A dockerized version will be released soon for the api. 
 
