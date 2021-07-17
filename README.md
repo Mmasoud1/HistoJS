@@ -51,8 +51,7 @@ To run the localhost in the browser, just start up a simple local server from th
   
 
 A dockerized version will be released soon for the api. 
-
-For using the backbone DSA server, you need to create a user account on any DSA servers and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
+For using the backbone DSA server, you need to create a user account on any [DSA servers](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11) and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
 
 ```bash
     https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11
