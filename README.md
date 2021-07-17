@@ -19,7 +19,7 @@ The tool is using Digital Slide Archive as a backbone to update the image metada
 
 - Install requirements
     ```bash
-    python>3.4,<3.8  is recommended
+    3.4< python <3.8  is recommended
     ```
 
     ```bash
@@ -33,6 +33,7 @@ To run locally, just start up a simple local server from the root level of the r
 
 
 Also, from the root level of the repository open a new terminal and run the python Api:
+
     ```bash
     conda activate histojs
     python RestApi.py
@@ -55,7 +56,7 @@ The Channel metadata CSV file must have at least two columns: 'channel_number' a
 
 
 ## Offline Demo
-### Demo H/W configuration: Processor - Intel® Core™ i7-8700 CPU @ 3.20GHz × 12, RAM - 16GB, GPU - GeForce GTX 1050
+Demo H/W configuration: Processor - Intel® Core™ i7-8700 CPU @ 3.20GHz × 12, RAM - 16GB, GPU - GeForce GTX 1050
 
 ### Design Mode
 
