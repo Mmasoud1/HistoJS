@@ -29,7 +29,9 @@ The tool is using Digital Slide Archive as a backbone to update the image metada
 
 To run locally, just start up a simple local server from the root level of the repository with the available port number 8xxx (e.g. 8010)
 
-`python -m http.server 8xxx`
+```bash
+    python -m http.server 8xxx
+```
 
 
 Also, from the root level of the repository open a new terminal and run the python Api:
