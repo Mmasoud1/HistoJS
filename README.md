@@ -18,13 +18,13 @@ HistoJS is an interactive tool to manage, manipulate, store and analysis the mul
 The tool is using Digital Slide Archive as a backbone to update the image metadata remotely or locally.
 
 - Install requirements
-    ```bash
+```bash
     3.4< python <3.8  is recommended
-    ```
+```
 
-    ```bash
+```bash
     conda env create -f histojs.yml
-    ```
+```
 
 
 To run locally, just start up a simple local server from the root level of the repository with the available port number 8xxx (e.g. 8010)
@@ -33,6 +33,7 @@ To run locally, just start up a simple local server from the root level of the r
 
 
 Also, from the root level of the repository open a new terminal and run the python Api:
+
 ```bash
     conda activate histojs
     python RestApi.py
@@ -41,8 +42,9 @@ Also, from the root level of the repository open a new terminal and run the pyth
 -In the browser url type: 
 
 ```bash
-   http://localhost:8020/
-```  
+    http://localhost:8020/
+```       
+      
       
 
 A dockerized version will be released soon for the api. 
