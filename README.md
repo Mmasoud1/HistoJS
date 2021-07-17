@@ -11,22 +11,36 @@
 </div>
 
 
-An interactive tool to manage, manipulate, store and analysis the multi-channels OME-Tiff files .
+
+
+HistoJS is an interactive tool to manage, manipulate, store and analysis the multi-channels OME-Tiff files .
 
 The tool is using Digital Slide Archive as a backbone to update the image metadata remotely or locally.
 
+- Install requirements
+    ```bash
+    python>3.4,<3.8  is recommended
+    ```
+
+    ```bash
+    conda env create -f histojs.yml
+    ```
+
+
 To run locally, just start up a simple local server from the root level of the repository with the available port number 8xxx (e.g. 8010)
 
-`python -m SimpleHTTPServer 8xxx`
+`python -m http.server 8xxx`
 
 
 Also, from the root level of the repository open a new terminal and run the python Api:
+    ```bash
+    conda activate histojs
+    python RestApi.py
+    ```
 
-`python RestApi.py`
-
-Then browse to local host
-
-`http://localhost:8xxx/`
+       -In the browser url
+      
+           `http://localhost:8020/`
 
 A dockerized version will be released soon for the api. 
 
@@ -38,14 +52,14 @@ Please note: if the name of the OME image file is $fileName$.ome.tif (e.g. TONSI
 
 The Channel metadata CSV file must have at least two columns: 'channel_number' and 'channel_name'
 
-For creating OME channel groups, browse to your server file and click design mode with the tool as in Demo section below.
 
 
-## License.
-[CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/3.0/) license
+## Offline Demo
+### Demo H/W configuration: Processor - Intel® Core™ i7-8700 CPU @ 3.20GHz × 12, RAM - 16GB, GPU - GeForce GTX 1050
 
+### Design Mode
 
-## Demo
+For creating OME channel groups, browse to your server file and click design mode with the tool.
 
 ![App Interface](https://github.com/Mmasoud1/HistoJS/blob/main/Demo/showMe.gif)
 
