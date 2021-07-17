@@ -55,7 +55,7 @@ A dockerized version will be released soon for the api.
 For using the backbone DSA server, you need to create a user account on any DSA servers and upload your OME image, cells mask, and channels metadata CSV file to your collection as in this link:
 
 
-    [https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11)
+    ![https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11](https://styx.neurology.emory.edu/girder/#folder/5e361c5c34679044bda81b11)
 
 
 
