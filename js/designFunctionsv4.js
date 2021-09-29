@@ -420,6 +420,10 @@
             initItemGroupsList();
             resetChannelCheckboxes();
             resetActiveFormState();
+
+            if(Opts.designModeAutoUpload) {
+                uploadGrpChanges();
+            }
         }
     }
 
@@ -488,7 +492,7 @@
 
    //------------ Channel bar left---------------//
    onCurGrpChOsdShowHide = ( grpChannelIndex) => {
-      if ((curChColorContrastStates.chIndex === undefined) || curChColorContrastStates.changesCanceled || curChColorContrastStates.changesComfirmed){
+      if ((curChColorContrastStates.chIndex === undefined) || curChColorContrastStates.changesCanceled || curChColorContrastStates.changesConfirmed){
           if (document.getElementById("eyeIcon." + grpChannelIndex).className === "fa fa-eye") {
                 document.getElementById("eyeIcon." + grpChannelIndex).className = "fa fa-eye-slash";
                 viewer.world.getItemAt(grpChannelIndex).setOpacity(0);
@@ -574,7 +578,7 @@
    }
 
    
-   comfirmChColorContrastChanges = () => {
+   confirmChColorContrastChanges = () => {
        let groupIndex = curChColorContrastStates.grpIndex;
        let grpChannelIndex = curChColorContrastStates.chIndex;
 
@@ -582,10 +586,14 @@
        currentItemInfo.omeDataset.Groups[groupIndex].Contrast_Min[grpChannelIndex] = curChColorContrastStates.newContrastMin;
        currentItemInfo.omeDataset.Groups[groupIndex].Colors[grpChannelIndex] = curChColorContrastStates.newColor;
 
-       curChColorContrastStates.changesComfirmed = true;
-       curChColorContrastStates.lastCommand = "Comfirm";
+       curChColorContrastStates.changesConfirmed = true;
+       curChColorContrastStates.lastCommand = "Confirm";
        showPanel("chColorContrastPanel", false);
        onItemSelectedGroup(groupIndex, true); // Group refresh = true 
+
+       if(Opts.designModeAutoUpload) {
+            uploadGrpChanges();
+       }       
    }
    
    cancelChColorContrastChanges = () => {
@@ -677,7 +685,7 @@
    }
    
    customizeChColor = (groupIndex, grpChannelIndex) => {
-        if ((curChColorContrastStates.chIndex === undefined)|| curChColorContrastStates.changesCanceled || curChColorContrastStates.changesComfirmed) {
+        if ((curChColorContrastStates.chIndex === undefined)|| curChColorContrastStates.changesCanceled || curChColorContrastStates.changesConfirmed) {
               let curGroup = currentItemInfo.omeDataset.Groups[groupIndex];
               curChColorContrastStates = new chColorContrastStates();
 
@@ -768,7 +776,7 @@
 
 
     uploadGrpChanges = () => {
-        if(isLoggedIn()){
+        if(isLoggedIn()) {
             let item = getSelectedItem();
             let hostAPI = getHostApi();
             let itemMetadataObject = {};
@@ -821,6 +829,10 @@
           onCurTileSourceClick();
           initItemGroupsList();
 
+          if(Opts.designModeAutoUpload) {
+              uploadGrpChanges();
+          }           
+
           if(tempGrpRemoved.length) {
              document.getElementById("undoGrpRemove").className = "fa  fa-undo";
           }
@@ -835,6 +847,10 @@
         removeArrayElem(currentItemInfo.omeDataset.Groups, groupToRemove);
         initItemGroupsList();
         document.getElementById("undoGrpRemove").className = "fa  fa-undo";  
+
+        if(Opts.designModeAutoUpload) {
+            uploadGrpChanges();
+        }        
     }
 
 
@@ -1964,7 +1980,7 @@ initChannelList = (omeChannels, itemName) => {
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="viewerZoomOut()"><i class="fa fa-search-minus"></i></a>'
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="goToRemoteItem()"> <i class="fa fa-cloud"></i></a>'
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="openDAPIForm()"><div class="tooltip"><i class="fa fa-object-group"></i><span class="tooltiptext">Select</span></div></a>'
-          nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="createNewGroup()"><div class="tooltip"><i class="fa fa-stop-circle"></i><span class="tooltiptext">Add</span></div></a>'
+          nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="createNewGroup()"><div class="tooltip"><i class="fa fa-plus-circle"></i><span class="tooltiptext">Add</span></div></a>'
           nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="resetChannelCheckboxes()"><div class="tooltip"><i class="fa fa-repeat"></i><span class="tooltiptext">Reset</span></div></a>'        
       }
 
@@ -2487,7 +2503,7 @@ initChannelList = (omeChannels, itemName) => {
          document.getElementById(fontId).style.color = Opts.defaultElemFontColor; 
    } 
 
-   comfirmServerListChangesInSettings = () => {
+   confirmServerListChangesInSettings = () => {
          cacheServerListLocal();
          checkAutoLoginToRemovedServer(() => {
             let curServerIndex = findObjectByKeyValue(Settings.dsaServers, 'id', getHostIndex().toString(), 'INDEX');
@@ -2651,7 +2667,7 @@ initChannelList = (omeChannels, itemName) => {
       return defaultOptions;
   }
 
-  comfirmOptionsListChangesInSettings = () => {
+  confirmOptionsListChangesInSettings = () => {
        resetActiveFormState();
        cacheOptionsListLocal()
   }
@@ -2816,7 +2832,7 @@ initChannelList = (omeChannels, itemName) => {
      }
   }    
 
-  comfirmInterfaceListChangesInSettings = () => {
+  confirmInterfaceListChangesInSettings = () => {
        resetActiveFormState();
        cacheInterfaceListValuesLocal();
   }
@@ -2921,15 +2937,15 @@ initChannelList = (omeChannels, itemName) => {
      // var settingsForm = document.getElementById("settingsForm");
      // settingsForm.style.display = "none";
      if(isServerListChanged()) {      
-        comfirmServerListChangesInSettings();     
+        confirmServerListChangesInSettings();     
      } 
 
      if(isOptionsListChanged()) {  
-        comfirmOptionsListChangesInSettings();
+        confirmOptionsListChangesInSettings();
      } 
 
      if(isInterfaceListChanged()) {  
-        comfirmInterfaceListChangesInSettings();      
+        confirmInterfaceListChangesInSettings();      
      } 
      
      closeSettingsForm();
@@ -2999,8 +3015,9 @@ initChannelList = (omeChannels, itemName) => {
                   initCurrentTileSource();
                   showPanel("channelListView",true);
                   showPanel("grpListView", true);
-                  if( ! isDAPIChannelSelected() ) {
-                  // if( !currentItemInfo.omeDataset.DapiChannel.length ) {  
+
+                  // if( ! isDAPIChannelSelected() ) {
+                  if( !currentItemInfo.omeDataset.DapiChannel.length ) {  
                       // if DAPI before selected for same item, DAPI form will not show up
                       openDAPIForm();
                       triggerHint("Specify DAPI or DNA channel by clicking on channel list","info", 7000);
@@ -3074,7 +3091,7 @@ initChannelList = (omeChannels, itemName) => {
       }
     }
 
-  comfirmLogin = () => {
+  confirmLogin = () => {
       var usr = document.getElementById("userNameId");
 
       if (!usr.value.length){ 

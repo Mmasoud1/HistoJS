@@ -948,6 +948,118 @@ def str_to_array(points):
     return pair_points
 
 
+
+@app.route('/createDapiCellsMorphStatData')
+def createDapiCellsMorphStatData():
+
+  print("Find statistics of morphology features e.g. area,..")
+  dapi_morph_stats_file_name = request.args.get('dapi_morph_stats_file', 0)
+  item_features_folder = request.args.get('item_features_folder', 0) 
+
+  boundaries_file_name = request.args.get('boundaries_file', 0)
+  boundaries_folder = request.args.get('boundaries_folder', 0)    
+
+  basic_morph_features_string= request.args.get('morph_feature_names_arr', 0)  
+
+
+  path_to_dapi_morph_stats_file = os.path.join(item_features_folder, dapi_morph_stats_file_name)
+  path_to_boundaries_file = os.path.join(boundaries_folder, boundaries_file_name)
+
+  # read cell morphology file having cells boundary, area, extent .. etc
+  df_cell_morphology = pd.read_json(path_to_boundaries_file) 
+
+  # Find statistical data 
+  morphology_states = df_cell_morphology.describe()
+
+  # basic_morph_features should be ['area', 'eccentricity', 'extent', 'orientation', 'solidity', 'major_axis_length', 'minor_axis_length']
+  # Refere to cellMorphFeatureList  with  mainParametersV3.js file for more details
+  basic_morph_features = json.loads(basic_morph_features_string)
+
+  all_basic_morph_feat_States = {}  
+
+  for morph_feature in basic_morph_features:
+      all_basic_morph_feat_States[morph_feature] = {"mean" : morphology_states[morph_feature]['mean'], 
+                                              "std" : morphology_states[morph_feature]['std'],
+                                              "min" : morphology_states[morph_feature]['min'],
+                                              "25%" : morphology_states[morph_feature]['25%'],
+                                              "50%" : morphology_states[morph_feature]['50%'],
+                                              "75%" : morphology_states[morph_feature]['75%'],
+                                              "max" : morphology_states[morph_feature]["max"]}
+
+
+  print('Save all_basic_morph_feat_States to json file...')
+  with open(path_to_dapi_morph_stats_file, 'w') as f:
+     json.dump(all_basic_morph_feat_States, f)
+
+
+  return Response(json.dumps(all_basic_morph_feat_States)) 
+
+
+
+@app.route('/classifyCellsWithMaxIntensity')
+def classifyCellsWithMaxIntensity():
+
+  print("Classify cells based on thier intensity..")
+  markers_morph_file_name = request.args.get('markers_morph_file', 0)  
+  out_features_folder = request.args.get('features_folder', 0) 
+  chnl_name_type_json_string = request.args.get('chnl_name_type', 0)
+  cell_feature_to_normalize = request.args.get('cellFeatureToNormalize', 0)
+
+  # cell_undefined_threshold_value can be e.g. mean or "50%"
+  cell_undefined_threshold_value = request.args.get('cell_undefined_threshold_value', 0)
+
+  path_to_markers_morph_file = os.path.join(out_features_folder, markers_morph_file_name)    
+  
+  print('Read markers morphology csv file...')  
+
+  df_cell_markers_morphology = pd.read_csv(path_to_markers_morph_file)
+
+  chnl_name_type_dic = json.loads(chnl_name_type_json_string)
+
+
+  # Normalize marker mean values
+  print('Normalizing markers in progress...')
+  markers_norm_col = []
+  for marker in chnl_name_type_dic:
+      markers_norm_col.append(marker["Frame"]+"_norm")
+      df_cell_markers_morphology[marker["Frame"]+"_norm"] = df_cell_markers_morphology[marker["Frame"] + cell_feature_to_normalize ].transform(lambda x: (x-x.mean())/x.std()).fillna(-1)#.reset_index()
+  # scale marker normalized values to the range from 0-255
+  sc = MinMaxScaler(feature_range=(0, 255))        
+  df_cell_markers_morphology[markers_norm_col] = sc.fit_transform(df_cell_markers_morphology[markers_norm_col])
+
+  # Get statistical values e.g. mean, min,  max, "25%", "50%" ,"75%",  std  for each normalized marker e.g. CD45
+  norm_mark_stats = df_cell_markers_morphology[markers_norm_col].describe()
+
+  # Create dataframe with selected columns to classify
+  df_selected_markers_normalized = pd.DataFrame()
+  df_selected_markers_normalized['id'] = df_cell_markers_morphology['id']
+  df_selected_markers_normalized[markers_norm_col] = df_cell_markers_morphology[markers_norm_col]
+  df_selected_markers_normalized['Max'] = df_selected_markers_normalized[markers_norm_col].idxmax(axis=1)  
+
+  # Filter cells with 2 phases: 
+  # 1- first find the marker of the max intensity value
+  for marker in chnl_name_type_dic:
+      df_selected_markers_normalized.loc[df_selected_markers_normalized['Max'] == marker["Frame"]+"_norm", 'Type'] = marker["Type"]  
+
+  # 2- classify as undefined or Others for any cell with markers values below the threshold cell_undefined_threshold_value
+  rslt_df = df_selected_markers_normalized
+  for marker in chnl_name_type_dic:
+      rslt_df = rslt_df[rslt_df[marker["Frame"]+"_norm"]< norm_mark_stats[marker["Frame"]+"_norm"][cell_undefined_threshold_value]]
+
+  df_selected_markers_normalized.loc[rslt_df.index , 'Type'] = 'Others' 
+
+
+
+  print("Converting cells classification  dataframe to compatible histojs dictionary ..")
+  dict_cell_classification = df_selected_markers_normalized.to_dict('records')
+  
+  for cell in dict_cell_classification:
+      cell['label'] = cell['id']
+      cell['id'] = "spx-" + str(cell["id"])
+
+  return Response(json.dumps(dict_cell_classification))   
+
+
 @app.route('/createAllSpxTilesFeature')
 def createAllSpxTilesFeature():
 
@@ -960,6 +1072,9 @@ def createAllSpxTilesFeature():
   cell_feature_to_normalize = request.args.get('cellFeatureToNormalize', 0)
 
   group_data_json_string = request.args.get('grp_data', 0)
+
+  # e.g. "Structural Components__markers_morphology.csv"
+  markers_morph_file_name = request.args.get('markers_morph_file', 0)
 
   features_file_name = request.args.get('features_file', 0)
   out_features_folder = request.args.get('features_folder', 0)    
@@ -975,6 +1090,7 @@ def createAllSpxTilesFeature():
 
   path_to_boundaries_file = os.path.join(boundaries_folder, boundaries_file_name)
   path_to_features_file = os.path.join(out_features_folder, features_file_name)
+  path_to_markers_morph_file = os.path.join(out_features_folder, markers_morph_file_name)
   # path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
 
 
@@ -1161,6 +1277,7 @@ def createAllSpxTilesFeature():
   # convert column Cell id to data type int
   df_cell_markers['id'] = df_cell_markers['id'].astype(int)
 
+
   # fill any null with zero
   df_cell_markers = df_cell_markers.fillna(0)  
 
@@ -1175,7 +1292,8 @@ def createAllSpxTilesFeature():
   print('Save dataframe to csv file...')
   if not (os.path.isdir(out_features_folder )):
      os.makedirs(out_features_folder)    
-  df_cell_markers_morphology.to_csv(path_to_features_file.split(".json")[0] + '_markers_morphology.csv', index=False) 
+  df_cell_markers_morphology.to_csv(path_to_markers_morph_file, index=False) 
+  #df_cell_markers_morphology.to_csv(path_to_features_file.split(".json")[0] + '_markers_morphology.csv', index=False) 
 
   # print('Save allTilesFeatures to basic json file...')
   # with open(path_to_features_file.split(".json")[0] + '_basic.json', 'w') as f:
@@ -1183,7 +1301,7 @@ def createAllSpxTilesFeature():
 
   # else:
 	 #  print('Read markers morphology csv file...')  	
-	 #  df_cell_markers_morphology = pd.read_csv(path_to_features_file.split(".json")[0] + '_markers_morphology.csv')
+	 #  df_cell_markers_morphology = pd.read_csv(path_to_markers_morph_file)
 	 #  df_cell_morphology = pd.read_json(path_to_boundaries_file) 
 	 #  allTilesFeatures = pd.read_json(path_to_features_file.split(".json")[0] + '_basic.json')
 
@@ -1221,7 +1339,7 @@ def createAllSpxTilesFeature():
                                    'solidity': tile["solidity"],  
                                    'x_cent': tile["x_cent"],
                                    'y_cent': tile["y_cent"],                                
-                                   "features": {'Frame':  marker["frameName"],   'OSDLayer': marker["OSDLayer"],  'max': tile[marker["frameName"]+"_max"],  'mean': tile[marker["frameName"]+"_mean"],  'std': tile[marker["frameName"]+"_std"], 'mean_norm': tile[marker["frameName"]+"_norm"]  } })               
+                                   "features": {'Frame':  marker["frameName"],   'OSDLayer': marker["OSDLayer"],  'max': tile[marker["frameName"]+"_max"],  'mean': tile[marker["frameName"]+"_mean"], 'nonzero_mean': tile[marker["frameName"]+"_nonzero_mean"],  'std': tile[marker["frameName"]+"_std"], 'norm': tile[marker["frameName"]+"_norm"]  } })               
 
 
   df_allCellFeatures = pd.DataFrame.from_dict(allCellFeatures)
@@ -1234,6 +1352,10 @@ def createAllSpxTilesFeature():
   print("-------------------------------------------------------------------------------------------------")
   print(allTilesFeaturesWithMorphs[0])
   print("-------------------------------------------------------------------------------------------------")
+
+
+
+
 
   # correlation and heatmap
   # print('Create and save correlation heatmap...')

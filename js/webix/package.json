@@ -1,0 +1,52 @@
+{
+  "_args": [
+    [
+      "webix@6.2.0",
+      "/mnt/externalData/Multiplexing Project/TreeBasedMultiplexViewer-master"
+    ]
+  ],
+  "_from": "webix@6.2.0",
+  "_id": "webix@6.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-ok9rxYMevzv3qiKrZi8je+bgYKUBpUtUICKfqoDChc/krheI5lqLKgGj10S6HIve8jUNupnx4JvNFjFt0qlrvA==",
+  "_location": "/webix",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "webix@6.2.0",
+    "name": "webix",
+    "escapedName": "webix",
+    "rawSpec": "6.2.0",
+    "saveSpec": null,
+    "fetchSpec": "6.2.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/webix/-/webix-6.2.0.tgz",
+  "_spec": "6.2.0",
+  "_where": "/mnt/externalData/Multiplexing Project/TreeBasedMultiplexViewer-master",
+  "author": {
+    "name": "XB Software"
+  },
+  "description": "Webix UI",
+  "keywords": [
+    "webix",
+    "ui",
+    "tree",
+    "datatable",
+    "list",
+    "chart",
+    "form",
+    "grid"
+  ],
+  "license": "SEE LICENSE IN license.text",
+  "main": "webix.js",
+  "name": "webix",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "types/webix.d.ts",
+  "version": "6.2.0"
+}

@@ -49,7 +49,7 @@
                   this.newColor = null;                                        
                   this.newContrastMax = null;
                   this.newContrastMin = null;
-                  this.changesComfirmed = false;
+                  this.changesConfirmed = false;
                   this.changesCanceled = false;        
                   this.lastCommand = null;  
                  }
@@ -98,6 +98,9 @@
             defaultElemFontColor:                 "white", 
             defaultElemFontWeight:                "normal",
             defaultCompositeOperation:            "lighter",
+
+            // Design Mode 
+            designModeAutoUpload:                 true, // if false upload by clicking upload button           
 
             //Tigger Hint Options
             defaultOpeningTime:                   10000,                
@@ -153,8 +156,10 @@
             maskContourApproximation:             true, // For extracting boundaries from cell mask, this option can reduce JSON file by 60%            
             searchEntirHostForResource:           false, // e.g. search entire host to finde cellMask.tiff, to use with getRemoteFileId() 
             createTilesFeature:                   {allTilesAtOnce: true}, // "false" : means create features by scanning tile by tile, very slow option
-            cellFeatureToNormalize:               "_mean", // select from [ _mean, _max, _std], preceded by underscore "_"            
+            cellFeatureToNormalize:               "_mean", // select from [ _mean, _max, _std, _nonzero_mean], preceded by underscore "_"            
             isChannelNormalizeRequired:           true, // "true": to normalize each ome channel before extract features.
+            // // RestApi - cell classify
+            cellUndefinedThresholdValue:          "mean", // select from [ mean, min,  max, "25%", "50%", "75%"],  where those valued are cal with Restapi cell classify fun                       
             // // RestApi - boxplot stats            
             boxplotForAboveZeroPixels:            true, // "true": neglect zero pixels when calculating a channel or marker boxplot
             isBoxplotChNormalizeRequired:         true, // "true": normalize channels before find boxplot data of each
@@ -187,8 +192,8 @@
             invalidNuclAreaThreshold:             1, //(int) Threshold value to exclude any contour or region area below it, must be int                     
 
             // For cell filtering and phenotyping
-            markerPositiveThreshold:              "q1",  // can be [0, min, q1], q1 for 25 percentile
-            markerNegativeThreshold:              "0",   // can be [0, min, q1] and less than markerPositiveThreshold
+            markerPositiveThreshold:              "q3",  // can be [0, min, q1, median, mean, q3], q1 for 25 percentile
+            markerNegativeThreshold:              "q1",   // can be [0, min, q1, median, mean, q3] and less than markerPositiveThreshold
 
 
             // General Environment Settings 
@@ -249,12 +254,24 @@
                                   strockWidth: null}, navigatorPointer: 0
                             });
 
-   var cellPositiveThresholdOptions = ["q1", "min", "0"];   //Can try also puting '<i class="fa fa-chevron-right" aria-hidden="true"></i>'
+   var cellPositiveThresholdOptions = ["q3", "mean", "median", "q1", "min", "0"];   //Can try also puting '<i class="fa fa-chevron-right" aria-hidden="true"></i>'
 
-   var cellNegativeThresholdOptions = ["q1", "min", "0"];
+   var cellNegativeThresholdOptions = ["q3", "mean", "median", "q1", "min", "0"];
 
    var featureKeys = ["mean", "max", "std"]; // <-----To create features checkboxes dynamically, change here. Also change in "chart"  below
    var checkboxSelectedFeatures = [...featureKeys]; // when checkboxes selected, by default all features selected
+
+
+   // Analysis CHNL Options Cell Morphological Filters
+   cellMorphFeatureList = [
+                            {id: "1", morphFeature: "area",  description: "Filter cells with areas above or equal threshold."},
+                            {id: "2", morphFeature: "eccentricity",  description: "If the eccentricity value is 1, cell is a line and if it is zero, cell is a perfect circle "},
+                            {id: "3", morphFeature: "extent",  description: "Filter cells with thresholed extent.  Extent is the ratio of cell contour area to bounding rectangle area"},
+                            {id: "4", morphFeature: "orientation",  description: "Angle between the x-axis and the major axis of the ellipse that has the same second-moments as the region"},                            
+                            {id: "5", morphFeature: "solidity",  description: "Solidity is the ratio of contour area to its convex hull area"},
+                            {id: "6", morphFeature: "major_axis_length",  description: "Length (in pixels) of the major axis of the cell ellipse"},
+                            {id: "7", morphFeature: "minor_axis_length",  description: "Length (in pixels) of the minor axis of the cell ellipse"}                                                        
+                         ];   
 
    // Analysis CHNL PLOTS chart
    chartOperationsList = [
@@ -293,6 +310,7 @@
 
    var allTilesFeatures = [];  // need correction to allTilesFeature
    var grpChannelsStatisticalData = []; // has each channel mean, max, min, std, median, q1, q3 
+   var dapiMorphStatisticalData = {}; // for each morphological features e.g. area, find mean, max, min, std, median, q1, q3 
    var allValideTiles = [];
    var allValidePhenotypes = [];
    // var txt_allTilesFeatures_backup = [];

@@ -82,6 +82,12 @@
         return isGrpSelected() ? getSelectedGroup().Channels.length : null;
     }
 
+
+    // return e.g. Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
+    getCurGrpChannelsName = () => {
+        return isGrpSelected() ? getSelectedGroup().Channels : null;
+    }    
+
     getSelectedGroupName = () => {
         return isGrpSelected() ? getSelectedGroup().Name : null;
     }  
@@ -110,6 +116,13 @@
                                      ) : null;                  
    }
 
+   // e.g. "Structural Components__markers_morphology.csv"
+   getGrpMarkersMorphFileName = () => { // get the proposed name of the featurs file 
+           return isGrpSelected() ?  ( isSuperPixel() ? getSelectedGroupName()  + "_markers_morphology.csv" : 
+                                                        getSelectedGroupName()  + "_Grid_"+ getGridSize() + "_markers_morphology.csv"
+                                     ) : null;                  
+   }   
+
    // e.g. "Structural Components__Boxplot_Data.json"
    // Can be used to compare group channels with existing json file to validate the info
    getGrpBoxplotFileName = () => { // get the proposed name of the boxplot file 
@@ -123,13 +136,12 @@
                                      ) : null;                  
    }
 
-   // e.g "features/TONSIL-1_40X/Grid/TileSize_64/", for singlePlex slides
+   // e.g "features/TONSIL-1_40X/", for singlePlex slides
+   // e.g "features/LUNG-3-PR_40X/"
    getItemFeaturesLocalPath = () => {
        return isGrpSelected() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultFeaturesDir + "/" +
-                                  getItemName().split(".")[0] + "/" +
-                                  ( isSuperPixel() ? "Spx" + "/" : "Grid" + "/"  + "TileSize_" + getGridSize() + "/")
-                                ) : null;  
+                                  getItemName().split(".")[0] + "/") : null;  
    }
 
    // e.g "features/TONSIL-1_40X/Structural Components/Grid/TileSize_64/", for multiPlex slides
@@ -163,6 +175,13 @@
                                   getItemName().split(".")[0] + "/"
                                 ) : null;  
    }
+
+   // For Dapi cells/boundaries morphological statistical data e.g. "LUNG-3-PR_40X_Morph_Stat.json"
+   getDapiMorphStatFileName = () => {
+        return getItemName().split(".")[0]  + "_Morph_Stat.json"
+   }
+
+   
 
    // e.g. "boundaries/TONSIL-1_40X/"
    getCsvChannelMetaDataLocalPath = () => {
@@ -419,10 +438,10 @@
 
   onCellFilterSliderMouseover = (elem) => {
     // console.log(" tooltipElem ", tooltipElem)
-    let channelName = elem.id.split('.')[1];
+    let channelOrFeatureName = elem.id.split('.')[1];
     // console.log(" elem.id ", elem.id)
     // updateInputTooltip_V2(getCellFilterSliderValue, `cellFilterValueTooltip.${channelName}`,  elem.id);
-    document.getElementById(`cellFilterValueTooltip.${channelName}`).innerHTML = getCellFilterSliderValue(elem.id);
+    document.getElementById(`cellFilterValueTooltip.${channelOrFeatureName}`).innerHTML = getCellFilterSliderValue(elem.id);
 
   }
 
@@ -535,6 +554,8 @@
           let tileClass = getClassType();
           allValideTiles = [];
           let numOfFrames = getSelectedGroup().Channels.length;  
+          // For morphological features e.g. cell area, solidity..
+          let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData);          
 
           if( !isFeaturesLoaded() ) { // At least one feature should be selected from Features menu (.e.g mean, max, std)
               triggerHint(" Create/Load Features first from Features menu .. ");
@@ -563,6 +584,17 @@
                           //let featuresDistance = computeDistance( currentTileData.features, tile.features, numOfFrames);
                           let valide = true;
 
+                          // For morphological features e.g. cell area, solidity..
+                          morphFeatureNamesArr.forEach( (morphFeatName, idx) => {
+                              //if to check whether morphological value > zero 
+                              if(parseFloat(document.getElementById("cellFilterSlider." + morphFeatName).value) > 0) {
+                                    if(tile[morphFeatName]  < parseFloat(document.getElementById("cellFilterSlider." + morphFeatName).value) ) {
+                                        valide = false;
+                                      }
+                              }    
+                          }) 
+
+
                           for(let k = 0; k < numOfFrames; k++){
                               let currentFrameBoxplotData = findObjectByKeyValue(grpChannelsStatisticalData, 'Frame', tile.features[k].Frame);
                               if( isCellPositiveSwitchEnabled(tile.features[k].Frame) ) {
@@ -579,8 +611,6 @@
                                   } 
 
                                
-
-
 
                                   if(positiveThreshold == 0){  
                                        // consider all cells greater than zero.                        
@@ -971,6 +1001,15 @@ createCellPhenotypesColorsArray = (numOfValidePhenotypes) => {
         document.getElementById("cellNegativeSwitch." + channelName).checked = false;
      }) 
 
+     // For morphological features e.g. cell area, solidity..
+    let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData)
+    morphFeatureNamesArr.forEach( (morphFeatureName, idx) => {
+          if(document.getElementById("cellFilterSlider." + morphFeatureName)) {
+               document.getElementById("cellFilterSlider." + morphFeatureName).value = 0;
+          }
+    }) 
+
+
      setBoundaryFillOpacity(Opts.defaultBoundaryFillOpacity);
      resetCellFilterDependencies();
      if( isPanelActive("cellNavigator") ) {
@@ -988,6 +1027,14 @@ createCellPhenotypesColorsArray = (numOfValidePhenotypes) => {
             isActive = true;
           }
      }) 
+
+    // For morphological features e.g. cell area, solidity..
+    let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData);
+    morphFeatureNamesArr.forEach( (morphFeatureName, idx) => {
+          if(parseFloat(document.getElementById("cellFilterSlider." + morphFeatureName).value) ) {
+              isActive = true;
+          }
+    })     
 
      return isActive? true : false;
   }  
@@ -1016,21 +1063,32 @@ createCellPhenotypesColorsArray = (numOfValidePhenotypes) => {
          });
 
      });
+
+  }
+
+  cellMorphFilterSliderChanged = (elem) => {
+     let morphFeatureName = elem.id.split('.')[1];
+     showLoadingIcon(() => {  
+
+         // Update tooltip value 
+         document.getElementById(`cellFilterValueTooltip.${morphFeatureName}`).innerHTML = getCellFilterSliderValue(elem.id);
+
+         // if(parseFloat(document.getElementById("cellFilterSlider." + featureName).value)){
+         // } else {
+         // }
+
+         if( isCellFiltersActive() ) { // check if there is at least channel filter slider with value > 0
+             webix.message("Filtering in progress");
+
+          
+         } 
+
+         filterTiles(() => {
+             hideLoadingIcon(); 
+         });   
+
+       });     
     
-     // console.log("elem ", elem)
-    // allTilesFeatures[0]
-    // Object { id: "grid-0-0", coordinates: [], features: (5) […] }
-   //  allTilesFeatures[0].features[index]
-   //  Object { OSDLayer: 0, mean: 2.953125, std: 3.023245714201461, max: 25, Frame: "CD45" }
-   // for
-
-     // if(elem.checked) {
-     //   viewer.world.getItemAt(index).setOpacity(1);       
-     // }
-     // else {
-     //   viewer.world.getItemAt(index).setOpacity(0);   
-     // }
-
 	}
 
    // check whether the cell postive ON/OFF button toggled to ON
@@ -1188,7 +1246,13 @@ createCellPhenotypesColorsArray = (numOfValidePhenotypes) => {
 
   requestCellPositiveInfo = () => {
      triggerHint("To visualize all cells with marker value above or equal selected threshold .. ");
-  }   
+  } 
+
+  requestCellMorphologicalInfo = (elem) => { // e.g. area, solidity etc
+     let morphfeatureName = elem.id.split('.')[1];
+     let featureEntry = cellMorphFeatureList.filter( entry => entry.morphFeature === morphfeatureName);
+     triggerHint(featureEntry[0].description, "info", 7000);    
+  }     
 
   requestCellNegativeInfo = () => {
      triggerHint("To visualize all cells with marker value below or equal selected threshold .. ");
@@ -1214,14 +1278,14 @@ createCellPhenotypesColorsArray = (numOfValidePhenotypes) => {
   	      let channelColor = curGroup.Colors[idx];
 	      // viewer.world.getItemAt(idx).setOpacity(1);
           nodes +=  '<button class="accordion">';
-	        nodes +=    `<li style="background-color: none" id="grpChannel${channelNumber}">`;
+	      nodes +=    `<li style="background-color: none" id="grpChannel${channelNumber}">`;
           nodes +=      `<span  style="background-color:\#${channelColor};   padding-left:0.5vw;">&nbsp</span>&nbsp`;	      
 	      // nodes +=    '<a href="javascript:void(0)" class="channelCheckboxClass" id="ChannelCheckboxId'+ channelNumber +'"  onclick="onChannelCheckboxClick('+ channelNumber +')">';
 	      // nodes +=      '<i class="fa fa-square" >&nbsp&nbsp</i></a>';
 	      // nodes +=    '<a href="javascript:void(0)"  onclick="onSelectedChannelOption('+ channelNumber +')">';
-	        nodes +=      `<font  style="font-size:0.77vw"  id="grpChannelFont${channelNumber}">${channelName}</font>`;
+	      nodes +=      `<font  style="font-size:0.77vw"  id="grpChannelFont${channelNumber}">${channelName}</font>`;
 	      // nodes +=     '</a>';
-	        nodes +=    '</li>';
+	      nodes +=    '</li>';
           nodes +=  '</button>';
           nodes +=  '<div class="accordionpanel">';
           nodes +=     '<table>';
@@ -1348,9 +1412,78 @@ createCellPhenotypesColorsArray = (numOfValidePhenotypes) => {
           nodes +=  '</div>';	      
 	    });
 
+
+        //////---------------------------------------------------------------------//////
+        //////-------------- Initiat Cell Morphological Options -------------------//////
+        //////---------------------------------------------------------------------//////
+
+        //let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData);
+
+        // morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ]
+        let morphFeatureNamesArr = cellMorphFeatureList.map(entry => {
+                                        return entry.morphFeature
+                                    })
+
+        nodes +=  '<button class="accordion">';
+        nodes +=    `<li style="background-color: none" id="DapiCellsMorphOptions">`;
+        nodes +=      `<i style="font-size:1.2vw" class="fa fa-pie-chart"></i>&nbsp`;       
+        nodes +=      `<font  style="font-size:0.77vw"  id="morphOptionsFont">CELL MORPHOLOGY</font>`;
+        nodes +=    '</li>';
+        nodes +=  '</button>';
+        nodes +=  '<div class="accordionpanel">';
+        nodes +=     '<table>';
+        nodes +=       '<colgroup> <col style="width:45%"> <col style="width:40%"><col style="width:15%"> </colgroup>';
+
+     
+        morphFeatureNamesArr.forEach( (morphFeatureName, idx) => {
+              // morphFeatureName e.g. area  
+              // featureStates is object e.g. { mean: 389.9538807755854, std: 182.39338373199172, min: 133.5, "25%": 260.5, "50%": 363.5, "75%": 469.5, max: 1666 }
+              // let morphFeatureStates = dapiMorphStatisticalData[morphFeatureName];
+              let morphFeatMaxVal = 10; //dapiMorphStatisticalData[morphFeatureName].max;
+              let morphFeatMinVal = 0 ; //dapiMorphStatisticalData[featureName].min;
+              let stepVal = (morphFeatMaxVal - morphFeatMinVal)/10;
+              // To make first letter at morphological feature name capital e.g. Area
+              let capitalizeName =  morphFeatureName.charAt(0).toUpperCase() + morphFeatureName.slice(1);           
+
+              nodes +=       '<tr>';
+              nodes +=         `<th style="text-align: left"><p> ${capitalizeName} </p></th>`;      
+              nodes +=         `<th ><div class="tooltip"><input  type="range" style="padding-left:5%; margin-left:10%; width:90%" min="${morphFeatMinVal}" max="${morphFeatMaxVal}" value="${morphFeatMinVal}" step="${stepVal}" id="cellFilterSlider.${morphFeatureName}" onchange="cellMorphFilterSliderChanged(this)" onmouseover="onCellFilterSliderMouseover(this)" disabled ><span class="tooltiptext" style="width: 50%; left: 50%;" id="cellFilterValueTooltip.${morphFeatureName}"></span></div></th>`;
+              nodes +=         `<th><a  href="javascript:void(0)" id="info.${morphFeatureName}" onclick="requestCellMorphologicalInfo(this)"><i style="font-size:1vw;"    class="fa fa-info-circle"></i></a></th>`;            
+              nodes +=       '</tr>'; 
+        });
+
+        nodes +=      '</table>';  
+            
+        nodes +=  '</div>';         
+
+
 	    document.getElementById("channelOptionsList").innerHTML += nodes;
 	}  
 
+
+
+    activateDapiCellsMorphOptionsList = (dapiMorphStatisticalData) => { 
+
+            //morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ] 
+            let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData)
+
+         
+            morphFeatureNamesArr.forEach( (morphFeatureName, idx) => {
+                  // morphFeatureName e.g. area  
+                  // featureStates is object e.g. { mean: 389.9538807755854, std: 182.39338373199172, min: 133.5, "25%": 260.5, "50%": 363.5, "75%": 469.5, max: 1666 }
+                  let morphFeatureStates = dapiMorphStatisticalData[morphFeatureName];
+                  let morphFeatMaxVal = dapiMorphStatisticalData[morphFeatureName].max;
+                  let morphFeatMinVal = 0 ; //dapiMorphStatisticalData[featureName].min;
+                  let stepVal = (morphFeatMaxVal - morphFeatMinVal)/10;             
+
+                  document.getElementById(`cellFilterSlider.${morphFeatureName}`).max = morphFeatMaxVal;
+                  document.getElementById(`cellFilterSlider.${morphFeatureName}`).min = morphFeatMinVal;
+                  document.getElementById(`cellFilterSlider.${morphFeatureName}`).step = stepVal;
+                  document.getElementById(`cellFilterSlider.${morphFeatureName}`).disabled = false;
+
+            });
+
+    }  
 
 /*--------------------------------------------------Right Panel-----------------------------------------------------*/
 /*---------------------------------------------- Boundary Section---------------------------------------------------*/
@@ -3155,6 +3288,57 @@ find_bbox = (obj, flag = "SPX/Grid") => {
       return box
 }
 
+
+//chnlNameType = [{"Frame": "CD45", "Type" : "Immune"}, {"Frame": "KERATIN", "Type" : "Tumor"}, 
+//                {"Frame": "ASMA", "Type" : "Stroma"}]
+getCellsClassification = (chnlNameType) => {  
+
+       let groupData = []; 
+
+       // e.g. "Structural Components__markers_morphology.csv" 
+       let markersMorphFileName =  getGrpMarkersMorphFileName();
+       let grpFeaturesFolder = getGrpFeaturesLocalPath();
+
+       let allCellClassesResoponse = [];
+
+       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/classifyCellsWithMaxIntensity", "&chnl_name_type=" + JSON.stringify(chnlNameType) +
+        "&features_folder=" + grpFeaturesFolder + "&markers_morph_file=" + markersMorphFileName +
+        "&cell_undefined_threshold_value=" + Opts.cellUndefinedThresholdValue + 
+        "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize , function(response) {
+
+             allCellClassesResoponse = JSON.parse(response);
+      });
+
+     return allCellClassesResoponse;
+}
+
+// Get Dapi cells statistical morphological data e.g. area,  solidity,  extent etc..
+getDapiCellsMorphStatData = () => { 
+
+       let dapiMorphStatFileName = getDapiMorphStatFileName();
+       let itemFeaturesFolder = getItemFeaturesLocalPath();
+
+       let boundariesFileName = getItemBoundariesFileName();
+       let boundariesFolder = getBoundariesLocalPath();   
+
+       let morphFeatureNamesArr = cellMorphFeatureList.map(entry => {
+                            return entry.morphFeature
+                        })
+
+       let allMorphDataResoponse = [];
+     
+       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createDapiCellsMorphStatData",
+        "&dapi_morph_stats_file=" + dapiMorphStatFileName + "&item_features_folder=" + itemFeaturesFolder +
+        "&morph_feature_names_arr=" + JSON.stringify(morphFeatureNamesArr) +
+        "&boundaries_file=" + boundariesFileName+ "&boundaries_folder=" + boundariesFolder, function(response) {
+
+             allMorphDataResoponse = JSON.parse(response);
+      });
+
+     return allMorphDataResoponse;
+}
+
+
 getAllSpxTilesFeature = () => { 
 
        let groupData = []; 
@@ -3163,13 +3347,15 @@ getAllSpxTilesFeature = () => {
        let apiUrl = getHostApi();
        let apiKey = getApiKey(); 
        let itemId = getSelectedItemId();
-
+ 
+       // e.g. "Structural Components__markers_morphology.csv" 
+       let markersMorphFileName =  getGrpMarkersMorphFileName();
        let featuresFileName = getGrpFeaturesFileName();
        let featuresFolder = getGrpFeaturesLocalPath();
 
        // For boxplot data file and location
-       let boxplotFileName = getGrpBoxplotFileName();
-       let boxplotFolder = getGrpBoxplotLocalPath();
+       // let boxplotFileName = getGrpBoxplotFileName();
+       // let boxplotFolder = getGrpBoxplotLocalPath();
 
        let boundariesFileName = getItemBoundariesFileName();
        let boundariesFolder = getBoundariesLocalPath();       
@@ -3183,7 +3369,7 @@ getAllSpxTilesFeature = () => {
      
        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createAllSpxTilesFeature","baseUrl=" + apiUrl + 
         "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) +
-        "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder +
+        "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + "&markers_morph_file=" + markersMorphFileName +
         "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize +  
         "&isChannelNormalizeRequired=" + Opts.isChannelNormalizeRequired + 
         // "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
@@ -3300,19 +3486,19 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                               // For future use
                               break;                 
                             }
-        case 'Histogram-log1p(y)':
+             case 'Histogram-log1p(y)':
                             {
                               // For future use
                               break;                 
                             }                            
                            
-              case 'Boxplot':
+             case 'Boxplot':
                             {
                               plotMarkersBoxPlots();
                               //triggerHint("To be Coded ..");
                               break;                
                             }
-           case 'Phenotypes':
+             case 'Phenotypes':
                             {
                               if( isSuperPixel() ) {
 
@@ -5099,6 +5285,8 @@ initBoundariesFeatures = () => {
   createLoadFeatures = () => {
         //let fetchedFeatures = getFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );  <<<<<<<<<<--------
         allTilesFeatures = readJsonFile( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
+
+        
         // let currentTileId = getSelectedTileId();
 
         // resetTileFeatures();        <<<<<<<<<<<<<<<< ------------
@@ -5296,7 +5484,21 @@ initBoundariesFeatures = () => {
                //  disableSimilarTilesBtn(false);
                   // freezeFeaturesControls(false);
               } 
-        }   
+        }  
+
+        //check for dapi cells morphological statistical data e.g. area: min, max, "25%", "50%", "75%"
+        dapiMorphStatisticalData = readJsonFile( getDapiMorphStatFileName(), getItemFeaturesLocalPath() );
+        // dapiMorphStatisticalData is Object { area: {…}, eccentricity: {…}, extent: {…}, ..}
+        //If dapi cells morphological statistical data file not exist, create them
+
+        if(! Object.keys(dapiMorphStatisticalData).length) { 
+             dapiMorphStatisticalData = getDapiCellsMorphStatData()
+        } 
+
+        // if loaded or created succesfully ...
+        if(Object.keys(dapiMorphStatisticalData).length) {
+             activateDapiCellsMorphOptionsList(dapiMorphStatisticalData);   
+        }
 
 } // end of function
 
