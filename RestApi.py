@@ -1,5 +1,5 @@
 #=========================================================
-#* HistoJS Demo - v1.0.0  | 2020
+#* HistoJS Demo - v1.0.0  | 2023
 #=========================================================
 #
 # Github:  https://github.com/Mmasoud1
@@ -12,7 +12,7 @@
 #=========================================================
 #
 #=========================================================
-#                      Rest Api
+#                     Flask Rest Api
 #=========================================================
 #
 #!env/bin/python
@@ -38,7 +38,8 @@ import base64
 from csbdeep.utils import Path, normalize
 from csbdeep.io import save_tiff_imagej_compatible
 from stardist import random_label_cmap, _draw_polygons, export_imagej_rois
-from sklearn.preprocessing import MinMaxScaler   
+from sklearn.preprocessing import MinMaxScaler  
+from sklearn.manifold import TSNE 
 from skimage import data, img_as_float
 from skimage import measure
 from shapely.geometry import Point
@@ -51,10 +52,18 @@ from collections import defaultdict
 import itertools
 import pandas as pd
 import math
+import psutil
+import gc as garbageCollect
 import codecs
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
+#UMAP Dim Reduction
+import umap.umap_ as umap
+#LDA Dim Reduction
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+#PCA Dim Reduction
+from sklearn.decomposition import PCA
 if sys.version_info[0] < 3: 
     from StringIO import StringIO
 else:
@@ -398,6 +407,12 @@ def masks_to_outlines(masks):
                 vr, vc = pvr + sr.start, pvc + sc.start 
                 outlines[vr, vc] = 1
         return outlines
+
+
+def normalize_image(img):
+    """can be used in case of csbdeep.utils normalize failed """
+    img = (img - img.min()) / (img.max() - img.min())
+    return img
 
 
 @app.route('/createBoundariesFromDapiChannel')
@@ -991,21 +1006,183 @@ def createDapiCellsMorphStatData():
   with open(path_to_dapi_morph_stats_file, 'w') as f:
      json.dump(all_basic_morph_feat_States, f)
 
-
   return Response(json.dumps(all_basic_morph_feat_States)) 
+
+  
+
+@app.route('/calculateDimReductionRandomSample')
+def calculateDimReductionRandomSample():
+
+  print("calculate Random Sample for dim reducer..")
+  
+  dim_reducer = request.args.get('dimReducer', 0)
+  #e.g. dim_reducer : t-SNE, PCA, LDA or UMAP
+  sample_data_string = request.args.get('sample', 0)
+  chnl_name_json_string = request.args.get('chnl_names', 0)
+  plot_dim = request.args.get('plotDim', 0, type=int)
+
+  sample_data_dic = json.loads(sample_data_string)
+  #sample_data_dic [{ id: "spx-1", KERATIN_norm: 1.91, CD45_norm: 9.20, ASMA_norm: 1.12, Max: "CD45_norm", Type: "Others", label: 1}, ..]
+
+  chnl_name_dic = json.loads(chnl_name_json_string)
+  #chnl_name_type_dic [  {"channel_name": "CD45", "channel_type" : "Immune"}, {"channel_name": "KERATIN", "channel_type" : "Tumor"}, .. ]
+
+  # Selected Features for processing 
+  markers_norm_col = []
+  for marker in chnl_name_dic:
+      markers_norm_col.append(marker["channel_name"]+"_norm")
+ 
+  df_all_samples = pd.DataFrame.from_dict(sample_data_dic)
+
+  # check for duplicated cells 
+  if df_all_samples['id'].duplicated().any():
+    print("Some cells duplicated at the random sample")
+
+  # Selected Features/columns for dimReducer e.g. CD45_norm   KERATIN_norm  ASMA_norm
+  selected_features = df_all_samples[markers_norm_col]    
+
+  # Find dimReducer 2D features
+
+  if dim_reducer == "t-SNE":  
+    model = TSNE(n_components = plot_dim, n_iter=1000, random_state=0)
+    # Configuration of the parameteres
+    # the number of components = 2   # two dim
+    # default perplexity = 30
+    # default learning rate = 200
+    # default Maximum number of iterations for the optimization = 1000
+      
+    print("Start processing TSNE for data samples ... ")
+    tsne_features = model.fit_transform(selected_features)
+
+    df_all_samples['t-SNE_x'] = tsne_features[:,0]
+    df_all_samples['t-SNE_y'] = tsne_features[:,1]
+    if plot_dim == 3 :
+       df_all_samples['t-SNE_z'] = tsne_features[:,2] 
+
+  elif dim_reducer == "PCA":
+    pca = PCA(n_components = plot_dim) 
+    print("Start processing PCA for data samples ... ")
+    x_principal = pca.fit_transform(selected_features) 
+
+    df_all_samples['PCA_x'] = x_principal[:,0]
+    df_all_samples['PCA_y'] = x_principal[:,1]
+    if plot_dim == 3 :
+       df_all_samples['PCA_z'] = x_principal[:,2] 
+
+
+  elif dim_reducer == "LDA":
+    target = df_all_samples['Type']
+    print("Start processing LDA for data samples ... ")
+    lda_features = LDA(n_components = plot_dim).fit_transform(selected_features,target)
+
+    df_all_samples['LDA_x'] = lda_features[:,0]
+    df_all_samples['LDA_y'] = lda_features[:,1]
+    if plot_dim == 3 :
+       df_all_samples['LDA_z'] = lda_features[:,2] 
+
+
+  elif dim_reducer == "UMAP":
+    reducer = umap.UMAP(random_state=42, n_components = plot_dim)
+    umap_features = reducer.fit_transform(selected_features)
+
+    df_all_samples['UMAP_x'] = umap_features[:,0]
+    df_all_samples['UMAP_y'] = umap_features[:,1]
+    if plot_dim == 3 :
+       df_all_samples['UMAP_z'] = umap_features[:,2] 
+
+
+  print("Converting dataframe to compatible histojs dictionary ..")
+  df_all_samples_with_dim_reduction = df_all_samples.to_dict('records')
+  
+
+  return Response(json.dumps(df_all_samples_with_dim_reduction))  
+
+
+
+
+# @app.route('/calculateRandomSampleTSNE')
+# def calculateRandomSampleTSNE():
+
+#   print("calculate Random Sample TSNE..")
+
+#   sample_data_string = request.args.get('sample', 0)
+#   chnl_name_type_json_string = request.args.get('chnl_name_type', 0)
+#   tsne_dim = request.args.get('tsne_dim', 0, type=int)
+
+
+#   sample_data_dic = json.loads(sample_data_string)
+#   #sample_data_dic [{ id: "spx-1", KERATIN_norm: 1.91, CD45_norm: 9.20, ASMA_norm: 1.12, Max: "CD45_norm", Type: "Others", label: 1}, ..]
+
+#   chnl_name_type_dic = json.loads(chnl_name_type_json_string)
+#   #chnl_name_type_dic [  {"channel_name": "CD45", "channel_type" : "Immune"}, {"channel_name": "KERATIN", "channel_type" : "Tumor"}, .. ]
+  
+
+#   # Selected Features for processing 
+#   markers_norm_col = []
+#   for marker in chnl_name_type_dic:
+#       markers_norm_col.append(marker["channel_name"]+"_norm")
+ 
+#   df_all_samples = pd.DataFrame.from_dict(sample_data_dic)
+
+#   # check for duplicated cells 
+#   if df_all_samples['id'].duplicated().any():
+#     print("Some cells duplicated at the random sample")
+
+#   # Selected Features/columns for TSNE e.g. CD45_norm   KERATIN_norm  ASMA_norm
+#   selected_features = df_all_samples[markers_norm_col]    
+
+
+#   # Find TSNE 2D features
+#   model = TSNE(n_components = tsne_dim, n_iter=1000, random_state=0)
+#   # Configuration of the parameteres
+#   # the number of components = 2   # two dim
+#   # default perplexity = 30
+#   # default learning rate = 200
+#   # default Maximum number of iterations for the optimization = 1000
+  
+#   print("Start processing TSNE for data samples ... ")
+#   tsne_features = model.fit_transform(selected_features)
+
+#   df_all_samples['tsne_x'] = tsne_features[:,0]
+#   df_all_samples['tsne_y'] = tsne_features[:,1]
+#   if tsne_dim == 3 :
+#      df_all_samples['tsne_z'] = tsne_features[:,2]   
+
+
+#   print("Converting dataframe to compatible histojs dictionary ..")
+#   df_all_samples_with_tsne = df_all_samples.to_dict('records')
+  
+
+
+#   return Response(json.dumps(df_all_samples_with_tsne))   
+
+@app.route('/checkMemoryInGB')
+def checkMemoryInGB():
+  print("Checking avaibale memory in Giga Bytes..")
+  garbageCollect.collect()
+  total_memory = psutil.virtual_memory().total/(1024*1024*1024)
+  available_memory = psutil.virtual_memory().available/(1024*1024*1024)
+
+  memory_data = {}
+  memory_data['totalMemory']=  total_memory
+  memory_data['availableMemory']= available_memory   
+ 
+  return Response(json.dumps(memory_data)) 
+
 
 
 
 @app.route('/classifyCellsWithMaxIntensity')
 def classifyCellsWithMaxIntensity():
 
-  print("Classify cells based on thier intensity..")
+  print("Classify cells based on thier intensity to Tumor/Immune/Stromal..")
   markers_morph_file_name = request.args.get('markers_morph_file', 0)  
   out_features_folder = request.args.get('features_folder', 0) 
   chnl_name_type_json_string = request.args.get('chnl_name_type', 0)
   cell_feature_to_normalize = request.args.get('cellFeatureToNormalize', 0)
+  # cluster_method = request.args.get('clusterMethod', 0)
 
-  # cell_undefined_threshold_value can be e.g. mean or "50%"
+  # cell_type "Others" or undefined_threshold_value can be e.g. mean or "50%"
   cell_undefined_threshold_value = request.args.get('cell_undefined_threshold_value', 0)
 
   path_to_markers_morph_file = os.path.join(out_features_folder, markers_morph_file_name)    
@@ -1015,14 +1192,15 @@ def classifyCellsWithMaxIntensity():
   df_cell_markers_morphology = pd.read_csv(path_to_markers_morph_file)
 
   chnl_name_type_dic = json.loads(chnl_name_type_json_string)
-
+  #chnl_name_type_dic [  {"channel_name": "CD45", "channel_type" : "Immune"}, {"channel_name": "KERATIN", "channel_type" : "Tumor"}, .. ]
+  
 
   # Normalize marker mean values
   print('Normalizing markers in progress...')
   markers_norm_col = []
   for marker in chnl_name_type_dic:
-      markers_norm_col.append(marker["Frame"]+"_norm")
-      df_cell_markers_morphology[marker["Frame"]+"_norm"] = df_cell_markers_morphology[marker["Frame"] + cell_feature_to_normalize ].transform(lambda x: (x-x.mean())/x.std()).fillna(-1)#.reset_index()
+      markers_norm_col.append(marker["channel_name"]+"_norm")
+      df_cell_markers_morphology[marker["channel_name"]+"_norm"] = df_cell_markers_morphology[marker["channel_name"] + cell_feature_to_normalize ].transform(lambda x: (x-x.mean())/x.std()).fillna(-1)#.reset_index()
   # scale marker normalized values to the range from 0-255
   sc = MinMaxScaler(feature_range=(0, 255))        
   df_cell_markers_morphology[markers_norm_col] = sc.fit_transform(df_cell_markers_morphology[markers_norm_col])
@@ -1039,12 +1217,12 @@ def classifyCellsWithMaxIntensity():
   # Filter cells with 2 phases: 
   # 1- first find the marker of the max intensity value
   for marker in chnl_name_type_dic:
-      df_selected_markers_normalized.loc[df_selected_markers_normalized['Max'] == marker["Frame"]+"_norm", 'Type'] = marker["Type"]  
+      df_selected_markers_normalized.loc[df_selected_markers_normalized['Max'] == marker["channel_name"]+"_norm", 'Type'] = marker["channel_type"]  
 
   # 2- classify as undefined or Others for any cell with markers values below the threshold cell_undefined_threshold_value
   rslt_df = df_selected_markers_normalized
   for marker in chnl_name_type_dic:
-      rslt_df = rslt_df[rslt_df[marker["Frame"]+"_norm"]< norm_mark_stats[marker["Frame"]+"_norm"][cell_undefined_threshold_value]]
+      rslt_df = rslt_df[rslt_df[marker["channel_name"]+"_norm"] < norm_mark_stats[marker["channel_name"]+"_norm"][cell_undefined_threshold_value]]
 
   df_selected_markers_normalized.loc[rslt_df.index , 'Type'] = 'Others' 
 
@@ -1068,6 +1246,9 @@ def createAllSpxTilesFeature():
   api_key = request.args.get('apiKey', 0)
 
   is_channel_normalize_required = request.args.get('isChannelNormalizeRequired', 0, type=bool)
+
+  print(" is_channel_normalize_required : {}".format(is_channel_normalize_required))
+
 
   cell_feature_to_normalize = request.args.get('cellFeatureToNormalize', 0)
 
@@ -1131,34 +1312,41 @@ def createAllSpxTilesFeature():
         girder_response = requests.get(base_url + request_url)  
 
       image_raw = Image.open(io.BytesIO(girder_response.content))
-      image = np.array(image_raw)
+      preprocess_image = np.array(image_raw)
+
+      del girder_response
+      del image_raw
+      garbageCollect.collect()
+
       
-      if not is_grey_scale(image):
+      if not is_grey_scale(preprocess_image):
         print("channel is not a valide gray scale image, converting  it to gray in progress... ")
 
         try:            
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            preprocess_image = cv2.cvtColor(preprocess_image, cv2.COLOR_BGR2GRAY)
 
-        except ValueError:  #raised if `y` is empty.
+        except ValueError:  
             print(' error converting channel to gray  {}'.format(ValueError))
             return jsonify("Failed");    
             # return jsonify("Not a valide gray channel");     
 
 
       if is_channel_normalize_required:
-          n_channel = 1 if image.ndim == 2 else image.shape[-1]
-          axis_norm = (0,1)   # normalize channels independently
+        n_channel = 1 if preprocess_image.ndim == 2 else preprocess_image.shape[-1]
+        axis_norm = (0,1)   # normalize channels independently
           # axis_norm = (0,1,2) # normalize channels jointly
-          # normalize the image
-          image_norm = normalize(image, 1,99.8, axis=axis_norm)
-          #scale image for the range 0 to 255
-          sc = MinMaxScaler(feature_range=(0, 255))        
-          image_norm_scaled = sc.fit_transform(image_norm).astype('uint8')        
+        try:            
+            # normalize the image
+            preprocess_image = normalize(preprocess_image, 1,99.8, axis=axis_norm)
+            #scale image for the range 0 to 255
+            sc = MinMaxScaler(feature_range=(0, 255))        
+            preprocess_image = sc.fit_transform(preprocess_image).astype('uint8')  
+
+        except MemoryError as error:  
+            print(' error while normalizing channels due to insufficient free Memory  {}'.format(error))
+            return jsonify("chNormFailed");    
+             
           
-          preprocess_image = image_norm_scaled
-          
-      else:
-          preprocess_image = image
 
 
 
@@ -1209,7 +1397,14 @@ def createAllSpxTilesFeature():
 
 
                  tile_mean = np.mean(cropped_cell, axis = (0, 1))
-                 tile_nonzero_mean = cropped_cell[np.nonzero(cropped_cell)].mean()
+
+                 if not np.sum(cropped_cell) :
+                    # if cropped_cell is all zeros, there will be no nonzero
+                    tile_nonzero_mean = tile_mean
+                 else:    
+                    tile_nonzero_mean = cropped_cell[np.nonzero(cropped_cell)].mean()                 
+
+                 #-- tile_nonzero_mean = cropped_cell[np.nonzero(cropped_cell)].mean()
                  tile_std = np.std(cropped_cell, axis = (0, 1))
                  tile_max = np.max(cropped_cell, axis = (0, 1))  
                  # tile_mean = np.mean(imgTile, axis = (0, 1));
@@ -1441,7 +1636,7 @@ def createAllGridTilesFeature():
         try:            
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        except ValueError:  #raised if `y` is empty.
+        except ValueError: 
             print(' error converting channel to gray  {}'.format(ValueError))
             return jsonify("Failed");    
             # return jsonify("Not a valide gray channel");      
@@ -1514,6 +1709,83 @@ def createAllGridTilesFeature():
   return Response(json.dumps(allTilesFeatures)) 
 
 
+
+@app.route('/createMarkerCellsStatisticalData')
+def createMarkerCellsStatisticalData():
+
+  print("Find markers statistical data based on thier  cells intensity ..")
+  markers_morph_file_name = request.args.get('markers_morph_file', 0)
+  # For boxplot data file and location e.g. Structural Components_MarkerCells_Boxplot_Data.json  
+
+  out_features_folder = request.args.get('features_folder', 0) 
+  cell_feature_to_consider = request.args.get('cellFeatureToNormalize', 0)
+  # Opts.cellFeatureToNormalize :  "_mean",  select from [ _mean, _max, _std, _nonzero_mean]
+
+  is_marker_feat_normalize_required = request.args.get('isMarkerFeatureNormalizeRequired', 0, type=bool)
+
+  boxplot_file_name = request.args.get('boxplot_file', 0)
+  out_boxplot_folder = request.args.get('boxplot_folder', 0) 
+  # # If true means consider only the cell pixel values above zero
+  # neglect_zero_pixels = request.args.get('neglect_zero', 0, type=bool)
+  # print("is zero pixels neglected for boxplot:  ", neglect_zero_pixels)  
+
+  group_markers_json_string = request.args.get('grp_markers', 0)  
+
+
+  group_markers_arr = json.loads(group_markers_json_string)
+  # [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
+
+  path_to_markers_morph_file = os.path.join(out_features_folder, markers_morph_file_name)    
+
+  path_to_boxplot_file = os.path.join(out_boxplot_folder, boxplot_file_name)
+  
+  print('Read markers morphology csv file...')  
+
+  df_cell_markers_morphology = pd.read_csv(path_to_markers_morph_file)
+
+
+  markers_col = []
+  if is_marker_feat_normalize_required:
+      # Normalize marker  values based on cell_feature_to_normalize
+      # Opts.cellFeatureToNormalize :  "_mean",  select from [ _mean, _max, _std, _nonzero_mean]
+      print('Normalizing markers in progress..')
+      for marker in group_markers_arr:
+          markers_col.append(marker+"_norm")
+          df_cell_markers_morphology[marker+"_norm"] = df_cell_markers_morphology[marker + cell_feature_to_consider ].transform(lambda x: (x-x.mean())/x.std()).fillna(-1)#.reset_index()
+      # scale marker normalized values to the range from 0-255
+      sc = MinMaxScaler(feature_range=(0, 255))        
+      df_cell_markers_morphology[markers_col] = sc.fit_transform(df_cell_markers_morphology[markers_col])
+
+  else:
+      for marker in group_markers_arr:
+          markers_col.append(marker + cell_feature_to_consider)
+
+  # Get statistical values e.g. mean, min,  max, "25%", "50%" ,"75%",  std  for each  marker e.g. CD45
+  marker_stats = df_cell_markers_morphology[markers_col].describe()
+ 
+  boxplot_data = []
+  # Get boxplot data for each marker   
+  if is_marker_feat_normalize_required:
+
+      for marker in group_markers_arr:
+          boxplot_data.append({'Frame':  marker, 'max': marker_stats[marker + "_norm"]['max'],  'mean': marker_stats[marker + "_norm"]['mean'],  'std': marker_stats[marker + "_norm"]['std'], 'min': marker_stats[marker + "_norm"]['min'], 'q1': marker_stats[marker + "_norm"]['25%'], 'median': marker_stats[marker + "_norm"]['50%'], 'q3': marker_stats[marker + "_norm"]['75%'] })      
+
+
+  else:
+      for marker in group_markers_arr:
+          boxplot_data.append({'Frame':  marker, 'max': marker_stats[marker + cell_feature_to_consider]['max'],  'mean': marker_stats[marker + cell_feature_to_consider]['mean'],  'std': marker_stats[marker + cell_feature_to_consider]['std'], 'min': marker_stats[marker + cell_feature_to_consider]['min'], 'q1': marker_stats[marker + cell_feature_to_consider]['25%'], 'median': marker_stats[marker + cell_feature_to_consider]['50%'], 'q3': marker_stats[marker + cell_feature_to_consider]['75%'] })      
+
+
+  if not (os.path.isdir(out_boxplot_folder )):
+      os.makedirs(out_boxplot_folder) 
+  with open(path_to_boxplot_file, 'w') as f:
+      json.dump(boxplot_data, f)  
+
+
+  return Response(json.dumps(boxplot_data))  
+
+
+
 #  calculate channel mean, max, min, std, median, q1, q3 
 @app.route('/createChannelsStatisticalData')
 def createChannelsStatisticalData():
@@ -1523,6 +1795,8 @@ def createChannelsStatisticalData():
   api_key = request.args.get('apiKey', 0)
 
   is_channel_normalize_required = request.args.get('isChannelNormalizeRequired', 0, type=bool)
+
+  print(" is_channel_normalize_required : {}".format(is_channel_normalize_required))
 
   group_data_json_string = request.args.get('grp_data', 0)
 
@@ -1558,55 +1832,72 @@ def createChannelsStatisticalData():
         girder_response = requests.get(base_url + request_url)  
 
       image_raw = Image.open(io.BytesIO(girder_response.content))
-      image = np.array(image_raw)
+      preprocess_image = np.array(image_raw)
+
+      del girder_response
+      del image_raw
+      garbageCollect.collect()
+
 
       # image_width, image_height = image_raw.size 
       
-      if not is_grey_scale(image):
-        print("channel is not a valide gray scale image, converting  it to gray in progress... ")
+      if not is_grey_scale(preprocess_image):
+        print("channel is not a valid gray scale image, converting  it to gray in progress... ")
 
         try:            
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            preprocess_image = cv2.cvtColor(preprocess_image, cv2.COLOR_BGR2GRAY)
 
-        except ValueError:  #raised if `y` is empty.
+        except ValueError:  
             print(' error converting channel to gray  {}'.format(ValueError))
             return jsonify("Failed");    
             # return jsonify("Not a valide gray channel");     
 
 
       if is_channel_normalize_required:
-          n_channel = 1 if image.ndim == 2 else image.shape[-1]
-          axis_norm = (0,1)   # normalize channels independently
+        n_channel = 1 if preprocess_image.ndim == 2 else preprocess_image.shape[-1]
+        axis_norm = (0,1)   # normalize channels independently
           # axis_norm = (0,1,2) # normalize channels jointly
-          # normalize the image
-          image_norm = normalize(image, 1,99.8, axis=axis_norm)
-          #scale image for the range 0 to 255
-          sc = MinMaxScaler(feature_range=(0, 255))        
-          image_norm_scaled = sc.fit_transform(image_norm).astype('uint8')        
+        try:            
+            # normalize the image
+            preprocess_image = normalize(preprocess_image, 1,99.8, axis=axis_norm)
+            #scale image for the range 0 to 255
+            sc = MinMaxScaler(feature_range=(0, 255))        
+            preprocess_image = sc.fit_transform(preprocess_image).astype('uint8')  
+
+        except MemoryError as error:  
+            print(' Error while normalizing channels due to insufficient free Memory  {}'.format(error))
+            return jsonify("chNormFailed");          
           
-          preprocess_image = image_norm_scaled
-          
-      else:
-          preprocess_image = image
 
 
 
       # Get boxplot data for each channel
       image_flatten = preprocess_image.flatten()
-      image_flatten_nonzero = image_flatten.ravel()[np.flatnonzero(image_flatten)]      
-
-      # df_marker_positive = pd.DataFrame(image_flatten_nonzero, columns=[marker["frameName"]])
 
       if neglect_zero_pixels : 
-        # df_marker_positive = df.loc[df[marker["frameName"]] > 0]
-        # stats = df_marker_positive.describe()   
-        stats = pd.DataFrame(image_flatten_nonzero, columns=[marker["frameName"]]).describe()
-      # Filter channel data for pixels > 0   
-      else:
-        # stats = df.describe()
-        stats = pd.DataFrame(image_flatten, columns=[marker["frameName"]]).describe()
+          # image_flatten_nonzero. Filter channel data for pixels > 0  
+          image_flatten = image_flatten.ravel()[np.flatnonzero(image_flatten)]      
 
-      boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
+      try:            
+           stats = pd.DataFrame(image_flatten, columns=[marker["frameName"]]).describe()
+
+      except MemoryError as error:  
+          print('insufficient free Memory  {}'.format(error))
+          print('Try find statisticals (e.g. min, quantile, etc )  with np approach ')
+          stats = { marker["frameName"] : {} }
+          stats[marker["frameName"]]['max']  =  np.max(image_flatten)  
+          stats[marker["frameName"]]['mean'] =  np.mean(image_flatten)   
+          #--stats[marker["frameName"]]['std']  =  np.std(image_flatten)  
+          stats[marker["frameName"]]['min']  =  np.min(image_flatten) 
+          stats[marker["frameName"]]['25%']  =  np.quantile(image_flatten, 0.25) 
+          stats[marker["frameName"]]['50%']  =  np.quantile(image_flatten, 0.5) 
+          stats[marker["frameName"]]['75%']  =  np.quantile(image_flatten, 0.75) 
+
+
+
+      #-- boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'std': stats[marker["frameName"]]['std'], 'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
+      # boxplot_data without std
+      boxplot_data.append({'Frame':  marker["frameName"], 'channelNum': marker["frameNum"],  'OSDLayer': marker["OSDLayer"],  'max': stats[marker["frameName"]]['max'],  'mean': stats[marker["frameName"]]['mean'],  'min': stats[marker["frameName"]]['min'], 'q1': stats[marker["frameName"]]['25%'], 'median': stats[marker["frameName"]]['50%'], 'q3': stats[marker["frameName"]]['75%'] })      
 
 
   if not (os.path.isdir(out_boxplot_folder )):
@@ -1949,7 +2240,7 @@ def readRemoteCsvFile():
 
   csv_file = gc.get( request_url, jsonResp = False)
   # CSV Read
-  raw_data = StringIO(csv_file.content)
+  raw_data = io.BytesIO(csv_file.content)
   df = pd.read_csv(raw_data)
   # Convert to JSON
   to_json = df.to_json(orient="records")

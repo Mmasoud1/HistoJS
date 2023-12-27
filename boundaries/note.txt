@@ -3,7 +3,6 @@
 =========================================================
 
 * Github:  https://github.com/Mmasoud1
-* GitLab:  https://gitlab.com/mmasoud1
 * Discription:  A user interface for whole slide image channel design, analysis and registration. 
 *               It is based on DSA as backbone server
 * 
@@ -12,4 +11,4 @@
 
 =========================================================
 
-Folder to store boundaries JSON files (e.g. TONSIL-1_40X_cellMask.json)
+Folder to store boundaries JSON files (e.g. SampleName_cellMask.json)

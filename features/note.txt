@@ -3,7 +3,6 @@
 =========================================================
 
 * Github:  https://github.com/Mmasoud1
-* GitLab:  https://gitlab.com/mmasoud1
 * Discription:  A user interface for whole slide image channel design, analysis and registration. 
 *               It is based on DSA as backbone server
 * 
@@ -13,4 +12,4 @@
 =========================================================
 
 Folder to store features folders and JSON files 
-(e.g. features/TONSIL-1_40X/Structural Components/Grid/TileSize_64/Structural Components_Grid_64_Feat.json)
+(e.g. features/TONSIL-1_40X/DAPI_KERATIN_ASMA_CD45_IBA1/Spx/DAPI_KERATIN_ASMA_CD45_IBA1_Spx_Feat.json)

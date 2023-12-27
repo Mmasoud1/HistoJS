@@ -1,0 +1,451 @@
+@import (once) "../../include/vars";
+@import (once) "../../include/mixins";
+
+@navviewPaneWidth: 280px;
+@navviewPaneWidthCompact: 48px;
+@navviewPaneItemHeight: 40px;
+
+@navviewPaneBackground: #e5e5e5;
+@navviewPaneItemHover: #cecece;
+@navviewPaneItemActive: #b7b7b7;
+@navviewPaneItemFocus: #0a0a0a;
+@navviewPaneItemDisabled: #9c9c9c;
+
+
+.navview {
+    display: block;
+    position: relative;
+    background-color: @white;
+    color: @dark;
+    overflow: hidden;
+    height: 100%;
+    min-height: 100%;
+}
+
+.navview {
+
+    .navview-pane, .navview-content {
+        display: block;
+        transition: all .1s linear;
+        min-height: 100%;
+        height: 100%;
+    }
+
+    .navview-pane {
+        width: @navviewPaneWidth;
+        background-color: @navviewPaneBackground;
+        position: absolute;
+        left: 0;
+        top: 0;
+        .translate3d(-100%);
+        z-index: 3;
+
+        &.open {
+            .translate3d(0);
+            .navview-menu-container {
+                overflow-y: auto!important;
+            }
+        }
+    }
+
+    .navview-content {
+        position: relative;
+    }
+}
+
+.navview {
+    .pull-button, .holder {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 48px;
+        height: 48px;
+        background-color: transparent;
+        border: 2px solid transparent;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .holder {
+        height: 40px;
+        display: none;
+    }
+
+    .navview-container, .navview-menu-container {
+        display: block;
+        position: relative;
+        width: auto;
+        background-color: inherit;
+    }
+
+    .navview-menu-container {
+        z-index: -1;
+    }
+
+    .navview-menu {
+        display: block;
+        position: relative;
+        list-style: none inside;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background-color: @navviewPaneBackground;
+
+        li {
+            display: block;
+            position: relative;
+        }
+
+        li {
+            a {
+                display: flex;
+                align-items: center;
+                position: relative;
+                line-height: @navviewPaneItemHeight;
+                text-decoration: none;
+                color: inherit;
+                white-space: nowrap;
+                border: 2px solid transparent;
+                height: @navviewPaneItemHeight;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+        }
+
+        .icon {
+            width: 48px;
+            height: 40px;
+            display: block;
+            text-align: center;
+        }
+
+        .caption {
+            padding-left: 48px;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .icon + .caption {
+            padding-left: 0;
+        }
+
+        .item-header {
+            font-size: 22px;
+            height: 32px;
+            line-height: 32px;
+            padding-left: 16px;
+            cursor: default;
+            background-color: transparent;
+            white-space: nowrap;
+            display: block;
+        }
+
+        li {
+            &.active {
+                &::before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    height: 24px;
+                    top: 8px;
+                    left: 0;
+                    width: 4px;
+                    background-color: @cyan;
+                    z-index: 1;
+                }
+            }
+
+            &.disabled {
+                color: @navviewPaneItemDisabled!important;
+
+                img {
+                    opacity: .5;
+                }
+            }
+        }
+    }
+
+    .pull-button, .navview-menu .icon, .suggest-box .holder {
+        & > * {
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            font-size: 16px;
+            vertical-align: initial;
+        }
+    }
+
+    .pull-button, .holder, .navview-menu li a {
+        &:hover {
+            background-color: @navviewPaneItemHover;
+        }
+
+        &:active {
+            background-color: @navviewPaneItemActive;
+        }
+    }
+
+    .suggest-box {
+        display: block;
+        padding: 8px 0;
+
+        .input, .select, .textarea {
+            display: flex;
+            width: ~"calc(100% - 24px)"!important;
+            margin: 0 12px;
+        }
+    }
+
+    .item-separator {
+        height: 16px!important;
+        width: 100%;
+        display: block;
+        background-color: transparent;
+        cursor: default;
+    }
+
+    .navview-menu .dropdown-toggle {
+        padding-right: 0!important;
+        &::before {
+            display: none;
+        }
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: auto;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 8px 8px;
+            border-color: transparent transparent @dark  transparent;
+            z-index: 1;
+            transform: rotate(-90deg);
+            transition: all .3s;
+        }
+        &.active-toggle::after {
+            border-width: 0 0 8px 8px;
+            border-color: transparent transparent @dark  transparent;
+            transform: rotate(0);
+            bottom: 0;
+            top: auto;
+        }
+    }
+
+    &.focusableItems {
+        .pull-button, .holder, .navview-menu li a {
+            &:focus {
+                border: 2px solid @navviewPaneItemFocus;
+            }
+        }
+    }
+
+    .badges {
+        display: flex;
+        margin-left: auto;
+        margin-right: 8px;
+
+        .badge {
+            margin: 0 2px;
+        }
+    }
+
+    .data-box {
+        display: block;
+    }
+
+    .navview-menu .navview-menu .item-header {
+        display: none!important;
+    }
+}
+
+.navview {
+    &.expanded {
+
+        .navview-pane {
+            width: @navviewPaneWidth!important;
+
+            .navview-menu .caption, .item-header {
+                display: block!important;
+            }
+
+            .suggest-box {
+                > *:not(.holder) {
+                    display: flex!important;
+                }
+            }
+
+            .holder {
+                display: none!important;
+            }
+
+            .navview-menu-container {
+                overflow-y: auto!important;
+            }
+        }
+        .badges {
+            display: flex!important;
+        }
+        .data-box {
+            display: block!important;
+        }
+    }
+
+    &.compacted {
+        .navview-pane {
+            width: @navviewPaneWidthCompact!important;
+            .translate3d(0);
+
+            .navview-menu .caption,
+            .item-header {
+                display: none!important;
+            }
+
+            .suggest-box {
+                > *:not(.holder) {
+                    display: none!important;
+                }
+            }
+
+            .holder {
+                display: block!important;
+            }
+
+            .navview-menu-container {
+                overflow-y: initial!important;
+            }
+
+        }
+        .navview-content {
+            margin-left: @navviewPaneWidthCompact!important;
+        }
+        .badges, .data-box {
+            display: none!important;
+        }
+    }
+}
+
+.navview-compact(){
+    .navview-pane {
+        width: @navviewPaneWidthCompact;
+        .translate3d(0);
+
+        .navview-menu .caption, .item-header {
+            display: none;
+        }
+
+        .suggest-box {
+            > *:not(.holder) {
+                display: none;
+            }
+        }
+
+        .holder {
+            display: block;
+        }
+
+        .navview-menu-container {
+            overflow-y: initial;
+        }
+
+    }
+    .navview-content {
+        margin-left: @navviewPaneWidthCompact;
+    }
+    .badges, .data-box {
+        display: none;
+    }
+}
+
+.navview-expanded(){
+    .navview-pane {
+        width: @navviewPaneWidth;
+        .translate3d(0);
+
+        .navview-menu .caption, .item-header {
+            display: block;
+        }
+
+        .suggest-box {
+            > *:not(.holder) {
+                display: flex;
+            }
+        }
+
+        .holder {
+            display: none;
+        }
+
+        .navview-menu-container {
+            overflow-y: auto;
+        }
+    }
+    .navview-content {
+        margin-left: @navviewPaneWidth;
+    }
+    .badges {
+        display: flex;
+    }
+    .data-box {
+        display: block;
+    }
+}
+
+each(@mediaBreakpointListMobile, {
+    @media screen and (min-width: @@value) {
+        .navview-margin-@{value} {margin-left: @navviewPaneWidth;}
+        .navview-margin-compact-@{value} {margin-left: @navviewPaneWidthCompact;}
+
+        .navview {
+            &.navview-compact-@{value} {
+                .navview-compact();
+            }
+            &.navview-expand-@{value} {
+                .navview-expanded();
+            }
+        }
+    }
+})
+
+.navview {
+    &.compacted, &.js-compact:not(.expanded) {
+        .navview-menu .navview-menu {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            width: 220px;
+            max-width: @navviewPaneWidth;
+
+            .caption {
+                display: block!important;
+            }
+
+            .item-header {
+                display: block!important;
+            }
+        }
+    }
+}
+
+.navview {
+    &.compacted, &.js-compact {
+        & .navview-pane > .navview-menu-container > .navview-menu > li > a {
+            & > .caption {
+                display: none;
+            }
+
+            & > .icon:hover + .caption {
+                display: block!important;
+                position: absolute;
+                left: ~"calc(100% + 0px)";
+                background-color: inherit;
+                padding: 0 16px;
+            }
+        }
+    }
+}

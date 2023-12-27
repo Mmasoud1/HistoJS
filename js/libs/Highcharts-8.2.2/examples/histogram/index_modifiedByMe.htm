@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Highcharts Example</title>
+
+		<style type="text/css">
+.highcharts-figure, .highcharts-data-table table {
+  min-width: 310px; 
+  max-width: 800px;
+  margin: 1em auto;
+}
+
+.highcharts-data-table table {
+font-family: Verdana, sans-serif;
+border-collapse: collapse;
+border: 1px solid #EBEBEB;
+margin: 10px auto;
+text-align: center;
+width: 100%;
+max-width: 500px;
+}
+.highcharts-data-table caption {
+  padding: 1em 0;
+  font-size: 1.2em;
+  color: #555;
+}
+.highcharts-data-table th {
+font-weight: 600;
+  padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+  padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+  background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+  background: #f1f7ff;
+}
+
+		</style>
+	</head>
+	<body style="background-color:black">
+<script src="../../code/highcharts.js"></script>
+<script src="../../code/modules/histogram-bellcurve.js"></script>
+<script src="../../code/modules/exporting.js"></script>
+<script src="../../code/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+</figure>
+
+
+
+		<script type="text/javascript">
+
+
+var data = [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 3.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
+
+
+
+var data1 = [4.5, 4, 5.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 5.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 5.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 5.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 5.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 5.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 5.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 5.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 5.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 5.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 5.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 6, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
+
+Highcharts.chart('container', {
+    chart: {
+      
+        backgroundColor: "black",
+        height: '70%',
+    },
+
+    title: {
+        text: ''
+    },
+    legend: {
+        align: 'center',  // left, right
+        verticalAlign: 'top',  // top, middle or bottom
+        layout: 'horizontal',  //horizontal , proximate, vertical
+        itemStyle: {
+            color: 'white',
+            fontWeight: 'bold'
+        }
+    }, 
+
+    // xAxis: {
+    //     title: { text: 'Area' },
+    //     alignTicks: false
+    // },
+
+                    xAxis: {
+                        title: { 
+                            text: 'Area',
+                            style: {
+                                color: '#fff',
+                                fontWeight: 'bold',
+                                fontSize: '10px',
+                                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+                            }                            
+                         },
+
+                        labels: {
+                              rotation: 0,
+                              style: {
+                                  color: "white",
+                                  fontWeight: "bold"
+                              }
+                        }                        
+                    },    
+
+    yAxis: {
+        title: { 
+            text: '# Cells',
+            style: {
+                color: '#fff',
+                fontSize: '10px',
+                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+            }                            
+
+
+         },        
+        gridLineWidth: 0,
+        labels: {
+              style: {
+                  color: "white", //chartOptions.yAxisTicksColor,
+                  fontWeight: "bold" //chartOptions.axisFontWeight
+              } 
+          }          
+
+    },
+
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },    
+
+    series: [{
+        name: 'Tumor',
+        type: 'histogram',
+        color: "#ff4846",
+        borderColor: "black",
+        borderWidth: 5,
+        baseSeries: 's1',
+        opacity: 0.9,
+        zIndex: 1
+      //  binsNumber: 5
+    }, {
+        name: 'Data',
+        visible: false,
+        showInLegend: false,    
+       // type: 'scatter',
+        data: data,
+        id: 's1'
+
+    },{
+        name: 'Immune',
+        type: 'histogram',
+        color: '#61c346',
+        baseSeries: 's2',
+        zIndex: -1
+      //  binsNumber: 5 
+    }, {
+        name: 'Data',
+        visible: false,
+        showInLegend: false,    
+       // type: 'scatter',
+        data: data1,
+        id: 's2'
+    }]
+
+
+
+});
+		</script>
+	</body>
+</html>

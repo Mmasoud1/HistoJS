@@ -1,0 +1,180 @@
+@import (once) "../../include/vars";
+@import (once) "../../include/mixins";
+
+.chat {
+    display: flex;
+    flex-flow: column;
+    border: 1px solid @borderColor;
+    background-color: @white;
+}
+
+.chat {
+
+    .title, .messages, .message-input {
+        display: block;
+    }
+
+    .title {
+        font-size: 18px;
+        line-height: 1.2;
+        padding: 8px;
+        border-bottom: 1px solid @borderColor;
+    }
+
+    .messages {
+        padding: 8px;
+        border-bottom: 1px solid @borderColor;
+        height: 100%;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+    .message {
+
+        display: flex;
+        flex-flow: row wrap;
+
+        .message-sender {
+            font-weight: bold;
+            font-size: 12px;
+            order: 1;
+            position: absolute;
+            top: 6px;
+            left: 6px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            order: 2;
+            opacity: .5;
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+        }
+
+        .message-item {
+            width: 100%;
+            flex-shrink: 0;
+            display: flex;
+            flex-flow: row nowrap;
+            margin: 2px 0 0;
+            order: 3;
+        }
+
+        .message-item {
+            .message-avatar {
+                overflow: hidden;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                flex-shrink: 0;
+                display: block;
+                order: 1;
+            }
+            .message-text {
+                display: flex;
+                align-items: center;
+                border: 1px solid @lightGray;
+                margin-left: 8px;
+                order: 2;
+                font-size: 14px;
+                line-height: 1.2;
+                padding: 30px 10px;
+                min-width: 100px;
+                max-width: 100%;
+                background-color: @lightGray;
+                position: relative;
+            }
+
+            .message-text-inner {
+                width: 100%;
+                overflow: hidden;
+
+            }
+
+            .message-text {
+                &::before {
+                    position: absolute;
+                    right: 100%;
+                    top: 14px;
+                    border: 6px solid transparent;
+                    border-right-color: inherit;
+                    content: ' ';
+                    height: 0;
+                    width: 0;
+                    pointer-events: none;
+                }
+
+                &.--next {
+                    padding-top: 10px;
+                    &::before {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        &.right {
+            .message-item {
+                justify-content: flex-end;
+            }
+
+            .message-time {
+                order: 1;
+                text-align: left;
+                left: auto;
+                right: 6px;
+            }
+
+            .message-sender {
+                order: 2;
+                left: auto;
+                right: 6px;
+            }
+
+            .message-avatar {
+                order: 2;
+            }
+
+            .message-text {
+                order: 1;
+                margin-left: 0;
+                margin-right: 8px;
+                &::before {
+                    right: auto;
+                    left: 100%;
+                    border-right-color: transparent;
+                    border-left-color: inherit;
+                }
+
+
+                &.--next {
+                    &::before {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.chat {
+    .message-input {
+        flex-shrink: 0;
+        margin-top: auto;
+        padding: 8px;
+
+        &.disabled {
+            opacity: .5;
+        }
+    }
+}
+
+.chat {
+    .message.left + .message.right {
+        margin-top: 10px;
+    }
+    .message.right + .message.left {
+        margin-top: 10px;
+    }
+}

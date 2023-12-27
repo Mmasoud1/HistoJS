@@ -4,7 +4,6 @@
 =========================================================
 
 * Github:  https://github.com/Mmasoud1
-* GitLab:  https://gitlab.com/mmasoud1
 * Discription:  A user interface for whole slide image channel design, analysis and registration. 
 *               It is based on DSA as backbone server
 * 
@@ -357,6 +356,23 @@ body {
                              font-size: 0.67vw;
                              }
 
+.chnlplotsbar {
+                height: auto; /*29.7vh; */
+                min-height: calc(190px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                top:  calc(630px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  
+                right: 1vw;
+                min-width: 1.5vw;
+                max-width: 3vw;
+                margin-right: -18vw; 
+             }
+
+          .chnlplotsbar span:hover {
+                                   opacity: 0.7;
+                                  }
+
+          .chnlplotsbar a {
+                           font-size: 0.77vw;
+                          }
 
 .hintpanel{
 /*          height: calc(100px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ;  */
@@ -382,6 +398,7 @@ body {
                       opacity: 0.7;
                       cursor: var(--cursor-type);
                      }
+
 
 /***** **********  to remove *********************************//*
 .osdcaptionpanel{
@@ -448,7 +465,25 @@ body {
   padding: 0.3vw;
   text-align: left;
   font-weight: bold;
-}                                             
+}         
+
+
+
+/*.pheno-grid-container {
+  display: grid;
+  width:20vw;
+  grid-template-columns: auto auto auto;
+  background-color: var(--div-bg-color);
+  padding: 0px;
+}
+.pheno-grid-item {
+  background-color: var(--div-bg-color);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 0px;
+  text-align: center;
+  margin:0px;
+}
+*/
 /* -------paragraph justification ----*/
 
 .just{
@@ -696,7 +731,7 @@ input {
                         font-size: 0.67vw;
                         border-radius: 2.9vw;
                         position: absolute;
-                        z-index: 1;
+                        z-index: 10;
                         bottom: 100%;
                         left: 0;
                         margin-left: 0;
@@ -766,6 +801,7 @@ input {
 
   .chnlplotsright{
                     height: auto;
+                    min-height: calc(250px * var(--screen-curAvailHeigth)/var(--screen-ref-availHeigth) ) ; 
                     width: 17vw;
                     position: fixed;
                     z-index: 1;
@@ -1341,6 +1377,8 @@ a {
       background: #f1f7ff;
   }
 
+
+
   #button-bar {
       min-width: 310px;
       max-width: 800px;
@@ -1353,6 +1391,23 @@ a {
                                                 font-size: 0.52vw;
                                                 -webkit-appearance: none;
                                             }
+
+                                            select#tumorMarkerList {
+                                                font-size: 0.52vw;
+                                                -webkit-appearance: none;
+                                            } 
+
+                                            select#maxContrastSliderMaxList {
+                                                font-size: 0.52vw;
+                                                -webkit-appearance: none;
+                                            } 
+                                            
+                                            select#minContrastSliderMaxList {
+                                                font-size: 0.52vw;
+                                                -webkit-appearance: none;
+                                            }                                             
+
+
 
 
   @keyframes formflashkeyframes {

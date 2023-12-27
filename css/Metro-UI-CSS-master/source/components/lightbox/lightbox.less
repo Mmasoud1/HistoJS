@@ -1,0 +1,115 @@
+@import (once) "../../include/vars";
+@import (once) "../../include/mixins";
+
+.lightbox-overlay {
+    background-color: rgba(0,0,0,.9);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: @zindex-overlay;
+}
+
+.lightbox {
+    z-index: @zindex-overlay + 1;
+    position: fixed;
+    background: transparent;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.lightbox__closer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    background: rgba(248,248,248,.5);
+    color: @dark;
+
+    * {
+        line-height: 32px;
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+    }
+}
+
+.lightbox__prev, .lightbox__next {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(248,248,248,.5);
+    color: @dark;
+    flex-grow: 0;
+    flex-shrink: 0;
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -24px;
+    left: 20px;
+
+    * {
+        line-height: 48px;
+        font-size: 40px;
+        height: 40px;
+        width: 40px;
+    }
+}
+
+.lightbox__next {
+    left: auto;
+    right: 20px;
+}
+
+.lightbox__prev, .lightbox__next, .lightbox__closer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.lightbox__image {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.lightbox__image-wrapper {
+    display: block;
+    width: auto;
+    max-height: ~"calc(100vh - 80px)";
+    max-width: ~"calc(100vw - 20px)";
+
+    &::before {
+        content: attr(data-title);
+        position: absolute;
+        color: @white;
+        top: 100%;
+        left: 0;
+        right: 0;
+    }
+
+    &.no-title {
+        &::before {
+            display: none;
+        }
+    }
+
+    img {
+        display: block;
+        width: auto;
+        max-height: ~"calc(100vh - 80px)";
+        max-width: ~"calc(100vw - 20px)";
+    }
+}

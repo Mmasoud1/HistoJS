@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>HistoJS Mocha Tests</title>
+    <!-- To avoid favicon.ico error put:  -->
+    <link rel="shortcut icon" href="#">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+
+    <!-- HistoJS Libs -->
+    <script src="../js/libs/tf.min.js"></script>
+    <script src="../js/libs/webix/webix.js" type="text/javascript"></script>
+    <script src="https://docs.opencv.org/3.4.0/opencv.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+
+
+    <!-- Mocha Setup -->
+    <script class="mocha-init">
+        mocha.ui('tdd');
+        mocha.setup('bdd');
+        mocha.reporter('html');
+        var expect = chai.expect;
+        // var assert = chai.assert;
+        // mocha.checkLeaks();
+        mocha.setup({globals: ['hasCert']});
+    </script>
+    <!-- src -->
+    <script src="../js/histojs/mainParametersv3.js"></script> 
+    <script src="../js/histojs/designFunctionsv4.js"></script>
+    <script src="../js/histojs/analysisFunctionsv12.js"></script>
+
+    <!-- Tests -->
+    <script src="histojs_test/designFunctions_test.js"></script>
+    <script src="histojs_test/analysisFunctions_test.js"></script>
+
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
+</html>

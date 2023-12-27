@@ -1,6 +1,6 @@
 <!-- 
 =========================================================
-* HistoJS Demo - v1.0.0  | 2020
+* HistoJS Demo - v1.0.0  | 2023
 =========================================================
 
 * Github:  https://github.com/Mmasoud1
@@ -8,7 +8,7 @@
 *               It is based on DSA as backbone server.
 * 
 *
-* Coded by Mohamed Masoud ( mmasoud2@outlook.com )
+* @author Mohamed Masoud <mmasoud2@outlook.com>
 
 =========================================================
 -->
@@ -25,8 +25,8 @@
   <link rel="shortcut icon" href="#">
 
 
-  <link rel="stylesheet" href="js/webix/webix.css" type="text/css">
-  <link rel="stylesheet"   href="css/animate.css/animate.min.css"   />  
+  <link rel="stylesheet" href="js/libs/webix/webix.css" type="text/css">
+  <link rel="stylesheet" href="css/animate.css/animate.min.css" />  
 <!--   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -40,43 +40,63 @@
 <!--   <link href="css/toggle-switch.css" rel="stylesheet" type="text/css"> -->
 <!-- 
   <script src="//openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
-  <script src="js/svg-overlay-master/openseadragon-svg-overlay.js"></script>   -->
-  <script src="js/webix/webix.js" type="text/javascript"></script>
+  <script src="js/svg-overlay-master/openseadragon-svg-overlay.js"></script>  
+-->
+  <script src="js/libs/webix/webix.js" type="text/javascript"></script>
 
-  <script src="js/plotly-latest.min.js"></script>
+  <script src="js/libs/plotly-latest.min.js"></script>
+
+
+
+  <!-- statistics Lib -->
+  <script src="js/libs/statistics.min.js" type="text/javascript"></script>
+    <script src="js/libs/jstat/jstat.js" type="text/javascript"></script>
+    <!-- <script src="js/Statistics/simple-statistics.min.js" type="text/javascript"></script> -->
+    <!--<script src='https://unpkg.com/simple-statistics@7.7.0/dist/simple-statistics.min.js'></script> -->
+
+ 
+
+  <!-- https://underscorejs.org/# -->
+  <script src="js/libs/underscore/underscore-umd-min.js"></script>   
+
 
   <!-- chart plot library option 1 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
   <!-- chart plot library option 2 -->
-  <script src="js/Highcharts-8.2.2/code/highcharts.js"></script>
-  <script src="js/Highcharts-8.2.2/code/highcharts-more.js"></script>
-  <script src="js/Highcharts-8.2.2/code/highcharts-3d.js"></script>
-  <script src="js/Highcharts-8.2.2/code/modules/cylinder.js"></script>  
-  <script src="js/Highcharts-8.2.2/code/modules/exporting.js"></script>
-  <script src="js/Highcharts-8.2.2/code/modules/export-data.js"></script>
-  <script src="js/Highcharts-8.2.2/code/modules/accessibility.js"></script>  
+  <script src="js/libs/Highcharts-8.2.2/code/highcharts.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/highcharts-more.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/highcharts-3d.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/modules/histogram-bellcurve.js"></script>   
+  <script src="js/libs/Highcharts-8.2.2/code/modules/heatmap.js"></script>  
+  <script src="js/libs/Highcharts-8.2.2/code/modules/cylinder.js"></script>  
+  <script src="js/libs/Highcharts-8.2.2/code/modules/sankey.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/modules/dependency-wheel.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/modules/exporting.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/modules/export-data.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/modules/offline-exporting.js"></script>
+  <script src="js/libs/Highcharts-8.2.2/code/modules/accessibility.js"></script>  
 
 
-  <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
-  <script type="text/javascript" src="js/spectrum.js"></script>
-  <script src="js/mainParametersv3.js" type="text/javascript"></script>  
-  <script src="js/designFunctionsv4.js" type="text/javascript"></script>  
-  <script src="js/analysisFunctionsv3.js" type="text/javascript"></script> 
+  <script type="text/javascript" src="js/libs/jquery-3.5.1.js"></script>
+  <script type="text/javascript" src="js/libs/spectrum.js"></script>
+  <script src="js/histojs/mainParametersv3.js" type="text/javascript"></script>  
+  <script src="js/histojs/designFunctionsv4.js" type="text/javascript"></script>  
+  <script src="js/histojs/analysisFunctionsv12.js" type="text/javascript"></script> 
   <script src="https://unpkg.com/mathjs@5.2.3/dist/math.min.js"></script>   
-<!--   <script src="js/OpenSeadragonThreejsOverlay-master/openseadragon-threejs-overlay.js" type="text/javascript"></script>    -->
+<!--   <script src="js/libs/OpenSeadragonThreejsOverlay-master/openseadragon-threejs-overlay.js" type="text/javascript"></script>    -->
 
-  <script src="js/node-lib/bundle.js"></script>    
+  <script src="js/libs/node-lib/bundle.js"></script>  
+
+  <script src="js/libs/tf.min.js"></script>     
 
 
-
-
-  <script src="js/d3-context-menu.js"></script>
+  <script src="js/histojs/d3-context-menu.js"></script>
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="lib/d3.js"></script>
+  <script src="js/libs/d3.js"></script>
 
   <script src="https://d3js.org/d3-polygon.v1.min.js"></script>
 
@@ -84,16 +104,17 @@
   <script src="lib/openseadragon/openseadragon.js"></script>
   <script src="lib/openseadragon-filtering.js"></script>   -->
 
-      <script src="https://cdn.jsdelivr.net/npm/openseadragon/build/openseadragon/openseadragon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/openseadragon@3.1.0/build/openseadragon/openseadragon.min.js"></script>
 
 <!--   <script src="js/d3-context-menu.js"></script> -->
-  <script src="js/svg-overlay-master/openseadragon-svg-overlay.js"></script>
+  <script src="js/libs/svg-overlay-master/openseadragon-svg-overlay.js"></script>
+  <script src="js/libs/openseadragon/openseadragon-scalebar.js"></script>
 
 
 </head>
 
 
-<body style="background-color:black" onload="docLoaded()">
+<body style="background-color:black" onload="docLoaded()" onresize="docResized()">
 
 <div class="navbar" >
   <p style="text-shadow: 4px 3px  grey"><b>HistoJS </b></p>
@@ -106,7 +127,7 @@
     <div class="dropdown-content" id="modeDropDownMenu"  >
        <a href="javascript:void(0)" onclick="openLayout(this.id)" id="Design"><i class='fa fa-magic'></i> Design Mode</a>
       <a href="javascript:void(0)" style="color: white;" onclick="openLayout(this.id)" id="Analysis"><i class="fa fa-bar-chart" aria-hidden="true"></i> Analysis Mode</i></a>
-      <a href="javascript:void(0)" style="color: gray;" onclick="runMode()" id="RunMode"><i class="fa fa-play-circle" aria-hidden="true"></i> Run Mode</i></a> 
+      <a href="javascript:void(0)" style="color: gray;" onclick="advancedMode()" id="advancedModeId"><i class="fa fa-play-circle" aria-hidden="true"></i> Advanced Mode</i></a> 
     </div>
   </div> 
 
@@ -238,32 +259,67 @@
 </div>
 
 
-
 <!-- Open Color Sliders -->
 <div id="chColorContrastPanel" class="chnlsettingsright" layout="Design">
-  <p class="just" style="margin-left: 0.5vw"><font style="font-size:0.86vw" ><i style="font-size:1.2vw" class="fa fa-sliders"></i> &nbsp CHNL SETTINGS </font></p> 
+      <table>
+        <colgroup>
+          <!-- Width of each column -->
+        <col style="width:85%">
+        <col style="width:15%">
+        </colgroup> 
+
+        <tr>
+          <th style="text-align: left"><p class="just" style="margin-left: 0.5vw"><font style="font-size:0.86vw" ><i style="font-size:1.2vw" class="fa fa-sliders"></i> &nbsp CHNL SETTINGS </font></p> </th>      
+          <th >  <a href="javascript:void(0)" onclick="showSlidersMaxList()" title="Slider Max" ><i style="font-size:0.9vw; padding-right: 0.1vw" class="fa fa-cog" ></i></a> </th>
+        </tr>
+      </table>
   <hr> 
 
     <table>
         <colgroup>
           <!-- Width of each column -->
         <col style="width:40%">
-        <col style="width:60%">
+        <col style="width:50%">
+        <col style="width:10%">
         </colgroup>   
          
       <tr>
         <th style="text-align: left"><label>Color:</label></th>      
-        <th ><div class="tooltip"><input id="chColorInputId" onchange="chColorChanged()"  onmouseover="onColorPickerMouseover()"><span class="tooltiptext" style="width: 50%; left: 50%;" id="chColorInputTooltip"></span></div> </th>
+        <th ><div class="tooltip"><input id="chColorInputId" onchange="chColorChanged()"  onmouseover="onColorPickerMouseover()"><span class="tooltiptext" style="width: 50%; left: 50%;" id="chColorInputTooltip"></span></div> 
+        </th>
       </tr>
 
       <tr>
         <th style="text-align: left"><label>Contrast-Max:</label></th>      
-        <th ><div class="tooltip"><input type="range" min="1000" max="65000" value="32500" class="slider" id="maxContrastRange" onchange="contrastChanged()" onmouseover="onContrastMaxSliderMouseover()"  ><span class="tooltiptext" style="width: 50%; left: 50%;" id="contrastMaxValueTooltip"></span></div></th>
+        <th ><div class="tooltip"><input type="range" min="1" max="65000" value="32500" class="slider" id="maxContrastRange" onchange="contrastChanged()" onmouseover="onContrastMaxSliderMouseover()"  ><span class="tooltiptext" style="width: 50%; left: 50%;" id="contrastMaxValueTooltip"></span></div>
+        </th>
+        <th id="maxContrastSliderMax" style="visibility: collapse;">
+              <select  id="maxContrastSliderMaxList"  onChange = "onMaxContrastSliderMaxListChanged()" style="width: 1.2vw; height: 2vh; margin-top: 1.5vh;" >
+                <option value="-1" > </option>                
+                <option value="100" > 100 </option>
+                <option value="1000" > 1k</option> 
+                <option value="10000" > 10k</option> 
+                <option value="65000"> 65k</option>                         
+              </select>
+        </th>         
       </tr>
+
+
+
       <tr>
         <th style="text-align: left"><label>Contrast-Min:</label></th>      
-        <th><div class="tooltip"> <input type="range" min="1" max="10000" value="500" class="slider" id="minContrastRange" onchange="contrastChanged()" onmouseover="onContrastMinSliderMouseover()" ><span class="tooltiptext" style="width: 50%; left: 50%;" id="contrastMinValueTooltip"></span></div> </th>
-      </tr>      
+        <th><div class="tooltip"> <input type="range" min="1" max="10000" value="500" class="slider" id="minContrastRange" onchange="contrastChanged()" onmouseover="onContrastMinSliderMouseover()" ><span class="tooltiptext" style="width: 50%; left: 50%;" id="contrastMinValueTooltip"></span></div> 
+        </th>
+        <th id="minContrastSliderMax" style="visibility: collapse; ">
+            <select  id="minContrastSliderMaxList"  onChange = "onMinContrastSliderMaxListChanged()" style="width: 1.2vw; height: 2vh; margin-top: 1.5vh; " >
+                <option value="-1" > </option>                  
+                <option value="100" > 100 </option> 
+                <option value="1000" > 1k</option> 
+                <option value="10000" > 10k</option> 
+           </select> 
+        </th>        
+      </tr>    
+
     </table>  
 
    <hr>
@@ -365,7 +421,14 @@
      <!--  Loaded dynamically -->
     </canvas>   
   </div>  
+  <div id="chartOperationSettings" style="height: 5%;"></div>   
 </div>
+
+<!--  Bars   -->
+<div id="chPlotsPanelSpecialBar" class="bar chnlplotsbar" style="line-height: 50%">
+  <!--  Loaded dynamically -->
+</div>
+
 
 <!-- Open Coordinate Panel -->
 <!-- <div id="myCoordinatesBarLeft" class="coordinatesbarleft">
@@ -541,8 +604,15 @@
     <p id="hintParagraph"></p>
 </div>  
 
-
-
+<div id="progressBarDiv" class="panel hintpanel" style="top:95vh" >
+  <div class="w3-container" >
+      <div class="w3-border" >
+        <div class="w3-white" style="height:2vh;width:10%;" id="progressBar"></div>
+        <!-- For use:  openProgressBar()  and  closeProgressBar() -->        
+        <!-- For use:  document.getElementById("progressBar").style.width=   "70%"; -->
+      </div>
+  </div>
+</div>  
 
 
 
@@ -554,8 +624,9 @@
 
 <script>
 
-//-----------------OpenSeadragon--------------------------------//  
-
+//--------------------------------------------------------------------------// 
+//-----------------------------OpenSeadragon--------------------------------//  
+//--------------------------------------------------------------------------// 
 
 
     var viewer = OpenSeadragon({
@@ -564,9 +635,35 @@
         tileSources: "",
         showNavigationControl: false,
         preserveViewport: true ,
+        //-- autoResize: true,
+        //-- showNavigator: true,
+        //-- navigatorPosition:   "BOTTOM_LEFT",
         debugMode :false,
         maxZoomPixelRatio : 2.5 
     });
+
+    //-- viewer.addHandler('open', function(event) {
+    //--   viewer.viewport.goHome();
+    //--   console.log("opened")
+    //-- });
+
+    //-- viewer.bookmarkUrl({ trackPage: true });
+
+     viewer.scalebar({
+          //-- type: OpenSeadragon.ScalebarType.Microscopy,
+          pixelsPerMeter: 0,
+          minWidth: "3.5vw",
+          location: OpenSeadragon.ScalebarLocation.BOTTOM_RIGHT,
+          xOffset: 5,
+          yOffset: 10,
+          stayInsideImage: false,
+          color: "white",
+          fontColor: "rgb(255, 255, 255)",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          fontSize: "small",
+          barThickness: 2
+      });
+
 
 
      var overlay = viewer.svgOverlay();
@@ -577,20 +674,20 @@
      function onMouseTrackerMove(event) {
       if(viewer.world.getItemCount()){
         var tile = viewer.world.getItemAt(0);
-        // openCoordinatesPanel();
-        // var viewerX = event.position.x;
-        // var viewerY = event.position.y;
+        //-- openCoordinatesPanel();
+        //-- var viewerX = event.position.x;
+        //-- var viewerY = event.position.y;
         var windowPoint = event.position;
-        // var windowPoint = new OpenSeadragon.Point(viewerX, viewerY);
+        //-- var windowPoint = new OpenSeadragon.Point(viewerX, viewerY);
         var viewportPoint = viewer.viewport.windowToViewportCoordinates(windowPoint);
-        // console.log(viewer.viewport.pixelFromPoint(viewportPoint))
+        //-- console.log(viewer.viewport.pixelFromPoint(viewportPoint))
         var currentImage = viewer.world.getItemAt(viewer.world.getItemCount()-1);
         var imagePoint = currentImage.viewportToImageCoordinates(viewportPoint);
         if(((imagePoint.x >= 0) && (imagePoint.x <= tile.getContentSize().x)) && ((imagePoint.y >= 0) && (imagePoint.y <= tile.getContentSize().y))) {
             document.getElementById("imagePointId").innerHTML="Image: " + "(" + Math.round(imagePoint.x) + "," + Math.round(imagePoint.y) + ")";  
         }    
 
-        // document.getElementById("viewportPointId").innerHTML="Viewport:" + viewportPoint;
+        //-- document.getElementById("viewportPointId").innerHTML="Viewport:" + viewportPoint;
         document.getElementById("containerPointId").innerHTML="Container: " + "(" + Math.round(windowPoint.x) + "," + Math.round(windowPoint.y) + ")"; 
 
         }}
@@ -601,7 +698,7 @@
 
       }).setTracking(Opts.defaultOsdMouseTracking); 
 
-    // viewer.addHandler("tile-loaded", tileLoadedHandler);
+    //-- viewer.addHandler("tile-loaded", tileLoadedHandler);
    //-------------------------------------------------//        
 
     var mainUI =  { view: "template", gravity: 3, content: "openseadragon1" };
@@ -625,7 +722,7 @@
 
     }
 
-    // initScreenLogo();
+    //-- initScreenLogo();
 
 
 </script>
