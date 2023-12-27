@@ -1,0 +1,31 @@
+name: histojs
+dependencies:
+  - python>3.4,<3.8
+  - pip
+  - pyqt
+  - pip:
+    - numpy>1.14.6,<1.19.4
+    - numba>=0.43.1  
+    - scipy==1.6.3
+    - torch>=1.6
+    - opencv-python-headless==4.5.1.48
+    - pyqtgraph>=0.11.0rc0
+    - natsort==7.1.1
+    - google-cloud-storage==1.38.0      
+    - tqdm==4.60.0
+    - tifffile==2021.4.8  
+    - tensorflow-gpu==2.4.1 
+    - starDist==0.6.2    
+    - flask==1.1.2
+    - girder_client==3.1.4
+    - flask_cors==3.0.10
+    - Pillow==8.2.0
+    - h5py==2.10.0
+    - opencv-python==4.5.1.48
+    - scikit-image==0.18.1
+    - shapely==1.7.1
+    - pandas==1.2.4
+    - csbdeep==0.6.1
+    - sklearn==0.0
+    - seaborn==0.11.1
+   
