@@ -18,9 +18,6 @@ The tool is using Digital Slide Archive as a backbone to update the image metada
 
 
 
-## Offline Demo
-Demo H/W configuration: Processor - Intel® Core™ i7-8700 CPU @ 3.20GHz × 12, RAM - 16GB, GPU - GeForce GTX 1050
-
 ### Design Mode
 
 For creating OME channel groups, browse to your server file and click design mode with the tool.
