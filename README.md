@@ -19,7 +19,9 @@ The tool can manage, store, and analyze the multi-channel OME-Tiff files using  
 
 ## Live Demo
 
-HistoJS [Demo](https://mmasoud1.github.io/HistoJS).
+HistoJS [Demo](https://mmasoud1.github.io/HistoJS) hosted by Github pages shows most core functionalities.  
+
+The analysis mode needs running of the Flask RestAPIs as the steps described [here](https://github.com/Mmasoud1/HistoJS/wiki/Setup-Environment).
 
 
 ## Updates
