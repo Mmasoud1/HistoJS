@@ -35,12 +35,12 @@ https://github.com/Mmasoud1/HistoJS/assets/36082112/7598afb0-ef05-40e0-9d53-767f
 
 <br>
 
-<!-- <div align="center">
+<div align="center">
 
 ![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/AnalysisMode.gif)
 
 **HistoJS V1.0.0 analysis mode**
-</div> -->
+</div>
 
 
 <br>
