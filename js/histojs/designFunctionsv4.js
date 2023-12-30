@@ -4012,8 +4012,10 @@ initChannelList = (omeChannels, itemName) => {
      }
   }
 
-
-
+ 
+  goToWikiDocs = () => {
+      window.open("https://github.com/Mmasoud1/HistoJS/wiki");
+  }
 
   openExtFeedbackForm = () => {
      // window.open("https://forms.gle/8ze2aamxJueWYQqV6"); 
@@ -4021,7 +4023,8 @@ initChannelList = (omeChannels, itemName) => {
   }
 
   openExtIssueForm = () => {
-     triggerHint("To be coded later")
+     // --triggerHint("To be coded later")
+     window.open("https://github.com/Mmasoud1/HistoJS/issues")
   }
   openContactUsForm = () => {
      triggerHint("To be coded later")
