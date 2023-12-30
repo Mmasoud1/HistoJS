@@ -28,20 +28,20 @@ The analysis mode needs running of the Flask RestAPIs as the steps described [he
 
 <div align="center">
 
-![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/AnalysisMode.gif)
+<!-- ![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/AnalysisMode.gif) -->
+https://github.com/Mmasoud1/HistoJS/assets/36082112/7598afb0-ef05-40e0-9d53-767fbc0e6d99
 
-
-**HistoJS V1.0.0  design mode **
+**HistoJS Design Mode **
 </div>
 
 <br>
 
-<div align="center">
+<!-- <div align="center">
 
 ![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/DesignMode.gif)
 
 **HistoJS V1.0.0 analysis mode**
-</div>
+</div> -->
 
 
 <br>
