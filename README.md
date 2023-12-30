@@ -37,7 +37,9 @@ https://github.com/Mmasoud1/HistoJS/assets/36082112/7598afb0-ef05-40e0-9d53-767f
 
 <div align="center">
 
-![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/AnalysisMode.gif)
+https://github.com/Mmasoud1/HistoJS/assets/36082112/95499746-8d97-4d9a-97e1-2ee12d3516d6    
+
+<!-- ![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/AnalysisMode.gif) -->
 
 **HistoJS V1.0.0 Analysis Mode**
 </div>
