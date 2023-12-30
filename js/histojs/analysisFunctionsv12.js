@@ -38,31 +38,97 @@
         return lastItemSelectionStates.grpIndex != null ? lastItemSelectionStates.grpIndex : null;
     }
 
+
+    /**
+     * check if a group selected to enter the analysis phase
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {boolean}     
+     */
+
     isGrpSelected = () => {
         return lastItemSelectionStates.grpIndex != null ? true : false;
     } 
 
     ////////////////-- For Chart Operations --///////////////
-    //Check if a group saved its Tumor-immune-Stromal selected channels 
+    //Check if a group saved its Tumor-immune-Stromal selected channels
+    /**
+     * Check if a group saved its Tumor-immune-Stromal selected channels
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {boolean}
+     */     
     isGrpChannelsNameTypeExist = (grpIndex) => {
         return currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types ? 
                ( currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types.length ? true : false ) : false;
     } 
+
+
+
+    /**
+     * Get the type of channel names  if they are Tumor/Immune/Stromal etc
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {Array} array of Objects 
+     *
+     * @example
+     *
+     * getGrpChannelsNameType( 1)
+     *
+     * // => [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
+     */      
 
     getGrpChannelsNameType = (grpIndex) => {
         return isGrpChannelsNameTypeExist(grpIndex) ? 
                currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types : null;    
     }
 
+    /**
+     * Set a value to the variable
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */     
+
     setGrpChannelsNameType = (grpIndex, chnlNameType) => {
         currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types = chnlNameType;    
     } 
+
+    /**
+     * Set the variable to null
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */ 
 
     resetGrpChannelsNameType = (grpIndex) => {
         currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types = null;    
     }         
 
     ///////////////////////////////
+
+    /**
+     * Check if Dapi channel selected during the design phase (i.e., channel grouping) 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {boolean}
+     */        
     isDAPIChannelSelected = () => {
         return lastItemSelectionStates.DAPIChannelIndex != null ? true : false;
     }           
@@ -71,13 +137,42 @@
         lastItemSelectionStates.DAPIChannelIndex = DAPIChannelIndex;
     }
 
+    /**
+     * Get Dapi channel index
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {number}
+     */      
+
     getSelectedDAPIChannelIndex = () => {
         return lastItemSelectionStates.DAPIChannelIndex;
     }     
 
+    /**
+     * Get Dapi channel name
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {String}
+     */ 
+
     getSelectedDAPIChannelName = () => {
         return isDAPIChannelSelected() ? getDAPIChannelObj()[0].channel_name :  null;
     }    
+
+    /**
+     * Set the variable to null
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */ 
 
     resetSelectedDAPIChannelIndex = () => {
         lastItemSelectionStates.DAPIChannelIndex = null ;
@@ -490,17 +585,35 @@
 
 	}
 
- resetCellFilterDependencies = () => {
-    allValidTiles = [];
-    allValidPhenotypes = [];
-    filteredValidPhenotypes = [];
-    resetNavigatorValidCells();
+   /**
+    * Set the variable to null
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */     
 
- }
+    resetCellFilterDependencies = () => {
+        allValidTiles = [];
+        allValidPhenotypes = [];
+        filteredValidPhenotypes = [];
+        resetNavigatorValidCells();
+
+    }
 
    getNavigatorValue = () => {
       return cellFiltersAndPhenotypesStates.navigatorPointer;
    }
+
+   /**
+    * Set the variable to zero
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */     
 
    resetNavigatorValue = () => {
      cellFiltersAndPhenotypesStates.navigatorPointer = 0;
@@ -513,6 +626,15 @@
     setNavigatorValidCells = (validCellsArray) => {
      cellFiltersAndPhenotypesStates.validCells = validCellsArray;
    } 
+
+   /**
+    * Set the variable to null
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */     
 
     resetNavigatorValidCells = () => {
      cellFiltersAndPhenotypesStates.validCells = null;
@@ -1482,16 +1604,25 @@ cellClassifications = (cellsWithTypes, callback) => {
           }
   }
 
-// future use
- resetCellTypeDependencies = () => {
-      if(! isViewBarEmpty("grpFeaturesViewBar") ) {
-           clearViewBar("grpFeaturesViewBar");
-      }
 
-      cellBasicClassification = [];
-      resetGrpChannelsNameType( getSelectedGrpIndex() );
-      setAllChannelsOpacity(); 
- }
+   /**
+    * Future use
+    * reset the variable  
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */    
+     resetCellTypeDependencies = () => {
+          if(! isViewBarEmpty("grpFeaturesViewBar") ) {
+               clearViewBar("grpFeaturesViewBar");
+          }
+
+          cellBasicClassification = [];
+          resetGrpChannelsNameType( getSelectedGrpIndex() );
+          setAllChannelsOpacity(); 
+     }
 
 
 //----------------------------------------------------------------------------------------------------//
@@ -1999,6 +2130,15 @@ getPhenotypeNamesFormField  = (fieldId) => {
         return document.getElementById(fieldId).value;
 }
 
+/**
+* reset the variable  
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/  
+
 resetPhenotypeNamesFormField = (fieldId) => {
         document.getElementById(fieldId).value = "";
 }
@@ -2173,7 +2313,15 @@ initPhenotypeNamesForm = () => {
      
   } 
 
-// future use
+/**
+* Future use
+* reset the variable  
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/ 
  resetCellPhenotypeDependencies = () => {
       if(! isViewBarEmpty("grpFeaturesViewBar") ) {
            clearViewBar("grpFeaturesViewBar");
@@ -2210,7 +2358,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
     return phenotypesColorsArray;
 }
 
-  // Turn Off all channels
+ /**
+ * Turn Off all channels 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */ 
   resetAllChannelsOpacity = () => {
      const curGroup = getSelectedGroup();
      curGroup.Channels.forEach((channelName,idx) => {
@@ -2219,6 +2374,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         document.getElementById("showHideAllGrpChls").className = "fa fa-eye-slash";
      }) 
   }
+
+ /**
+ * Turn On all channels 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 
   setAllChannelsOpacity = () => {
      const curGroup = getSelectedGroup();
@@ -2250,6 +2414,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
   }
 
+ /**
+ * Reset all cell filters  
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 
   resetAllCellFilters = () => {
      const curGroup = getSelectedGroup();
@@ -2354,6 +2526,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         return document.getElementById("cellPositiveSwitch." + channelName).checked ? true : false;
    }
 
+ /**
+ * Turn off cell postive switch 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
    resetCellPositiveSwitch = (channelName) => {
       document.getElementById("cellPositiveSwitch." + channelName).checked = false;
    }
@@ -2415,6 +2595,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    isCellNegativeSwitchEnabled = (channelName) => {
         return document.getElementById("cellNegativeSwitch." + channelName).checked ? true : false;
    }
+
+ /**
+ * Turn off cell negative switch 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */   
 
    resetCellNegativeSwitch = (channelName) => {
       document.getElementById("cellNegativeSwitch." + channelName).checked = false;
@@ -2812,6 +3001,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
           freezeBoundaryDependentControls(freezeFlag);
    }
 
+ /**
+ * Turn off boundary switch 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */  
    resetBoundarySwitch = () => {
         document.getElementById("boundarySwitch").checked = false;
         boundarySwitchClicked();
@@ -3619,7 +3816,7 @@ downloadUserData = (data, fileName) =>{
 	}  
 
 
-
+/*------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------Right Panel-----------------------------------------------------*/
 /*---------------------------------------------- Features Section---------------------------------------------------*/
 /*------------------------------------------------------------------------------------------------------------------*/
