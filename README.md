@@ -52,6 +52,6 @@ https://github.com/Mmasoud1/HistoJS/assets/36082112/95499746-8d97-4d9a-97e1-2ee1
 
 [![Google Doc](https://img.shields.io/badge/HistoJS-Feedback-blue)](https://docs.google.com/forms/d/e/1FAIpQLSdHuO--mG00sKydQpJ7sPpDmhcJ4ECdj-wAB1kwXQExh_nUSg/viewform?usp=sf_link) [![MIT-License ](https://img.shields.io/badge/license-MIT-green)](https://github.com/Mmasoud1/HistoJS/blob/main/LICENSE)
 
-**Copyright 2023 Mohamed Masoud**
+**Mohamed Masoud - 2023**
 </div>
 

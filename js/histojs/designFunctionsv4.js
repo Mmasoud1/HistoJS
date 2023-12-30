@@ -758,7 +758,7 @@
         let nodes = "";
 
         nodes +=  '<div id="screenLogo" class="screen-logo animate__animated animate__zoomIn" >';
-        nodes +=    '<img src="Demo/HistoJS-logo.png"  alt="logo" width="40%" height="40%" />';
+        nodes +=    '<img src="css/logo/HistoJS-logo.png"  alt="logo" width="40%" height="40%" />';
         nodes +=    '<h1 style="color: white; font-size: 2vw">HistoJS Demo</h1>';
         nodes +=    '<p class="lead" style="color: white; font-size: 0.9vw">';
         nodes +=        'A user interface for design and analysis highly multiplexed immunofluorescence images<br>';
