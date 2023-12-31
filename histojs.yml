@@ -16,7 +16,7 @@ dependencies:
     - tifffile==2021.4.8  
     - tensorflow-gpu==2.4.1 
     - starDist==0.6.2    
-    - flask==1.1.2
+    - flask>=2.2.2
     - girder_client==3.1.4
     - flask_cors==3.0.10
     - Pillow==8.2.0
@@ -28,4 +28,8 @@ dependencies:
     - csbdeep==0.6.1
     - sklearn==0.0
     - seaborn==0.11.1
+    - psutil==5.9.7
+    - umap-learn==0.5.2
+    - importlib-metadata==6.7.0
+
    
