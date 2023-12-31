@@ -241,7 +241,7 @@
             defaultBoundariesDir:                 "boundaries",  // Local directory  within the widget root level to save boundaries info. 
             defaultRegistrationDir:               "registration", // Local directory  within the widget root level to save registration info. 
             dockerMountingDir:                    "",             // for  RestApi decker
-            maxFileSize:                          700000  // Max file size send to flask to avoid javascript syntaxerror "the url is malformed "
+            maxFileSize:                          500000  // Max file size send to flask to avoid javascript syntaxerror "the url is malformed "
 
      }
 

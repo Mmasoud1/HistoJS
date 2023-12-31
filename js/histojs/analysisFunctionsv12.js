@@ -10478,7 +10478,7 @@ initBoundariesFeatures = () => {
             triggerHint("Wait while creating channels mean, max, std, norm features file","info", 5000);
             let creationSuccessFlag = true;
             let fileChunksToSaveTemp = [];
-            let maxFileSize = Opts.maxFileSize;;
+            let maxFileSize = Opts.maxFileSize;
             // let safeMargin = 2000;
             
             try {
