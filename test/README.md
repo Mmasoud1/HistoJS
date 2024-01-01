@@ -13,7 +13,7 @@
 <br />
 <div align="center">
 
-<img src='https://github.com/mmasoud1/HistoJS/blob/master/css/logo/_logo.jpg' width='300' height='100'></img>
+<!-- <img src='https://github.com/mmasoud1/HistoJS/blob/master/css/logo/_logo.jpg' width='300' height='100'></img> -->
 
-**Mohamed Masoud - 2022**
+**Mohamed Masoud - 2024**
 </div>
