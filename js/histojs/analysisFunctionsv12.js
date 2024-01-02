@@ -369,7 +369,14 @@
 
 
 
-
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 
 
 
@@ -410,7 +417,14 @@
 
   }
 
-
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
   onCurGrpClick = () => {
         var curGroup = getSelectedGroup();
         setAllChannelsOpacity();
@@ -433,7 +447,14 @@
   //   </ul>
 
 
-
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 
    initGrpFeaturesList = () => { 
    	  initGrpInfo();
@@ -512,6 +533,15 @@
 	   //    document.getElementById("curAnalysisTileSource").innerHTML = node;
     // }       
 
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+
     initGrpInfo = () => { 
 
 	      document.getElementById("currentGrpTitle").innerHTML = getItemRootName( getItemName().split(".")[0] ) + " Group:";
@@ -538,7 +568,14 @@
 /*---------------------------------------------- Channel Option Section---------------------------------------------*/
 /*------------------------------------------------------------------------------------------------------------------*/
 
-
+    /**
+     * 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */
 
    showHideAnalysisGrpChannels = () => {
 
@@ -550,39 +587,83 @@
           }
    }
 
+    /**
+     * 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */
 
-  toggleChannelOpacity = (elem) => {
-     let index = elem.id.split('.')[1];
+      toggleChannelOpacity = (elem) => {
+         let index = elem.id.split('.')[1];
 
-     if(elem.checked) {
-       viewer.world.getItemAt(index).setOpacity(1);       
+         if(elem.checked) {
+           viewer.world.getItemAt(index).setOpacity(1);       
+         }
+         else {
+           viewer.world.getItemAt(index).setOpacity(0);   
+         }
+      }
+
+
+    /**
+     * Future use
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+     
+     onChOpacitySliderMouseover = (elem) => {
+           //-- to be coded
      }
-     else {
-       viewer.world.getItemAt(index).setOpacity(0);   
-     }
-  }
 
-	onChOpacitySliderMouseover = (elem) => {
+    /**
+     * 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+      onCellFilterSliderMouseover = (elem) => {
+        // console.log(" tooltipElem ", tooltipElem)
+        let channelOrFeatureName = elem.id.split('.')[1];
+        // console.log(" elem.id ", elem.id)
+        // updateInputTooltip_V2(getCellFilterSliderValue, `cellFilterValueTooltip.${channelName}`,  elem.id);
+        document.getElementById(`cellFilterValueTooltip.${channelOrFeatureName}`).innerHTML = getCellFilterSliderValue(elem.id);
 
-	}
+      }
 
-  onCellFilterSliderMouseover = (elem) => {
-    // console.log(" tooltipElem ", tooltipElem)
-    let channelOrFeatureName = elem.id.split('.')[1];
-    // console.log(" elem.id ", elem.id)
-    // updateInputTooltip_V2(getCellFilterSliderValue, `cellFilterValueTooltip.${channelName}`,  elem.id);
-    document.getElementById(`cellFilterValueTooltip.${channelOrFeatureName}`).innerHTML = getCellFilterSliderValue(elem.id);
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
 
-  }
+    getCellFilterSliderValue = (elemId) => {
+        // console.log("elemId", elemId);
+        //id="cellFilterSlider.${idx}"
+        return document.getElementById(elemId).value;
+    }
 
-  getCellFilterSliderValue = (elemId) => {
-    // console.log("elemId", elemId);
-    //id="cellFilterSlider.${idx}"
-     return document.getElementById(elemId).value;
-  }
+    /**
+     * Future use
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */
 
 	channelOpacityChanged = (elem) => {
-
+        //-- to be coded
 	}
 
    /**
@@ -602,6 +683,15 @@
 
     }
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */    
+
    getNavigatorValue = () => {
       return cellFiltersAndPhenotypesStates.navigatorPointer;
    }
@@ -619,9 +709,27 @@
      cellFiltersAndPhenotypesStates.navigatorPointer = 0;
    }  
 
+    /**
+     * 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+
    setNavigatorValue = (val) => {
      cellFiltersAndPhenotypesStates.navigatorPointer = val;
    } 
+
+     /**
+     * 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     */  
  
     setNavigatorValidCells = (validCellsArray) => {
      cellFiltersAndPhenotypesStates.validCells = validCellsArray;
@@ -640,88 +748,135 @@
      cellFiltersAndPhenotypesStates.validCells = null;
    }    
 
-    getNavigatorValidCells = () => {
-     return cellFiltersAndPhenotypesStates.validCells.length ? cellFiltersAndPhenotypesStates.validCells : null;
-   } 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
 
-  goToStartFilteredCell = () => {
-      const validArray = getNavigatorValidCells();
-      if(validArray == null) {
-          triggerHint("No valid cells");
-          return 0;
-      }
-      // if (index == -1) {
-      //     validArray = allValidTiles;
-      // } else {
-      //     validArray = allValidPhenotypes[index].validCells
-      // }
+     getNavigatorValidCells = () => {
+       return cellFiltersAndPhenotypesStates.validCells.length ? cellFiltersAndPhenotypesStates.validCells : null;
+     } 
 
-      if( getNavigatorValue() ) {
-          resetNavigatorValue();
-          zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
-          document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length
-      } else {
-          triggerHint("Click forward button to navigate .. ", "info", 5000);
-      }
-  }
-
-  prevFilteredCell = () => {
-      const validArray = getNavigatorValidCells();
-      if(validArray == null) {
-          triggerHint("No valid cells");
-          return 0;
-      }      
-
-      // if (index == -1) {
-      //     validArray = allValidTiles;
-      // } else {
-      //     validArray = allValidPhenotypes[index].validCells
-      // }   
-
-      // if( getNavigatorValue() > 0 ) {
-      //     setNavigatorValue(getNavigatorValue() - 1);
-      //     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
-      //     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length     
-      if( getNavigatorValue() > 0 ) {
-          setNavigatorValue(getNavigatorValue() - 1);
-          if( getNavigatorValue() ) {
-             zoomToTile(document.getElementById(validArray[getNavigatorValue()-1].id));
-             document.getElementById("currentCell").innerHTML = (getNavigatorValue()) + "/" + validArray.length  
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
+      goToStartFilteredCell = () => {
+          const validArray = getNavigatorValidCells();
+          if(validArray == null) {
+              triggerHint("No valid cells");
+              return 0;
           }
-      } else {
-          triggerHint("Click forward button to navigate .. ", "info", 5000);
+          // if (index == -1) {
+          //     validArray = allValidTiles;
+          // } else {
+          //     validArray = allValidPhenotypes[index].validCells
+          // }
+
+          if( getNavigatorValue() ) {
+              resetNavigatorValue();
+              zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
+              document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length
+          } else {
+              triggerHint("Click forward button to navigate .. ", "info", 5000);
+          }
       }
-  }
 
-  nextFilteredCell = () => {
-      const validArray = getNavigatorValidCells();
-      if(validArray == null) {
-          triggerHint("No valid cells");
-          return 0;
-      }      
 
-      // if (index == -1) {
-      //     validArray = allValidTiles;
-      // } else {
-      //     validArray = allValidPhenotypes[index].validCells
-      // }  
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
 
-      // if( getNavigatorValue() < validArray.length -1 ) {
-      //     setNavigatorValue(getNavigatorValue() + 1);
-      //     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
-      //     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length   
-      if( getNavigatorValue() < validArray.length ) {
-          setNavigatorValue(getNavigatorValue() + 1);
-          zoomToTile(document.getElementById(validArray[getNavigatorValue()-1].id));
-          document.getElementById("currentCell").innerHTML = (getNavigatorValue() ) + "/" + validArray.length                    
-      } else {
-          triggerHint("Click backward button to navigate .. ", "info", 5000);
+      prevFilteredCell = () => {
+          const validArray = getNavigatorValidCells();
+          if(validArray == null) {
+              triggerHint("No valid cells");
+              return 0;
+          }      
+
+          // if (index == -1) {
+          //     validArray = allValidTiles;
+          // } else {
+          //     validArray = allValidPhenotypes[index].validCells
+          // }   
+
+          // if( getNavigatorValue() > 0 ) {
+          //     setNavigatorValue(getNavigatorValue() - 1);
+          //     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
+          //     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length     
+          if( getNavigatorValue() > 0 ) {
+              setNavigatorValue(getNavigatorValue() - 1);
+              if( getNavigatorValue() ) {
+                 zoomToTile(document.getElementById(validArray[getNavigatorValue()-1].id));
+                 document.getElementById("currentCell").innerHTML = (getNavigatorValue()) + "/" + validArray.length  
+              }
+          } else {
+              triggerHint("Click forward button to navigate .. ", "info", 5000);
+          }
       }
-  }
 
- isFilteredCellFound = () => {
-    return allValidTiles.length ? true : false;
- } 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
+
+      nextFilteredCell = () => {
+          const validArray = getNavigatorValidCells();
+          if(validArray == null) {
+              triggerHint("No valid cells");
+              return 0;
+          }      
+
+          // if (index == -1) {
+          //     validArray = allValidTiles;
+          // } else {
+          //     validArray = allValidPhenotypes[index].validCells
+          // }  
+
+          // if( getNavigatorValue() < validArray.length -1 ) {
+          //     setNavigatorValue(getNavigatorValue() + 1);
+          //     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
+          //     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length   
+          if( getNavigatorValue() < validArray.length ) {
+              setNavigatorValue(getNavigatorValue() + 1);
+              zoomToTile(document.getElementById(validArray[getNavigatorValue()-1].id));
+              document.getElementById("currentCell").innerHTML = (getNavigatorValue() ) + "/" + validArray.length                    
+          } else {
+              triggerHint("Click backward button to navigate .. ", "info", 5000);
+          }
+      }
+
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
+
+     isFilteredCellFound = () => {
+        return allValidTiles.length ? true : false;
+     } 
 
  // togglecellNavigator = () => {
  //              if(allValidTiles.length) {
@@ -732,6 +887,14 @@
  // }
 
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */
 
  filterTiles = (callback) => {
           let tileClass = getClassType();
@@ -1408,16 +1571,33 @@
 //----------------------------------- Cell Classifications -------------------------------------------//
 //----------------------------------------------------------------------------------------------------//
 
-// chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
-// return cellTypeColors obj: { Tumor: "#ff4846", ... }
+
+   /**
+    * Take channel types and return cell type colors
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {Array} chnlNameType: Array of objects
+    * @returns {object}
+    * @example
+    *
+    * cellTypeColors = getCellTypeColorObj (  [{"channel_name": "CD45", "channel_type" : "Immune"}, 
+                                               {"channel_name": "KERATIN", "channel_type" : "Tumor"},
+                                               {"channel_name": "ASMA", "channel_type" : "Stromal"}] )
+    *
+    * // => Object { Immune: "#61c346", Tumor: "#ff4846", Stromal: "#5dd1ff", Others: "#6244d9" }  
+    */
+
 getCellTypeColorObj = (chnlNameType) => {
 
     if(chnlNameType.length) {
 
-        // let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
+        //-- let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
         let cellTypeColors = {};  
 
-        // let NumOfcellsPerClass = {}; 
+        //-- let NumOfcellsPerClass = {}; 
         chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
                let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
                let cellTypeColor = mainCellTypesList.filter(cell => cell.cellType == cellType)[0].cellTypeColor;
@@ -1435,7 +1615,16 @@ getCellTypeColorObj = (chnlNameType) => {
 
 }
 
-// Classify cells into Tumor / Immune / Stromal / Others
+
+/**
+* Classify cells into Tumor / Immune / Stromal / Others
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/
+
 cellClassifications = (cellsWithTypes, callback) => {
           let tileClass = getClassType();
 
@@ -1523,7 +1712,18 @@ cellClassifications = (cellsWithTypes, callback) => {
 
  }   
 
-    cellTypeNavigation = (elem) => {
+  
+/**
+* 
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/
+
+
+  cellTypeNavigation = (elem) => {
          // triggerHint(" To be coded.. ")
          let cellType = elem.id.split('.')[1];
          let clr =  elem.style.backgroundColor
@@ -1559,7 +1759,14 @@ cellClassifications = (cellsWithTypes, callback) => {
     }
 
 
-
+/**
+* 
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/
 
    onCellTypeShowHide = (elem) => {
           let cellType = elem.id.split('.')[1];
@@ -1607,7 +1814,7 @@ cellClassifications = (cellsWithTypes, callback) => {
 
    /**
     * Future use
-    * reset the variable  
+    * Reset the variable  
     * 
     * @function
     * @memberof HistoJS
@@ -1630,8 +1837,21 @@ cellClassifications = (cellsWithTypes, callback) => {
 //----------------------------------------------------------------------------------------------------//
 
 
-
-//  Generate all binary strings of n bits e.g. Array(8) [ "000", "001", "010", "011", "100", "101", "110", "111" ]
+/**
+* Generate all binary strings of n bits e.g. Array(8) [ "000", "001", "010", "011", "100", "101", "110", "111" ]
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+* @param {number} n
+* @returns {Array} 
+* @example
+*
+*  getBinaryStringsOfNbits(n)
+*
+* //=> Array(8) [ "000", "001", "010", "011", "100", "101", "110", "111" ]
+*/     
  getBinaryStringsOfNbits = (n) => {
         let binaryStrings = [];
         // get max number of possible strings
@@ -1645,7 +1865,27 @@ cellClassifications = (cellsWithTypes, callback) => {
 }
 
 
- //  For group such as [ "LAG3", "DAPI", "PDL1" ], remove 010 binary
+ 
+/**
+* For group such as [ "LAG3", "DAPI", "PDL1" ], remove 010 binary to remove dapi 
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+* @param {Array} binaryStrings
+* @returns {Array} 
+* @example
+*
+* curChannelsArr = [ "LAG3", "DAPI", "PDL1" ]
+* dapiChName = "DAPI" 
+* allBinaryMarkersString = [ "000", "001", "010", "011", "100", "101", "110", "111"]
+*
+* removeBinaryWithOnlyDapiChannel(allBinaryMarkersString)
+*
+* //=> [ "000", "001", "011", "100",  "101", "110", "111"]
+*
+*/
  removeBinaryWithOnlyDapiChannel = (binaryStrings) => {
         let curChannelsArr = getCurGrpChannelsName(); //-- curChannelsArr: [ "LAG3", "DAPI", "PDL1" ]
         let dapiChName = getSelectedDAPIChannelName(); // -- dapiChName : "DAPI"
@@ -1660,43 +1900,94 @@ cellClassifications = (cellsWithTypes, callback) => {
         // -- binaryToRemove : "010"      
 
         removeArrayElem(binaryStrings, binaryToRemove);
-
 }
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {boolean}
+    */  
 
  isCellPhenotypeActive = () => {
     return allValidPhenotypes.length ? true : false;
  } 
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {Array}
+    */  
+
  getCellPhenotypesCurrentSettings = () => {
 
         let curSettings = [];
-
         getCurGrpChannelsName().forEach( (channelName, idx) => {
             curSettings.push(document.getElementById("markerPositiveThresholds." + channelName ).value)
             // -- curSettings.push(document.getElementById("cellPositiveSwitch." + channelName ).value)
             curSettings.push(document.getElementById("markerNegativeThresholds." + channelName ).value)
             // -- curSettings.push(document.getElementById("cellNegativeSwitch." + channelName ).value)
-
         });   
 
         return  curSettings;
-
  }
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {Array}
+    */  
 
  getCellPhenotypesLastSettings = () => {
       return cellFiltersAndPhenotypesStates.phenotypesLastSettings;
-
  } 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
 
  setCellPhenotypesLastSettings = (phentotypeSettings) => {
      cellFiltersAndPhenotypesStates.phenotypesLastSettings = phentotypeSettings;   
- 
  } 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {boolean}
+    */   
 
  isCellPhenotypeSettingsChanged = ( curSettings) => {
     return !areArraysEquals(curSettings, getCellPhenotypesLastSettings() );
- 
  }
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
 
 cellPhenotypes = (callback) => {
           let tileClass = getClassType();
@@ -5443,7 +5734,7 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
 
       mainCellTypesList.forEach((cellTypeEntry, idx) => {   
               let cellType = cellTypeEntry.cellType; // e.g. Tumor 
-              // let clr  = cellTypeEntry.cellTypeColor;          
+              //-- let clr  = cellTypeEntry.cellTypeColor;          
               if(cellType !== "Others") { 
 
                   let marker = document.getElementById("markerList."+ cellType).value;  // return e.g. KERATIN or ""

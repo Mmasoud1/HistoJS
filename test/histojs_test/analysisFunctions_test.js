@@ -15,22 +15,22 @@
 
 describe("Main Analysis Functions", function () {
 
-  // describe('#labelMax()', function () {
-  //   it('return max', function () {
-  //      expect( labelMax( [1,2,3]) ).to.equal(3);
-  //   });
-  // });
+  describe('#getCellTypeColorObj()', function () {
+    it('return cell type colors', function () {
+       expect(getCellTypeColorObj(  [{"channel_name": "CD45", "channel_type" : "Immune"}, 
+                                     {"channel_name": "KERATIN", "channel_type" : "Tumor"},
+                                     {"channel_name": "ASMA", "channel_type" : "Stromal"}] 
+                                 ) 
+             ).to.eql( { Immune: "#61c346", Tumor: "#ff4846", Stromal: "#5dd1ff", Others: "#6244d9" } );
+    });
+  });  
 
-  // describe('#arrValuesFreq()', function () {
-  //   it('return frequence of  array unique values', function () {
-  //      expect( arrValuesFreq( [2, 2, 2, 2, 3]) ).to.be.a('map');
-  //   });
-  // });  
+  describe('#getBinaryStringsOfNbits()', function () {
+    it('return all binary strings of n bits', function () {
+       expect( getBinaryStringsOfNbits(3) ).to.eql([ "000", "001", "010", "011", "100", "101", "110", "111" ]);
+    });
+  });
 
-  // describe('#map2Object()', function () {
-  //   it('convert map to  JSON object, and it needs JS ES6', function () {
-  //      expect( map2Object(  new Map().set('a', 1).set('b', 2) ) ).to.eql({ a: 1, b: 2 });
-  //   });
-  // });   
+  
 
 });  
