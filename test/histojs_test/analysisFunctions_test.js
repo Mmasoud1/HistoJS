@@ -31,6 +31,13 @@ describe("Main Analysis Functions", function () {
     });
   });
 
-  
+  describe('#getPhenoBinaryDescription()', function () {
+    it('return phenotype binary description', function () {
+       expect( getPhenoBinaryDescription("10101", [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]) 
+
+        ).to.eql("DAPI+ KERATIN- ASMA+ CD45- IBA1+ ");
+    });
+  });  
+
 
 });  

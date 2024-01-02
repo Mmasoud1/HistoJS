@@ -2156,6 +2156,15 @@ cellPhenotypes = (callback) => {
  }    
 
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
+
   phenotypeNavigation = (phenotypeIndex) => {
 
          if( isCellFiltersActive() ) {
@@ -2192,6 +2201,16 @@ cellPhenotypes = (callback) => {
 
   }            
 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
+
     initCellNavigator = (validCellsArray,  clr = 'none') => {
       let nodes =  ""; 
       nodes += '<div class="navigator-item"><p class="just" style="font-weight: bold;" id="cellTitle">Cells:</p></div>';
@@ -2224,6 +2243,16 @@ cellPhenotypes = (callback) => {
       showPanel("cellNavigator", true);       
   }
 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
+
    onPhenotypeShowHide = (phenotypeIndex) => {
     
           if (document.getElementById("phenotypeEyeIcon." + phenotypeIndex).className === "fa fa-eye") {
@@ -2242,20 +2271,57 @@ cellPhenotypes = (callback) => {
   }
 
 
-removeAllSelectOptions = (SelectListId) => {
-        document.getElementById(SelectListId).options.length = 0;
-}
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
+
+    removeAllSelectOptions = (SelectListId) => {
+            document.getElementById(SelectListId).options.length = 0;
+    }
 
 
-//<option value="10101"> "10101" </option>
-addNewSelectOption = (SelectListId, newOptionTxt, newOptionValue) => {
-        let newOption = new Option(newOptionTxt, newOptionValue);
-        document.getElementById(SelectListId).add(newOption,undefined);
-}
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
 
-getPhenotypeBinaryIndex  = (binaryVal) => {
-    return allValidPhenotypes.findIndex(entry => entry.binary === binaryVal);
-}
+    //<option value="10101"> "10101" </option>
+    addNewSelectOption = (SelectListId, newOptionTxt, newOptionValue) => {
+            let newOption = new Option(newOptionTxt, newOptionValue);
+            document.getElementById(SelectListId).add(newOption,undefined);
+    }
+
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
+    getPhenotypeBinaryIndex  = (binaryVal) => {
+        return allValidPhenotypes.findIndex(entry => entry.binary === binaryVal);
+    }
+
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */  
 
 updateSelectList = (SelectListId, oldOptionTxt, newOptionTxt) => {
      let selectListObj = document.getElementById(SelectListId);
@@ -2275,14 +2341,41 @@ updateSelectList = (SelectListId, oldOptionTxt, newOptionTxt) => {
 
 }
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
 saveClosePhenotypeName = () => {
       applyPhenotypeName();
       document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
 }
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
 cancelPhenotypeName = () => {
       document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
 }
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
 
 applyPhenotypeName = () => {
     let curOptionBinaryValue  =  document.getElementById("phenotypeList").value;
@@ -2330,6 +2423,15 @@ applyPhenotypeName = () => {
 }
 
 
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
 requestPhenotypeInfo = (elem) => {
 
     switch (elem.id) {
@@ -2360,13 +2462,34 @@ requestPhenotypeInfo = (elem) => {
 
 }
 
-// e.g.  10101   is DAPI+ KERATIN- ASMA+ CD45- IBA1+
-// e.g. grpChnlNameArr  :  Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
-getphenoBinaryDescription = (phenotypeVal, grpChnlNameArr) => {
+
+
+
+   /**
+    *  return phenotype binary description
+    *  e.g. grpChnlNameArr  :  Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]    
+    *  e.g.  "10101"  is  "DAPI+ KERATIN- ASMA+ CD45- IBA1+ "
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} phenotypeVal
+    * @param {Array} grpChnlNameArr
+    * @returns {string}
+    * @example
+    *
+    *
+    * getPhenoBinaryDescription("10101", [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ])
+    *
+    * =>  "DAPI+ KERATIN- ASMA+ CD45- IBA1+ "
+    */ 
+
+getPhenoBinaryDescription = (phenotypeVal, grpChnlNameArr) => {
         let phenoDescription = '';   
 
-        for(chIdx = 0; chIdx < phenotypeVal.length; chIdx ++ ) {
-                    markerStatus = parseInt(phenotypeVal.charAt(chIdx));
+        for(let chIdx = 0; chIdx < phenotypeVal.length; chIdx ++ ) {
+                    let markerStatus = parseInt(phenotypeVal.charAt(chIdx));
 
                     if(markerStatus) { // -- if 1
                         phenoDescription += grpChnlNameArr[chIdx] + "+";
@@ -2382,9 +2505,29 @@ getphenoBinaryDescription = (phenotypeVal, grpChnlNameArr) => {
         return phenoDescription;  //--e.g. DAPI+ KERATIN- ASMA- CD45+ IBA1+ 
 }
 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
 getPhenotypeName = (binary) => {
       return allValidPhenotypes.filter( entry => entry.binary === binary)[0].phenotypeName;
 }
+
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
 
 setPhenotypeName = (binary, phenotypeName) => {
 
@@ -2408,9 +2551,29 @@ setPhenotypeName = (binary, phenotypeName) => {
 //       });      
 // }
 
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
 getPhenotypeBinaryColor = (binary) => {
       return allValidPhenotypes.filter( entry => entry.binary === binary)[0].phenotypeColor;
 }
+
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
 
 setPhenotypeNamesFormField = (fieldId, value) => {
         document.getElementById(fieldId).value = value;
@@ -2434,32 +2597,69 @@ resetPhenotypeNamesFormField = (fieldId) => {
         document.getElementById(fieldId).value = "";
 }
 
-// To show description of the phenotype binary e.g. 10101
-onPhenotypeListChanged = () => {
-        let phenotypeVal = document.getElementById("phenotypeList").value;
-        let grpChnlNameArr = getCurGrpChannelsName();   
-        // e.g.  Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ] 
-        loadPhenotypeNameFormFields(phenotypeVal, grpChnlNameArr);
-}
 
-initPhenotypeBinaryColor = (phenotypeVal) => {
-    let clr = getPhenotypeBinaryColor(phenotypeVal);
-    document.getElementById("phenotypeBinaryClr").style.backgroundColor =  clr;
-}  
+   /**
+    * To show description of the phenotype binary e.g. 10101
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
+    onPhenotypeListChanged = () => {
+            let phenotypeVal = document.getElementById("phenotypeList").value;
+            let grpChnlNameArr = getCurGrpChannelsName();   
+            // e.g.  Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ] 
+            loadPhenotypeNameFormFields(phenotypeVal, grpChnlNameArr);
+    }
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
+    initPhenotypeBinaryColor = (phenotypeVal) => {
+        let clr = getPhenotypeBinaryColor(phenotypeVal);
+        document.getElementById("phenotypeBinaryClr").style.backgroundColor =  clr;
+    }  
+
+
+   /**
+    * 
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
+    loadPhenotypeNameFormFields = (phenotypeVal, grpChnlNameArr) => {
+            setPhenotypeNamesFormField("phenotypeDescription", getPhenoBinaryDescription(phenotypeVal, grpChnlNameArr));
+            setPhenotypeNamesFormField("phenotypeBinaryField", phenotypeVal);        
+            setPhenotypeNamesFormField("phenotypeName", getPhenotypeName(phenotypeVal));
+            // setPhenotypeNamesFormField("phenotypeAbbreviation", getPhenotypeAbbreviation(phenotypeVal));
+            initPhenotypeBinaryColor(phenotypeVal);
+
+    }
 
 
 
-loadPhenotypeNameFormFields = (phenotypeVal, grpChnlNameArr) => {
-        setPhenotypeNamesFormField("phenotypeDescription", getphenoBinaryDescription(phenotypeVal, grpChnlNameArr));
-        setPhenotypeNamesFormField("phenotypeBinaryField", phenotypeVal);        
-        setPhenotypeNamesFormField("phenotypeName", getPhenotypeName(phenotypeVal));
-        // setPhenotypeNamesFormField("phenotypeAbbreviation", getPhenotypeAbbreviation(phenotypeVal));
-        initPhenotypeBinaryColor(phenotypeVal);
+  /**
+    * Give phenotype binary a name e.g. CD20+ which is for example ***1* name as B Cell
+    * allValidPhenotypes[0] e.g. { binary: "10001", phenotypeName: null, validCells: (32) […], totalValidCellsNum: 32, phenotypeColor: "#ff0000" }
+    *
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
 
-}
-
-// Give phenotype binary a name e.g. CD20+ which is for example ***1* name as B Cell
-// allValidPhenotypes[0] e.g. { binary: "10001", phenotypeName: null, validCells: (32) […], totalValidCellsNum: 32, phenotypeColor: "#ff0000" }
 initPhenotypeNamesForm = () => {
 
       if(! allValidPhenotypes.length) {
@@ -2622,9 +2822,29 @@ initPhenotypeNamesForm = () => {
       setAllChannelsOpacity(); 
  }
 
+/**
+*  
+*  
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/ 
+
  isViewBarEmpty = (viewBarId) => {
     return document.getElementById(viewBarId).innerHTML === "" ? true : false;
  }
+
+/**
+*  
+*  
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+*/ 
   
   clearViewBar = (viewBarId) => {
         if(!(isViewBarEmpty(viewBarId))){
