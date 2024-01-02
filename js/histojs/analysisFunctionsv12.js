@@ -3876,6 +3876,10 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @version 1.0.0
    * @param {string} fileName
    * @returns {string}
+   * @example
+   *
+   * searchFileRemotely("LUNG-3-PR_40X.ome.tif")
+   * => "658d3bd0a45554f5d9171dc4"    
    */    
 
   searchFileRemotely = (fileName) =>{
@@ -3885,7 +3889,6 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
               searchResult = JSON.parse(result)['item'][0];
             })
          return searchResult ? searchResult._id  : null;
-
   }
 
   /**
@@ -3912,8 +3915,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @since 1.0.0
    * @version 1.0.0
    * @param {string} fileName
-   * @returns {Object}
-   */     
+   * @returns {object}
+   * @example 
+   *
+   * getRemoteFileInfo("LUNG-3-PR_40X.ome.tif")
+   * => { _id: "658d3bd0a45554f5d9171dc4", folderId: "658d3bd0a45554f5d9171dc0", meta: Object { omeDatasetUpdate: {…}, omeSceneDescription: (44) […], settings: {…} },
+   *       name: "LUNG-3-PR_40X.ome.tif",...}
+   */    
+      
 
   getRemoteFileInfo = (fileName) => {
          let remoteFileInfo ;
@@ -3926,7 +3935,21 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
 
-  // Get the id of the JSON or CSV file whether they are withing same ome folder or in any collection on the server
+  /**
+   * Get the id of the JSON or CSV file whether they are withing same ome folder or in any collection on the server
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName
+   * @returns {string}
+   * @example
+   *
+   * getRemoteFileId("LUNG-3-PR_40X.ome.tif")
+   * => "658d3bd0a45554f5d9171dc4"
+   */   
+
   getRemoteFileId = (fileName) => {
         // check ome folder first
         let remoteFileInfo = getRemoteFileInfo(fileName);
@@ -3946,6 +3969,96 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         // }
   }    
 
+
+  /**
+   *  Get the content of the remote file  e.g. LUNG-3-PR_40X_channel_metadata.csv
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName
+   * @returns {Object}
+   * @example 
+   *
+   * getRemoteFileContents("LUNG-3-PR_40X_Morph_Stat.json")
+   * 
+   * => Object { area: {…}, eccentricity: {…}, extent: {…}, orientation: {…}, solidity: {…}, ... }
+   *
+   *
+   *
+   * getRemoteFileContents("LUNG-3-PR_40X_channel_metadata.csv")
+   * 
+   * => "channel_number,channel_name
+        0,DAPI
+        1,A488background1
+        2,A555background1
+        3,A647background1"
+   *   
+   *
+   *
+   *
+   */    
+      
+  getRemoteFileContents = (fileName) => {
+         let remoteFileContent ;
+         webix.ajax().sync().get(getHostApi() + "item/" + getRemoteFileId(fileName) + "/download?offset=0&contentDisposition=inline", (result) => {
+              if( fileName.includes(".json") ) {
+                  remoteFileContent = JSON.parse(result);
+              } else if( fileName.includes(".csv") ) {
+                  remoteFileContent = result;
+              }
+
+            })
+        
+         return remoteFileContent ? remoteFileContent : null;
+  } 
+
+
+  /**
+   *  Convert CSV content to JSON 
+   *  Set header true to convert it as json object not as an array 
+   *  Set dynamicTyping true to make numbers show as numerical not strings, ex. show as 0 not "0"
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} csvContent
+   * @returns {Array} Array of objects
+   * @example 
+   *
+   * csvContent    =   `channel_number,channel_name
+                        0,DAPI
+                        1,A488background1
+                        2,A555background1
+                        3,A647background1`
+   *
+   *
+   * convertCsv2Json(csvContent)
+   * 
+   * => Array(4) [ {channel_number: 0, channel_name: "DAPI"}, {channel_number: 1, channel_name: "A488background1"}, {…}, {…} ]
+   *   
+   */  
+
+  convertCsv2Json = (csvContent) => {
+       // header true to convert it as json object not as an array
+       return Papa.parse(csvContent, { skipEmptyLines: true, header: true, dynamicTyping: true}).data;
+
+  }
+
+
+
+  /**
+   * Download file from host server
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName   
+   */ 
+
   downloadRemoteFile = (fileName) => {
       let a = document.getElementById('downloadingLink');
       if(a == null) {
@@ -3958,10 +4071,78 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
       a.href = url;
       a.click();
 
-      //document.body.removeChild(a);
+      //--document.body.removeChild(a);
   } 
 
-  // in case no api_key found on host, create one for use with restApi to download JSON files from host
+
+    /**
+    * Fetch json data from json file stored locally or remotely  
+    *
+    * @since 1.0.0
+    * @param {string} jsonURL - json url e.g. "./download/myData.json". or "https://styx.neurology.emory.edu/girder/api/v1/item/61dfb57d4874d4ffdf4e3144/download?contentDisposition=inline"
+    * @example
+    *
+    * fetchRemoteJson("./features/LUNG-3-PR_40X/DAPI_KERATIN_ASMA_CD45_IBA1/Spx/DAPI_KERATIN_ASMA_CD45_IBA1_Spx_Feat.json")
+    *
+    */  
+
+    fetchRemoteJson= (jsonURL) => {
+        let jsonDataObj; 
+        $.ajax({
+              url: jsonURL,
+              async: false,
+              dataType: 'json',
+              success: function (response) {
+                jsonDataObj = response  
+                //-- jsonDataObj { key1: val1, key2: val2, key3: val3 }   
+              }
+            });
+
+         return jsonDataObj ? jsonDataObj : null ;
+
+    }
+
+
+    /**
+    * Fetch csv data from csv file stored locally or remotely  
+    *
+    * @since 1.0.0
+    * @param {string} csvURL - csv url e.g. "./download/myData.csv". or "https://styx.neurology.emory.edu/girder/api/v1/item/61dfb57d4874d4ffdf4e3144/download?contentDisposition=inline"
+    * @example
+    *
+    * fetchRemoteCsv("./features/LUNG-3-PR_40X/DAPI_KERATIN_ASMA_CD45_IBA1/Spx/DAPI_KERATIN_ASMA_CD45_IBA1_markers_morphology.csv")
+    *
+    */  
+
+    fetchRemoteCsv= (csvURL) => {
+        let csvDataObj; 
+        $.ajax({
+              url: csvURL,
+              async: false,
+              dataType: 'text',
+              success: function (response) {
+                csvDataObj = response  
+                //-- csvDataObj  'key1, key2
+                //                val1, val2'    
+              }
+            });
+
+         return csvDataObj ? csvDataObj : null ;
+
+    }
+
+
+
+  
+  /**
+   * In case no api_key found on host, create one for use with restApi to download JSON files from host
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0  
+   */ 
+
   createApiKey = () => {
     if( isLoggedIn() ){
         webix.ajax().sync().post( getHostApi() + "api_key?name=" + getUserInfo().lastName + "&active=true");
@@ -3970,6 +4151,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
     }
   }
 
+  /**
+   * In case no api_key found on host, create one for use with restApi to download JSON files from host
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0  
+   */ 
 
    getApiKey = () => {
        let apiKey = null;
@@ -3987,6 +4176,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
       return apiKey.length ? apiKey[0].key : null;      
 
    }
+
 
   downloadHostFile = (fileName, localDir) => { // fileName is the name on host  e.g "TONSIL-1_40X_cellMask.json"
          let remoteJSON = {};
@@ -4092,6 +4282,22 @@ downloadUserData = (data, fileName) =>{
   }
 
 
+    /**
+    * Get Tile BBox 
+    *
+    * @since 1.0.0
+    * @param {string} spxBoundaries
+    * @returns {string}
+    * @example
+    *
+    * spxBoundaries= "3073,3829 3077,3833 3077,3839 3075,3841 3075,3843 3070,3847 3068,3846\
+                      3065,3848 3062,3848 3060,3842 3062,3838 3062,3836 3064,3834 3065,3831 3070,3829" 
+    *
+    * getTileBboxFormat(spxBoundaries)
+    *
+    * => "3060,3829 3060,3848 3077,3848 3077,3829" 
+    *
+    */ 
 
   getTileBboxFormat = (spxBoundaries) => { 
     let bbox = find_bbox(spxBoundaries, "boundaryString");
@@ -4267,7 +4473,7 @@ downloadUserData = (data, fileName) =>{
 
 
 
-
+  // Not in use currenlty 
   initSpxOverlay_v1 = ( /*allSpxBoundaryData = [] */) => {
      webix.message("Wait cell boundaries to load");
      triggerHint("Wait cell boundaries to load","info", 10000);
@@ -10794,7 +11000,7 @@ plotMarkersBoxPlots = () => {
 
 function onSelectedTile (d, i) { // Add interactivity
 
-    // setSelectedTile( d3.select(this).attr('id') );
+    //-- setSelectedTile( d3.select(this).attr('id') );
     setSelectedTile(this);
     let curTile = d3.select(this);
   
@@ -10804,7 +11010,7 @@ function onSelectedTile (d, i) { // Add interactivity
      }
 
   
-    // if( !isSuperPixel() ){
+    //-- if( !isSuperPixel() ){
           let prevTileId = getLastSelectedTileId();
           let prevTile = d3.select("#" + prevTileId);
           // let strokeWidth = 10;
@@ -10822,15 +11028,15 @@ function onSelectedTile (d, i) { // Add interactivity
 
          setLastSelectedTileId( curTile.attr('id') );
          
-    // }   
+    //-- }   
        
     
     curTile.style("fill-opacity", Opts.selectedTileFillOpacity);
     curTile.style("fill", Opts.selectedTileFillColor);
-    // d3.select("#" + this.id).style("fill-opacity", 'none')
-    // d3.select("#" + this.id).style('stroke-width', Opts.selectedTileStrokeWidth)
-    // d3.select("#" + this.id).style('stroke', 'yellow')
-    // d3.select("#" + this.id).style('stroke', 'yellow')
+    //-- d3.select("#" + this.id).style("fill-opacity", 'none')
+    //-- d3.select("#" + this.id).style('stroke-width', Opts.selectedTileStrokeWidth)
+    //-- d3.select("#" + this.id).style('stroke', 'yellow')
+    //-- d3.select("#" + this.id).style('stroke', 'yellow')
 
     let bbox = find_bbox(this);
     let entry = findObjectByKeyValue( Boundary_box, 'id', getSelectedTileId() ); // to check whether the entry exists or no..
@@ -10846,33 +11052,34 @@ function onSelectedTile (d, i) { // Add interactivity
        document.getElementById("curRoiFont").innerHTML = getSelectedTileId();
     } 
 
-    //currentIndex = this.attributes.index.nodeValue;
-    // loadCanvas(bbox['left'],bbox['top'],bbox['width'],bbox['height'],currentIndex.toString());
+    //-- currentIndex = this.attributes.index.nodeValue;
+    //-- loadCanvas(bbox['left'],bbox['top'],bbox['width'],bbox['height'],currentIndex.toString());
 
           
-    // if ($$("Features").getValue()=="RGB")
-    //       {
-    //           PlotRGB(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
+    // --if ($$("Features").getValue()=="RGB")
+    // --      {
+    // --          PlotRGB(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
 
-    //                   sortedDeEnDistances=[];
-    //                   HistFeatures1D=[];
-    //                   var currentTileFeatures = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(this).attr('id')); 
-    //                   HistFeatures1D=getHistFeatures(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
+    // --                  sortedDeEnDistances=[];
+    // --                  HistFeatures1D=[];
+    // --                  var currentTileFeatures = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(this).attr('id')); 
+    // --                  HistFeatures1D=getHistFeatures(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
               
-    //           if($$("findSimilarTiles").getValue()==1)
-    //           {
-    //                   lookupSimilars(HistFeatures1D);
+    // --           if($$("findSimilarTiles").getValue()==1)
+    // --          {
+    // --                  lookupSimilars(HistFeatures1D);
                       
-    //           } 
+    // --          } 
 
-    //       }
+    // --      }
           
 
-/*-----------------------------------------------------------------------
+  /*-----------------------------------------------------------------------
     $$("findSimilarTiles").enable();                          <-------------------------------------------------
-------------------------------------------------------------------------*/
+  ------------------------------------------------------------------------*/
 
 } // end of onSelectedTile
+
 /////////////////////////////////////////////////////
 // when mouse leave OSD overlay
 function handleMouseLeave  (d, i) { // Add interactivity

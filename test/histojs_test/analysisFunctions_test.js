@@ -43,7 +43,40 @@ describe("Main Analysis Functions", function () {
     it('return phenotype colors array', function () {
        expect( createCellPhenotypesColorsArray(2) ).to.eql([ "#ff0000", "#00ffff" ]);
     });
+  });  
+
+  describe('#getTileBboxFormat()', function () {
+    it('return tile BBox', function () {
+       let spxBoundaries= "3073,3829 3077,3833 3077,3839 3075,3841 3075,3843 3070,3847 3068,3846" +
+                          " 3065,3848 3062,3848 3060,3842 3062,3838 3062,3836 3064,3834 3065,3831 3070,3829" 
+       expect( getTileBboxFormat(spxBoundaries) ).to.eql("3060,3829 3060,3848 3077,3848 3077,3829");
+    });
+  }); 
+
+  describe('#convertCsv2Json()', function () {
+    it('return JSON object from CSV content', function () {
+       let csvContent    =   `channel_number,channel_name
+                                0,DAPI
+                                1,CD45`
+       expect( convertCsv2Json(csvContent) ).to.eql([{"channel_number": 0, "channel_name": "DAPI"},{"channel_number": 1, "channel_name": "CD45"}]);
+    });
   });   
 
+  describe('#fetchRemoteJson()', function () {
+    it('return JSON contents from JSON file', function () {
+       expect( fetchRemoteJson("./util/jsonData.json") ).to.eql([{"channel_number": 0, "channel_name": "DAPI"},{"channel_number": 1, "channel_name": "CD45"}]);
+    });
+  });       
+
+  describe('#fetchRemoteCsv()', function () {
+    it('return CSV contents from CSV file', function () {
+       let expectResult = 
+`channel_number,channel_name
+0,DAPI
+1,CD45
+`       
+       expect( fetchRemoteCsv("./util/csvData.csv") ).to.eql(expectResult);
+    });
+  }); 
 
 });  

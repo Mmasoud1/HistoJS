@@ -3337,7 +3337,7 @@ initChannelList = (omeChannels, itemName) => {
    }
 
    goToDsaServerPage = () => {
-       window.open("https://github.com/DigitalSlideArchive/digital_slide_archive/blob/master/ansible/README.rst"); 
+       window.open("https://github.com/Mmasoud1/HistoJS/wiki/Local-DSA"); 
    }
 
    initDemoFormContent = () => {
