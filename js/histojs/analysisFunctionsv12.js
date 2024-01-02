@@ -2855,6 +2855,23 @@ initPhenotypeNamesForm = () => {
         }
   }
 
+/**
+*  create cell phenotype colors crray
+*  
+* 
+* @function
+* @memberof HistoJS
+* @since 1.0.0
+* @version 1.0.0
+* @param {number} numOfValidPhenotypes
+* @returns {Array}
+* @example
+*
+* createCellPhenotypesColorsArray(2)
+*
+* => Array [ "#ff0000", "#00ffff" ]
+*/   
+
 createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
     let colorStep=Math.floor(360/numOfValidPhenotypes); // 360 is HSL max hue
     let saturation=100;
@@ -2903,6 +2920,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         document.getElementById("showHideAllGrpChls").className = "fa fa-eye";
      }) 
   }  
+
+ /**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 
   freezeAllCellFilters = (freezeFlag = true) => {
      resetAllCellFilters();
@@ -2959,6 +2985,16 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
   }
 
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ * @returns {bool}
+ */
+
   isCellFiltersActive = () => {
      const curGroup = getSelectedGroup();
      let isActive = false;
@@ -2979,6 +3015,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
      return isActive? true : false;
   }  
+
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */  
 
   cellFilterSliderChanged = (elem) => {
      let channelName = elem.id.split('.')[1];
@@ -3007,6 +3052,16 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
   }
 
+
+/**
+ * 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */  
+
   cellMorphFilterSliderChanged = (elem) => {
      let morphFeatureName = elem.id.split('.')[1];
      showLoadingIcon().then( result => {
@@ -3032,10 +3087,22 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
     
 	}
 
-   // check whether the cell postive ON/OFF button toggled to ON
+   
+
+/**
+ * check whether the cell postive ON/OFF button toggled to ON
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ * @returns {bool}
+ */    
+  
    isCellPositiveSwitchEnabled = (channelName) => {
         return document.getElementById("cellPositiveSwitch." + channelName).checked ? true : false;
    }
+
 
  /**
  * Turn off cell postive switch 
@@ -3048,6 +3115,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    resetCellPositiveSwitch = (channelName) => {
       document.getElementById("cellPositiveSwitch." + channelName).checked = false;
    }
+
+
+/**
+ * Turn ON/OFF channel postive switch 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */  
+
 
   toggleChannelCellPositive = (elem) => {
      let channelName = elem.id.split('.')[1];
@@ -3090,8 +3168,6 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
            });
 
 
-
-
     } else {
 
       resetCellPositiveSwitch(channelName);
@@ -3102,7 +3178,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
   }
 
-   // check whether the cell postive ON/OFF button toggled to ON
+ 
+
+/**
+ * check whether the cell negative ON/OFF button toggled to ON
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ * @returns {bool}
+ */    
    isCellNegativeSwitchEnabled = (channelName) => {
         return document.getElementById("cellNegativeSwitch." + channelName).checked ? true : false;
    }
@@ -3119,6 +3205,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    resetCellNegativeSwitch = (channelName) => {
       document.getElementById("cellNegativeSwitch." + channelName).checked = false;
    }
+
+
+
+/**
+ * Turn ON/OFF channel negative switch 
+ * 
+ * @function
+ * @memberof HistoJS
+ * @since 1.0.0
+ * @version 1.0.0
+ */  
 
   toggleChannelCellNegative = (elem) => {
      let channelName = elem.id.split('.')[1];
@@ -3181,29 +3278,111 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    //      document.getElementById("boundarySwitch").checked = false;
    //      boundarySwitchClicked();
    // } 
+
+
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelName
+   * @returns {number}
+   */  
+
    getMarkerPositiveThresholdValue = (channelName) => {
         return document.getElementById("markerPositiveThresholds." + channelName).value;
    }
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelName
+   * @returns {number}
+   */  
 
    getMarkerNegativeThresholdValue = (channelName) => {
         return document.getElementById("markerNegativeThresholds." + channelName).value;
    } 
 
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelName
+   * @returns {number}
+   */ 
+
    getMarkerPositiveThresholdIndex= (channelName) => {
         return cellPositiveThresholdOptions.indexOf(document.getElementById("markerPositiveThresholds." + channelName).value);
    }
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelName
+   * @returns {number}
+   */ 
 
    getMarkerNegativeThresholdIndex= (channelName) => {
         return cellNegativeThresholdOptions.indexOf(document.getElementById("markerNegativeThresholds." + channelName).value);
    }
 
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelName
+   * @param {number} value
+   */  
+
    setMarkerPositiveThresholdValue = (channelName, value) => {
         document.getElementById("markerPositiveThresholds." + channelName).value = value;
    } 
 
+
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelName
+   * @param {number} value
+   */ 
+
    setMarkerNegativeThresholdValue = (channelName, value) => {
         document.getElementById("markerNegativeThresholds." + channelName).value = value;
    } 
+
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
    onChangeMarkerPositiveThreshold = (elem) => {
        // let channelName = elem.id.split('.')[1];
@@ -3216,13 +3395,43 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
        // curPositiveThresholdIndex = cellPositiveThresholdOptions.indexOf(curPositiveThreshold)
    }
 
-  onChangeMarkerNegativeThreshold = () => {
 
-  }    
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
+  onChangeMarkerNegativeThreshold = () => {
+       // to be coded
+  }  
+
+
+ /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */   
 
   requestCellPositiveInfo = () => {
      triggerHint("To visualize all cells with marker value above or equal selected threshold .. ");
   } 
+
+
+ /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
   requestCellMorphologicalInfo = (elem) => { // e.g. area, solidity etc
      let morphfeatureName = elem.id.split('.')[1];
@@ -3230,9 +3439,29 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
      triggerHint(featureEntry[0].description, "info", 7000);    
   }     
 
+
+ /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
   requestCellNegativeInfo = () => {
      triggerHint("To visualize all cells with marker value below or equal selected threshold .. ");
   } 
+
+
+ /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
   requestCellFilterInfo = () => {
      triggerHint("To visualize all cells with marker value above slider value .. ");
@@ -3240,7 +3469,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
 
- 
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
 
 	initGrpChannelOptionsList = () => { 
 	    let nodes = "";
@@ -3444,6 +3681,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 	}  
 
 
+ /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
 
     activateDapiCellsMorphOptionsList = (dapiMorphStatisticalData) => { 
 
@@ -3473,7 +3719,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 /*------------------------------------------------------------------------------------------------------------------*/
 
 
-   // check whether the ON/OFF button toggled to ON
+
+  /**
+   * check whether the ON/OFF button toggled to ON
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   */ 
+
    isBoundarySwitchEnabled = () => {
         return document.getElementById("boundarySwitch").checked ? true : false;
    }
@@ -3483,14 +3739,34 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
    // }
 
-   // check whether button toggled to SPX
+   
+  /**
+   * check whether button toggled to SPX
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   */    
+
    isSuperPixel = () => {
     //   return document.getElementById("toggleBoundaries").checked ? true: false;
     // I removed grid option and kept only spx option 
          return true; 
    }
 
-   // enable sliders 
+
+  /**
+   * Enable sliders 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {bool} freezeFlag   
+   */ 
+
    enableBoundarySliders = (enableFlag) => {
         let allSliders = document.getElementById("boundaryOptionsTable").querySelectorAll('input[type="range"]');
         allSliders.forEach( slider => {
@@ -3498,6 +3774,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         });
    }  
 
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {bool} freezeFlag   
+   */ 
 
    freezeBoundaryDependentControls = (freezeFlag = true) => {  // Controls that depend on Boundary existence such as strock or fill
           enableBoundarySliders(!freezeFlag); 
@@ -3507,6 +3792,16 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
           // freezeInput("boundaryFillColor", freezeFlag); 
           // freezeInput("strokeColor", freezeFlag); 
    }   
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {bool} freezeFlag
+   */    
 
    freezeBoundaryControls = (freezeFlag = true) => {
           freezeBoundaryDependentControls(freezeFlag);
@@ -3523,7 +3818,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    resetBoundarySwitch = () => {
         document.getElementById("boundarySwitch").checked = false;
         boundarySwitchClicked();
-   }   
+   }  
+
+
+  /**
+   * 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */     
 
    resetBoundarySwitchDependencies = () => {
         if( isSimilarRegionBtnEnabled() ) {
@@ -3533,7 +3838,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         freezeAllCellFilters(true);
    } 
 
-   //  ON-OFF Boundary Switch
+
+
+  /**
+   * ON-OFF Boundary Switch
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+
    boundarySwitchClicked = () => {
          //  is switch ON
    	     if( isBoundarySwitchEnabled() ) {
@@ -3547,8 +3862,22 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
          }
    }
 
-  // search entire current host for the item id
-  //return object e.g. { _id: "5f3d8b53c0ac4ed1ea110f9b", _modelType: "item", size: 1496, baseParentId: "5da4e7f47bc2409bd20e1ff3", baseParentType: "collection", created: "2020-08-19T20:28:03.545000+00:00", creatorId: "5d9fd4e87bc2409bd20a359f", description: "", folderId: "5e361c5c34679044bda81b11", meta: {}, … }
+
+
+
+  /**
+   * Search entire current host for the item id
+   * Return object e.g. { _id: "5f3d8b53c0ac4ed1ea110f9b", _modelType: "item", size: 1496, baseParentId: "5da4e7f47bc2409bd20e1ff3", baseParentType: "collection", created: "2020-08-19T20:28:03.545000+00:00", creatorId: "5d9fd4e87bc2409bd20a359f", description: "", folderId: "5e361c5c34679044bda81b11", meta: {}, … }
+   *
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName
+   * @returns {string}
+   */    
+
   searchFileRemotely = (fileName) =>{
  //https://styx.neurology.emory.edu/girder/api/v1/resource/search?q=%22TONSIL-1_40X_channel_metadata.csv%22&mode=text&types=%5B%22item%22%5D&limit=10
          let searchResult = [];
@@ -3559,11 +3888,33 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
   }
 
+  /**
+   *
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName
+   * @returns {bool}
+   */    
+
   isRemoteFileExist = (fileName) => {
         return getRemoteFileInfo(fileName) ? true : false;
   }
 
-  // return object e.g. { _id: "5f3d8b53c0ac4ed1ea110f9b", _modelType: "item", folderId: "5e361c5c34679044bda81b11" ... 
+  
+  /**
+   * return object e.g. { _id: "5f3d8b53c0ac4ed1ea110f9b", _modelType: "item", folderId: "5e361c5c34679044bda81b11" ... 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName
+   * @returns {Object}
+   */     
+
   getRemoteFileInfo = (fileName) => {
          let remoteFileInfo ;
          webix.ajax().sync().get(getHostApi() + "item?folderId=" + getSelectedItemFolderId() + "&name=" + fileName + "&limit=50&sort=lowerName&sortdir=1", (result) => {
@@ -3572,6 +3923,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         
          return remoteFileInfo ? remoteFileInfo : null;
   } 
+
+
 
   // Get the id of the JSON or CSV file whether they are withing same ome folder or in any collection on the server
   getRemoteFileId = (fileName) => {

@@ -39,5 +39,11 @@ describe("Main Analysis Functions", function () {
     });
   });  
 
+  describe('#createCellPhenotypesColorsArray()', function () {
+    it('return phenotype colors array', function () {
+       expect( createCellPhenotypesColorsArray(2) ).to.eql([ "#ff0000", "#00ffff" ]);
+    });
+  });   
+
 
 });  
