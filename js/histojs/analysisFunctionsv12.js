@@ -6504,42 +6504,79 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 /*------------------------------------------------------------------------------------------------------------------*/
 
 
-// <input type="radio" id="layerOption" name="renderMode" value="layer">
-// <label for="male">Layers</label><br>
-// <input type="radio" id="blendOption" name="renderMode" value="blend">
-// <label for="blend">Blend</label><br>
-// <input type="radio" id="compositeOption" name="renderMode" value="composite">
-// <label for="composite">Composite</label>
+   //-- <input type="radio" id="layerOption" name="renderMode" value="layer">
+   //-- <label for="male">Layers</label><br>
+   //-- <input type="radio" id="blendOption" name="renderMode" value="blend">
+   //-- <label for="blend">Blend</label><br>
+   //-- <input type="radio" id="compositeOption" name="renderMode" value="composite">
+   //-- <label for="composite">Composite</label>
+
+   //-- <label class="container">Layers
+   //--   <input type="radio" checked="checked" name="renderMode">
+   //--   <span class="checkmark"></span>
+   //-- </label>
+   //-- <label class="container">Blend
+   //--   <input type="radio" name="renderMode">
+   //--   <span class="checkmark"></span>
+   //-- </label>
+   //-- <label class="container">Composite
+   //--   <input type="radio" name="renderMode">
+   //--   <span class="checkmark"></span>
+   //-- </label>
 
 
-// <label class="container">Layers
-//   <input type="radio" checked="checked" name="renderMode">
-//   <span class="checkmark"></span>
-// </label>
-// <label class="container">Blend
-//   <input type="radio" name="renderMode">
-//   <span class="checkmark"></span>
-// </label>
-// <label class="container">Composite
-//   <input type="radio" name="renderMode">
-//   <span class="checkmark"></span>
-// </label>
-
-
+  /**
+   * Get selected composite operation
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string} e.g. "lighter" 
+   */  
 
    getSelectedCompositeOperation = () => {
    	   return currentGrpFeaturesSelectionStates.compositeOperation;
    }
+
+  /**
+   * Set composite operation
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */     
 
    setCurCompositeOperation = () => {
        let curCompositeOperation = document.getElementById("compositeOperations").value;
        currentGrpFeaturesSelectionStates.compositeOperation = curCompositeOperation;
    }
 
+  /**
+   * Get selected display option
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string} e.g. "composite" 
+   */  
+
    getSelectedDisplayOption = () => {
    	   return currentGrpFeaturesSelectionStates.displayOption;
 
    }
+
+  /**
+   * Set current display  option
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Object} curOption
+   */  
 
    setCurDisplayOption = (curOption) => {
         currentGrpFeaturesSelectionStates.displayOption = curOption.value;
@@ -6547,10 +6584,20 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
                                           document.getElementById("compositeOperations").disabled = false; 
 	}
 
-	// compositeChanged = () =>{
- //        console.log( document.getElementById("compositeOperations").value )
 
-	// }
+	//-- compositeChanged = () => {
+    //--      console.log( document.getElementById("compositeOperations").value )
+	//-- }
+
+
+  /**
+   * Confirm button for  display changes
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
 	confirmDisplayChanges = () => {
 		let curGroup = getSelectedGroup();
@@ -6560,12 +6607,12 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 		        switch ( getSelectedDisplayOption()){
 		               case 'layers':
 		                              {
-								        reloadOSD(curGroup, false);  // compositeFlag = false
+								        reloadOSD(curGroup, false);  //-- compositeFlag = false
 		                                break;                 
 		                              }
 		                case 'blend':
 		                              {
-								      //  reloadOSD(curGroup, true, compositeType);
+								        //-- reloadOSD(curGroup, true, compositeType);
 								        triggerHint("To be Coded ..");
 		                                break;                
 		                              }
@@ -6588,16 +6635,36 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 	}
  
-  requestOperationInfo = () => {
+
+  /**
+   * Request operation info
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
+    requestOperationInfo = () => {
     	let curOperationValue = document.getElementById("compositeOperations").value;
     	let operationEntry = compositeOperations.filter( operation => operation.type === curOperationValue);
-      triggerHint(operationEntry[0].description, "info", 7000);
+        triggerHint(operationEntry[0].description, "info", 7000);
 	}
 
+
+  /**
+   * Init group channel display options
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
 	initGrpChnlDisplayOptions = () => { 
-	    let nodes="";
+	    let nodes = "";
 	    let sectionTitle = 'Channels Display';
-	    document.getElementById("grpChnlDisplyOptions").innerHTML=""; 
+	    document.getElementById("grpChnlDisplyOptions").innerHTML = ""; 
 
   		nodes +=  '<button class="accordion">';
   		nodes +=    '<li style="background-color: none" id="grpDisplayOptionsTitleLi">';
@@ -6609,32 +6676,32 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   		nodes +=       '<colgroup> <col style="width:50%"> <col style="width:50%"></colgroup>';
 
 
-  		// nodes +=       '<colgroup> <col style="width:10%"> <col style="width:50%"> <col style="width:40%"></colgroup>';
-  		// nodes +=       '<tr>';  
-  		// nodes +=         '<th >';
-  		// nodes +=   		   '<input type="radio" id="layerOption" name="renderMode" value="layer">';
-  		// nodes +=         '</th>';	
-  		// nodes +=         '<th>';
-  		// nodes +=  	       '<label for="layerOption">Layers</label>';
-  		// nodes +=         '</th>';	
-  		// nodes +=       '</tr>'  
+  		//-- nodes +=       '<colgroup> <col style="width:10%"> <col style="width:50%"> <col style="width:40%"></colgroup>';
+  		//-- nodes +=       '<tr>';  
+  		//-- nodes +=         '<th >';
+  		//-- nodes +=   		   '<input type="radio" id="layerOption" name="renderMode" value="layer">';
+  		//-- nodes +=         '</th>';	
+  		//-- nodes +=         '<th>';
+  		//-- nodes +=  	       '<label for="layerOption">Layers</label>';
+  		//-- nodes +=         '</th>';	
+  		//-- nodes +=       '</tr>'  
 
-  		// nodes +=       '<tr>';  
-  		// nodes +=         '<th >';
-  		// nodes +=   		   '<input type="radio" id="blendOption" name="renderMode" value="blend">';
-  		// nodes +=         '</th>';	
-  		// nodes +=         '<th>';		
-  		// nodes +=  	       '<label for="blendOption">Blend</label>';
-  		// nodes +=         '</th>';	
-  		// nodes +=       '</tr>';  
+  		//-- nodes +=       '<tr>';  
+  		//-- nodes +=         '<th >';
+  		//-- nodes +=   		   '<input type="radio" id="blendOption" name="renderMode" value="blend">';
+  		//-- nodes +=         '</th>';	
+  		//-- nodes +=         '<th>';		
+  		//-- nodes +=  	       '<label for="blendOption">Blend</label>';
+  		//-- nodes +=         '</th>';	
+  		//-- nodes +=       '</tr>';  
 
-  		// nodes +=       '<tr>';  
-  		// nodes +=         '<th >';
-  		// nodes +=   	       '<input type="radio" id="compositeOption" name="renderMode" value="composite" checked>';
-  		// nodes +=         '</th>';	
-  		// nodes +=         '<th>';			
-  		// nodes +=  	       '<label for="compositeOption">Composite</label>';
-  		// nodes +=         '</th>';	
+  		//-- nodes +=       '<tr>';  
+  		//-- nodes +=         '<th >';
+  		//-- nodes +=   	       '<input type="radio" id="compositeOption" name="renderMode" value="composite" checked>';
+  		//-- nodes +=         '</th>';	
+  		//-- nodes +=         '<th>';			
+  		//-- nodes +=  	       '<label for="compositeOption">Composite</label>';
+  		//-- nodes +=         '</th>';	
 
   		nodes +=       '<tr>';  
   		nodes +=         '<th >';
@@ -6642,7 +6709,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   		nodes +=         '</th>';	
   		nodes +=       '</tr>';			
 
-  		// nodes +=         '</th>';
+  		//-- nodes +=         '</th>';
 
   		nodes +=       '<tr>';  
   		nodes +=         '<th >';
@@ -6650,7 +6717,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   		nodes +=         '</th>';	
   		nodes +=       '</tr>';			
 
-  		// nodes +=         '</th>';		
+  		//-- nodes +=         '</th>';		
 
 
   		nodes +=       '<tr>';  
@@ -6677,14 +6744,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
   		nodes +=       '<tr style="border: 3px solid grey">&nbsp</tr>'  
 
-      nodes +=  		'<tr >'  
-      nodes +=    		'<td >'
-      nodes +=       		   '<a  href="javascript:void(0)" onclick="confirmDisplayChanges()"><i style="font-size:1vw;"    class="fa fa-check-circle"></i></a>'
-      nodes +=     		'</td>'
-      nodes +=    		'<td >'
-      nodes +=       		   '<a  href="javascript:void(0)" onclick="requestOperationInfo()"><i style="font-size:1vw;"    class="fa fa-info-circle"></i></a>'
-      nodes +=     		'</td>'        
-      nodes +=   		'</tr>'  
+        nodes +=  		'<tr >'  
+        nodes +=    		'<td >'
+        nodes +=       		   '<a  href="javascript:void(0)" onclick="confirmDisplayChanges()"><i style="font-size:1vw;"    class="fa fa-check-circle"></i></a>'
+        nodes +=     		'</td>'
+        nodes +=    		'<td >'
+        nodes +=       		   '<a  href="javascript:void(0)" onclick="requestOperationInfo()"><i style="font-size:1vw;"    class="fa fa-info-circle"></i></a>'
+        nodes +=     		'</td>'        
+        nodes +=   		'</tr>'  
 
   		nodes +=      '</table>'  
              
@@ -6693,6 +6760,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 	    document.getElementById("grpChnlDisplyOptions").innerHTML += nodes;
 
 	}  	
+
+  /**
+   * Init Accordion Click
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
 	initAccordionClick = () => { 
 		for(let btn of document.getElementsByClassName("accordion")) {
@@ -6704,52 +6780,78 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 	}	
 
 
-
-
-
 //////////////////////////////////////////////////////////////////////////////
+  /**
+   * Init Accordion Click
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */    
 
-removeBoundaries = () => {
-     d3.selectAll("polygon").remove();     // to make it independent of class type
-     resetTileValues();
-     // if(! isViewBarEmpty("grpFeaturesViewBar") ) {               //<<<<<<<<<<<<<<<<<<<<<----------
-     //       clearViewBar("grpFeaturesViewBar");
-     // }       
-  }
+   removeBoundaries = () => {
+         d3.selectAll("polygon").remove();     // To make it independent of class type
+         resetTileValues();
 
-removeTile = (tileId) => {
-     d3.select("#"+ tileId).remove();     // to make it independent of class type
-  }  
+         //-- if(! isViewBarEmpty("grpFeaturesViewBar") ) {               //<<<<<<<<<<<<<<<<<<<<<----------
+         //--       clearViewBar("grpFeaturesViewBar");
+         //-- }       
+   }
+
+  /**
+   * Remove specific tile from all 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} tileId
+   */  
+
+   removeTile = (tileId) => {
+        d3.select("#"+ tileId).remove();     // to make it independent of class type
+   }  
   
 //////////////////////////////////////////////////////////////////////////////////////
-// function loadTilesLabel(){
-//     let tileType =  "SPX";
-//     let tileSize =   64;
-//     let saveFileName = slideName + "." + currentIndex + "." + tileType + "." + tileSize.toString(); 
+//-- function loadTilesLabel(){
+//--     let tileType =  "SPX";
+//--     let tileSize =   64;
+//--     let saveFileName = slideName + "." + currentIndex + "." + tileType + "." + tileSize.toString(); 
 
-//     let savedTileLabels = getFeatures(saveFileName);
-//     if((savedTileLabels == null)||(savedTileLabels == "Notexist")){
-//        webix.message("no saved labels");
-//     }else{
-//          if(tileType == "SPX")
-//             SPXTilesLabel = JSON.parse(savedTileLabels);
-
-//          webix.message("labels Loaded"); 
-
-//     }
-
-//   }
+//--     let savedTileLabels = getFeatures(saveFileName);
+//--     if((savedTileLabels == null)||(savedTileLabels == "Notexist")){
+//--        webix.message("no saved labels");
+//--     }else{
+//--          if(tileType == "SPX")
+//--             SPXTilesLabel = JSON.parse(savedTileLabels);
+//--          webix.message("labels Loaded"); 
+//--     }
+//--   }
 
 ////////////////////////// Features functions ////////////////////////////////////////
 
-// getFeatures = (fileName, featuresFolder) => {            <<<<<<<<<<<<<-----------
-//     let results = [];
-//     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readFeatures","filename=" + fileName + "&outfolder=" +featuresFolder, response => {
-//        results = response;
-//      });
+//-- getFeatures = (fileName, featuresFolder) => {            <<<<<<<<<<<<<-----------
+//--     let results = [];
+//--     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readFeatures","filename=" + fileName + "&outfolder=" +featuresFolder, response => {
+//--        results = response;
+//--      });
+//--     return results;
+//-- }
 
-//      return results;
-// }
+  /**
+   * Save features to local file
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} filename
+   * @param {string} Directory
+   * @param {string} featuresDic
+   * @param {string} writeMode
+   * @param {number} lastChunkFlag            
+   */     
 
 saveFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
@@ -6759,14 +6861,32 @@ saveFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag
            });
   }   
 
-// calculateFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
-//     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
-//           "name=" + filename + "&Dir=" + Directory + "&featuresDicData=" + featuresDic + "&lastChunkFlag=" + lastChunkFlag + "&mode=" + writeMode,
-//            function(response) {
-//               console.log(response)
-//            });
-//   }   
 
+//-- calculateFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
+//--     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
+//--           "name=" + filename + "&Dir=" + Directory + "&featuresDicData=" + featuresDic + "&lastChunkFlag=" + lastChunkFlag + "&mode=" + writeMode,
+//--            function(response) {
+//--               console.log(response)
+//--            });
+//-- }   
+
+
+  /**
+   * Find bounding box around cell boundary
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Object} obj
+   * @param {string} flag
+   * @returns {string} box
+   * @example
+   *
+   *
+   *
+   * => 
+   */   
 
 find_bbox = (obj, flag = "SPX/Grid") => {
        let xpx = [];
@@ -6823,9 +6943,7 @@ find_bbox = (obj, flag = "SPX/Grid") => {
 //chnlNameType = [{"channel_name": "CD45", "channel_type" : "Immune"}, {"channel_name": "KERATIN", "channel_type" : "Tumor"}, 
 //                {"channel_name": "ASMA", "channel_type" : "Stroma"}]
 getCellsClassification = (chnlNameType, clusterMethod, othersTypeThreshold) => {  
-
        let groupData = []; 
-
        // e.g. "Structural Components__markers_morphology.csv" 
        let markersMorphFileName =  getGrpMarkersMorphFileName();
        let grpFeaturesFolder = getGrpFeaturesLocalPath();
@@ -6835,11 +6953,10 @@ getCellsClassification = (chnlNameType, clusterMethod, othersTypeThreshold) => {
        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
         "/classifyCellsWithMaxIntensity", "&chnl_name_type=" + JSON.stringify(chnlNameType) +
         "&features_folder=" + grpFeaturesFolder + "&markers_morph_file=" + markersMorphFileName +
-        // "&cell_undefined_threshold_value=" + Opts.cellUndefinedThresholdValue + 
+        //-- "&cell_undefined_threshold_value=" + Opts.cellUndefinedThresholdValue + 
         "&cell_undefined_threshold_value=" + othersTypeThreshold +         
-        // "&clusterMethod=" + clusterMethod +
+        //-- "&clusterMethod=" + clusterMethod +
         "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize , function(response) {
-        
 
              allCellClassesResoponse = JSON.parse(response);
       });
@@ -6961,22 +7078,21 @@ getAllSpxTilesFeature = () => {
        let featuresFolder = getGrpFeaturesLocalPath();
 
        // For boxplot data file and location
-       // let boxplotFileName = getGrpBoxplotFileName();
-       // let boxplotFolder = getGrpBoxplotLocalPath();
+       //-- let boxplotFileName = getGrpBoxplotFileName();
+       //-- let boxplotFolder = getGrpBoxplotLocalPath();
 
        let boundariesFileName = getItemBoundariesFileName();
        let boundariesFolder = getBoundariesLocalPath();       
 
        let allFeaturesResoponse = [];
 
-       // if(Opts.isChannelNormalizeRequired) { 
-       //    //-- if true check for free memory first to avoid out or memory problem with image normalize function
-       //    Opts.isChannelNormalizeRequired = isChnlImgDataNormFeasible();
-       //    if(!Opts.isChannelNormalizeRequired) {
-       //        triggerHint(" Channels normalization Required flag is set to false due to insufficient free memory")
-       //    } 
-
-       // }
+       //-- if(Opts.isChannelNormalizeRequired) { 
+       //--    //-- if true check for free memory first to avoid out or memory problem with image normalize function
+       //--    Opts.isChannelNormalizeRequired = isChnlImgDataNormFeasible();
+       //--    if(!Opts.isChannelNormalizeRequired) {
+       //--        triggerHint(" Channels normalization Required flag is set to false due to insufficient free memory")
+       //--    } 
+       //-- }
        
 
        for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
@@ -6988,7 +7104,7 @@ getAllSpxTilesFeature = () => {
         "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + "&markers_morph_file=" + markersMorphFileName +
         "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize +  
         "&isChannelNormalizeRequired=" + Opts.isChannelNormalizeRequired + 
-        // "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
+        //-- "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
         "&boundaries_file=" + boundariesFileName+ "&boundaries_folder=" + boundariesFolder, function(response) {
 
              allFeaturesResoponse = JSON.parse(response);
@@ -7026,7 +7142,7 @@ getAllGridTilesFeature = () => {
        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createAllGridTilesFeature","baseUrl=" + apiUrl + 
         "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) +
         "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + 
-        // "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
+        //-- "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
         "&gridSize=" + gridSize, function(response) {
 
              allFeaturesResoponse = JSON.parse(response);
@@ -7059,27 +7175,25 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                  for(let n = 0; n < featureKeys.length; n++) {
                    if ( hist.hasOwnProperty(featureKeys[n]) ) {
                       // Alternatively:  
-                      //  var keyIndex=  Object.keys(hist).indexOf( featureKeys[n] )   
-                      // var keyName =  Object.keys(hist)[  keyIndex ]  
-                      // var keyValue= hist[ keyName ][1] 
+                      //--  var keyIndex=  Object.keys(hist).indexOf( featureKeys[n] )   
+                      //--  var keyName =  Object.keys(hist)[  keyIndex ]  
+                      //--  var keyValue = hist[ keyName ][1] 
+
                       //OR simply
                        temp[featureKeys[n]] = hist[featureKeys[n]];
                       }
-                   // temp[featureKeys[0]] = hist['mean'][1];
-                   // temp[featureKeys[1]] = hist['max'][1];
-                   // temp[featureKeys[2]] = hist['stdev'][1];
+                   //-- temp[featureKeys[0]] = hist['mean'][1];
+                   //-- temp[featureKeys[1]] = hist['max'][1];
+                   //-- temp[featureKeys[2]] = hist['stdev'][1];
                  }
 
                  temp["Frame"] = curGroup.Channels[k];
                  tileProbData.push(temp)
-             //   tileProbData.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
+             //--tileProbData.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
                   
           });
-
      }
-
     return tileProbData;
-
 }
     // helpful when click cancel buttons
     restoreLastChartOperation = () => {
@@ -7099,7 +7213,7 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
             togglePanel(chPlotsPanel);
         } 
 
-        //resetChartPlottingData()
+        //--resetChartPlottingData()
         resetChartFirstAppearFlag();
         removeChartBottomLists();
         freezeInput("chartOperations", true);
