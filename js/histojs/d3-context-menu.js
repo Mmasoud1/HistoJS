@@ -8,10 +8,7 @@
 *                It is based on DSA as backbone server.
 *
 * @version 1.0.0
-* @license MIT  
 *
-* @author Mohamed Masoud <mmasoud2@outlook.com>
-
 =========================================================
 
 
@@ -22,7 +19,7 @@
 
 
 
- function contextMenu(menu, openCallback) {
+ contextMenu = (menu, openCallback) => {
     // Menu will only appear when Similar Tiles is on	
 	// create the div element that will hold the context menu
 	d3.selectAll('.d3-context-menu').data([1])
@@ -37,7 +34,7 @@
 	
 
 	// this gets executed when a contextmenu event occurs
-	// return function(data, index) {	
+	//-- return function(data, index) {	
 		// console.log("data",data)
 		var elm = this;
      
@@ -50,20 +47,20 @@
 			})
 			.style('background-color',function(d, i) {
 			
-				// if(d.title.split(" ")[0]=="SPX"){
-				 if(i==0){	
+				//-- if(d.title.split(" ")[0]=="SPX"){
+				 if(i == 0) {	
 				 	return 'grey';
-				 }else{
-                    return 'white';
-				  }
+				 } else {
+                return 'white';
+				 }
 			})
 			.style('color',function(d, i) {
 			 
-				// if(d.title.split(" ")[0]=="SPX"){
-				 if(i==0){	
+				//-- if(d.title.split(" ")[0]=="SPX"){
+				 if(i == 0) {	
 				 	return 'white';
-				 }else{
-                    return 'black';
+				 } else {
+               return 'black';
 				 }
 			})
 
@@ -99,6 +96,6 @@
 			.style('display', 'block');
 
 		d3.event.preventDefault();
-	// };
+	//-- };
   
 };
