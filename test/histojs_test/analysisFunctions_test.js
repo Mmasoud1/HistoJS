@@ -79,4 +79,44 @@ describe("Main Analysis Functions", function () {
     });
   }); 
 
+
+  describe('#isLocalFileExistByAjax()', function () {
+    it('check if file exists', function () {
+       expect( isLocalFileExistByAjax("./util/jsonData.json") ).to.be.true;
+    });
+  });  
+
+  describe('#getBoundariesHomeDir()', function () {
+    it('return boundaries home dir', function () {
+       expect( getBoundariesHomeDir() ).to.eql("boundaries/");
+    });
+  });   
+
+  describe('#isFilteredCellFound()', function () {
+    it('return if there is filtered cell', function () {
+       expect( isFilteredCellFound() ).to.be.false;
+    });
+  });  
+
+  describe('#isFilteredCellFound()', function () {
+    it('return if there is filtered cell', function () {
+       expect( isFilteredCellFound() ).to.be.false;
+    });
+  });   
+
+  describe('#isCellPhenotypeActive()', function () {
+    it('return if cell phenotype active', function () {
+       expect( isCellPhenotypeActive() ).to.be.false;
+    });
+  });  
+
+  describe('#compare()', function () {
+    it('return 1 or -1 depend on comparsion', function () {
+       let dist1 = [], dist2 = [];
+       dist1.Distance = 3;
+       dist2.Distance = 4;
+       expect( compare(dist1, dist2) ).to.eql(1);
+    });
+  });    
+
 });  

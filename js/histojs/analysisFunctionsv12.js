@@ -32,6 +32,11 @@
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0
+     * @returns {number}
+     * @example
+     *
+     * getSelectedGrpIndex()
+     * => 0
      */
 
     getSelectedGrpIndex = () => {
@@ -46,7 +51,11 @@
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0
-     * @returns {boolean}     
+     * @returns {boolean}  
+     * @example
+     *
+     * isGrpSelected()
+     * => true        
      */
 
     isGrpSelected = () => {
@@ -54,7 +63,7 @@
     } 
 
     ////////////////-- For Chart Operations --///////////////
-    //Check if a group saved its Tumor-immune-Stromal selected channels
+
     /**
      * Check if a group saved its Tumor-immune-Stromal selected channels
      * 
@@ -63,7 +72,12 @@
      * @since 1.0.0
      * @version 1.0.0
      * @returns {boolean}
+     * @example
+     *
+     * isGrpChannelsNameTypeExist(0)
+     * => true      
      */     
+
     isGrpChannelsNameTypeExist = (grpIndex) => {
         return currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types ? 
                ( currentItemInfo.omeDataset.Groups[grpIndex].Channel_Types.length ? true : false ) : false;
@@ -79,12 +93,11 @@
      * @since 1.0.0
      * @version 1.0.0
      * @returns {Array} array of Objects 
-     *
      * @example
      *
-     * getGrpChannelsNameType( 1)
+     * getGrpChannelsNameType(0)
      *
-     * // => [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
+     * // => [{ channel_name: "KERATIN", channel_type: "Tumor" }, {"channel_name": "CD45", "channel_type" : "Immune"}, ...]
      */      
 
     getGrpChannelsNameType = (grpIndex) => {
@@ -106,7 +119,7 @@
     } 
 
     /**
-     * Set the variable to null
+     * reset the variable to null
      * 
      * @function
      * @memberof HistoJS
@@ -128,10 +141,25 @@
      * @since 1.0.0
      * @version 1.0.0
      * @returns {boolean}
+     * @example
+     *
+     * isDAPIChannelSelected()
+     * => true       
      */        
+
     isDAPIChannelSelected = () => {
         return lastItemSelectionStates.DAPIChannelIndex != null ? true : false;
     }           
+
+    /**
+     * Set Selected DAPI Channel Index
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @param {number} DAPIChannelIndex
+     */   
 
     setSelectedDAPIChannelIndex = (DAPIChannelIndex) => {
         lastItemSelectionStates.DAPIChannelIndex = DAPIChannelIndex;
@@ -145,6 +173,10 @@
      * @since 1.0.0
      * @version 1.0.0
      * @returns {number}
+     * @example
+     *
+     * getSelectedDAPIChannelIndex()
+     * => 0       
      */      
 
     getSelectedDAPIChannelIndex = () => {
@@ -159,6 +191,10 @@
      * @since 1.0.0
      * @version 1.0.0
      * @returns {String}
+     * @example     
+     *
+     * getSelectedDAPIChannelName()
+     * => "DAPI"
      */ 
 
     getSelectedDAPIChannelName = () => {
@@ -178,18 +214,62 @@
         lastItemSelectionStates.DAPIChannelIndex = null ;
     } 
 
-    // return e.g. { channel_name: "DNA 1", channel_number: 0, cycle_number: 0, … }
+    
+    /**
+     * Get channel object by index      //<<<<<<<<<<<<<  fix to object 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @param {number} index
+     * @returns {Array}
+     * @example     
+     *
+     * getChannelObjByIndex(0)
+     * => Array [{ channel_name: "DAPI", channel_number: 0 }]
+     */    
+
     getChannelObjByIndex = (index) => {
         return getSelectedItem().meta.omeSceneDescription.length ? getSelectedItem().meta.omeSceneDescription.filter(obj => { 
                                                                                          return obj.channel_number == index;
                                                                                           }) : null;
     }
 
+    /**
+     * Get channel object by name      //<<<<<<<<<<<<<  fix to object 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @param {string} channelName
+     * @returns {Array}
+     * @example     
+     *
+     * getChannelObjByIndex('DAPI')
+     * => Array [{ channel_name: "DAPI", channel_number: 0 }]
+     */  
+
     getChannelObjByName = (channelName) => {
         return getSelectedItem().meta.omeSceneDescription.length ? getSelectedItem().meta.omeSceneDescription.filter(obj => { 
                                                                                          return obj.channel_name == channelName;
                                                                                           }) : null;
     }    
+
+    /**
+     * Get Dapi channel object       //<<<<<<<<<<<<<  fix to object 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {Array}
+     * @example     
+     *
+     * getDAPIChannelObj()
+     * => Array [{ channel_name: "DAPI", channel_number: 0 }]
+     */ 
 
     getDAPIChannelObj = () => {
         return isDAPIChannelSelected() ? getSelectedItem().meta.omeSceneDescription.filter(obj => { 
@@ -198,23 +278,99 @@
     }
   
     //////////////////////////////
+
+    /**
+     * Get selected group object
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {object}
+     * @example     
+     *
+     * getSelectedGroup()
+     *
+     * => Object { Channel_Types: (3) […], Channels: (5) […], Colors: (5) […], Contrast_Max: (5) […], Contrast_Min: (5) […], 
+                 Format: "jpg", Max_Contrast_Max: (5) […], Max_Contrast_Min: (5) […], Name: "DAPI_KERATIN_ASMA_CD45_IBA1", Numbers: (5) […], … }
+     */ 
+
     getSelectedGroup = () => {
         return isGrpSelected() ? currentItemInfo.omeDataset.Groups[ getSelectedGrpIndex() ] : null;
     }
+
+    /**
+     * Get current group number of channels
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {number}
+     * @example     
+     *
+     * getCurGrpNumOfChannels()
+     *
+     * =>  5 
+     */     
 
     getCurGrpNumOfChannels = () => {
         return isGrpSelected() ? getSelectedGroup().Channels.length : null;
     }
 
 
-    // return e.g. Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
+    /**
+     * Get current group channel names
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {Array}
+     * @example     
+     *
+     * getCurGrpChannelsName()
+     *
+     * =>  Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
+     */ 
+
     getCurGrpChannelsName = () => {
         return isGrpSelected() ? getSelectedGroup().Channels : null;
     }    
 
+    /**
+     * Get selected group  name
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getSelectedGroupName()
+     *
+     * =>  "DAPI_KERATIN_ASMA_CD45_IBA1"
+     */
+
     getSelectedGroupName = () => {
         return isGrpSelected() ? getSelectedGroup().Name : null;
     }  
+
+    /**
+     * Update Input Tooltip
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @param {string} tooltipId
+     * @param {function} getFunCallback   
+     * @example       
+     *
+     * updateInputTooltip("strokeOpacityValueTooltip", getStrokeOpacity)
+     *
+     */
 
     updateInputTooltip = (tooltipId, getFunCallback) => {
     	return document.getElementById(tooltipId).innerHTML = getFunCallback();
@@ -225,7 +381,21 @@
       return document.getElementById(tooltipId).innerHTML = getFunCallback(arguments[2]);
     }    
 
-   // disable/enable input element
+    /**
+     * disable/enable input element
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @param {string} inputId
+     * @param {bool} freezeFlag     
+     * @example     
+     *
+     * freezeInput("cellPositiveSwitch.DAPI")
+     *
+     */
+
    freezeInput = (inputId, freezeFlag = true) => {
          document.getElementById(inputId).disabled = freezeFlag;
    } 
@@ -233,49 +403,163 @@
 
    //-- Files to load or create -- ---------------------------------------------------------//
 
-   // e.g. "Structural Components_Grid_64_Feat.json"
+  
+    /**
+     * Get features file name
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpFeaturesFileName()
+     *
+     * =>  "DAPI_KERATIN_ASMA_CD45_IBA1_Spx_Feat.json"
+     * OR
+     * => "Structural Components_Grid_64_Feat.json"
+     */  
+
    getGrpFeaturesFileName = () => { // get the proposed name of the featurs file 
            return isGrpSelected() ?  ( isSuperPixel() ? getSelectedGroupName()  + "_Spx_Feat.json" : 
                                                         getSelectedGroupName()  + "_Grid_"+ getGridSize() + "_Feat.json"
                                      ) : null;                  
    }
 
-   // e.g. "Structural Components__markers_morphology.csv"
+   
+    /**
+     * Get group morph file name
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpMarkersMorphFileName()
+     *
+     * =>  "DAPI_KERATIN_ASMA_CD45_IBA1_markers_morphology.csv" 
+     * OR
+     * =>  "Structural Components__markers_morphology.csv"
+     */   
+
    getGrpMarkersMorphFileName = () => { // get the proposed name of the featurs file 
            return isGrpSelected() ?  ( isSuperPixel() ? getSelectedGroupName()  + "_markers_morphology.csv" : 
                                                         getSelectedGroupName()  + "_Grid_"+ getGridSize() + "_markers_morphology.csv"
                                      ) : null;                  
    }   
 
-   // e.g. "Structural Components__Boxplot_Data.json"
-   // Can be used to compare group channels with existing json file to validate the info
+  
+    /**
+     * Can be used to compare group channels with existing json file to validate the info
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpBoxplotFileName()
+     *
+     * =>  "DAPI_KERATIN_ASMA_CD45_IBA1_Boxplot_Data.json" 
+     * OR
+     * =>  "Structural Components__Boxplot_Data.json"
+     */    
+
    getGrpBoxplotFileName = () => { // get the proposed name of the boxplot file 
            return isGrpSelected() ?   getSelectedGroupName()  + "_Boxplot_Data.json" : null;                  
    }  
 
 
-   // e.g. "Structural Components_MarkerCells_Boxplot_Data.json"
-   // used when Boxplot Data is cell based not channel based according to Opts.isBoxplotChannelBased false flag
+    /**
+     * Used when Boxplot Data is cell based not channel based according to Opts.isBoxplotChannelBased false flag
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpMarkerCellsBoxplotFileName()
+     *
+     * =>  "DAPI_KERATIN_ASMA_CD45_IBA1_MarkerCells_Boxplot_Data.json" 
+     * OR
+     * =>  "Structural Components_MarkerCells_Boxplot_Data.json"
+     */    
+
    getGrpMarkerCellsBoxplotFileName = () => { // get the proposed name of the boxplot file 
            return isGrpSelected() ?   getSelectedGroupName()  + "_MarkerCells_Boxplot_Data.json" : null;                  
    } 
 
-   // e.g. "Incomplete_Structural Components_Grid_64_Feat.json"  Used to save features temp to 'Resume' in case of unexpected interruption 
+
+
+    /**
+     *  Used to save features temp to 'Resume' in case of unexpected interruption 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpFeaturesTemporaryFileName()
+     *
+     * =>  "Incomplete_DAPI_KERATIN_ASMA_CD45_IBA1_Spx_Feat.json" 
+     * OR
+     * =>  "Incomplete_Structural Components_Grid_64_Feat.json"
+     */ 
+
    getGrpFeaturesTemporaryFileName = () => { // get the proposed name of the featurs file 
            return isGrpSelected() ?  ( isSuperPixel() ? "Incomplete_" + getSelectedGroupName()  + "_Spx_Feat.json" : 
                                                         "Incomplete_" + getSelectedGroupName()  + "_Grid_"+ getGridSize() + "_Feat.json"
                                      ) : null;                  
    }
 
-   // e.g "features/TONSIL-1_40X/", for singlePlex slides
-   // e.g "features/LUNG-3-PR_40X/"
+
+    /**
+     *  Get the folder where featues can located for selected item. 
+     *  e.g "features/TONSIL-1_40X/", for singlePlex slides
+     *  e.g "features/LUNG-3-PR_40X/" 
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getItemFeaturesLocalPath()
+     *
+     * =>  "features/LUNG-3-PR_40X/" 
+     */ 
+
    getItemFeaturesLocalPath = () => {
        return isGrpSelected() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultFeaturesDir + "/" +
                                   getItemName().split(".")[0] + "/") : null;  
    }
 
-   // e.g "features/TONSIL-1_40X/Structural Components/Grid/TileSize_64/", for multiPlex slides
+    /**
+     *  Get the folder where featues can located for  the current  selected item. 
+     *  e.g., "features/TONSIL-1_40X/Structural Components/Grid/TileSize_64/", for multiPlex slides
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpFeaturesLocalPath()
+     *
+     * =>  "features/LUNG-3-PR_40X/DAPI_KERATIN_ASMA_CD45_IBA1/Spx/" 
+     */ 
+
    getGrpFeaturesLocalPath = () => {
        return isGrpSelected() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultFeaturesDir + "/" +
@@ -285,7 +569,23 @@
                                 ) : null;  
    }
 
-   // e.g "features/TONSIL-1_40X/Structural Components/", for multiPlex slides
+
+    /**
+     *  Get the folder where Boxplot can located for  the current  selected item. 
+     * e.g "features/TONSIL-1_40X/Structural Components/", for multiPlex slides
+     * 
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpBoxplotLocalPath()
+     *
+     * =>  "features/LUNG-3-PR_40X/DAPI_KERATIN_ASMA_CD45_IBA1/" 
+     */ 
+
    getGrpBoxplotLocalPath = () => {
        return isGrpSelected() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultFeaturesDir + "/" +
@@ -293,13 +593,47 @@
                                   getSelectedGroupName() + "/" ) : null;  
    }   
 
-   // e.g. "Structural Components_cellMask.json"
+   
+    /**
+     *  Get the Boundaries suggested file name. 
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getGrpBoundariesFileName()
+     *
+     * =>  "DAPI_KERATIN_ASMA_CD45_IBA1_cellMask.json" 
+     * OR
+     * => "Structural Components_cellMask.json"
+     */  
+
    getGrpBoundariesFileName = () => {
         return isGrpSelected() ? getSelectedGroupName()  + "_cellMask.json" : null;
    }
 
    
-   // e.g. "boundaries/TONSIL-1_40X/"
+
+    /**
+     *  Get the folder where Boundaries can located for  the current  selected item. 
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getBoundariesLocalPath()
+     *
+     * =>  "boundaries/LUNG-3-PR_40X/"  
+     * OR
+     * => "boundaries/TONSIL-1_40X/"
+     */  
+
    getBoundariesLocalPath = () => {
        return isGrpSelected() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultBoundariesDir + "/" +
@@ -307,14 +641,44 @@
                                 ) : null;  
    }
 
-   // For Dapi cells/boundaries morphological statistical data e.g. "LUNG-3-PR_40X_Morph_Stat.json"
+   
+    /**
+     *  For Dapi cells/boundaries morphological statistical data e.g. "LUNG-3-PR_40X_Morph_Stat.json"
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getDapiMorphStatFileName()
+     *
+     * =>  "LUNG-3-PR_40X_Morph_Stat.json"  
+     */     
+
    getDapiMorphStatFileName = () => {
         return getItemName().split(".")[0]  + "_Morph_Stat.json"
    }
 
    
 
-   // e.g. "boundaries/TONSIL-1_40X/"
+ 
+    /**
+     *  CSV channel meta data local path.
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getCsvChannelMetaDataLocalPath()
+     *
+     * =>  "boundaries/LUNG-3-PR_40X/" 
+     */  
+
    getCsvChannelMetaDataLocalPath = () => {
        return getItemName() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultBoundariesDir + "/" +
@@ -322,55 +686,116 @@
                                 ) : null;  
    }   
 
-   //  e.g "TONSIL-1_40X_cellMask.json"
+
+    /**
+     *  Get Item bourndaris file name
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getItemBoundariesFileName()
+     *
+     * =>  "LUNG-3-PR_40X_cellMask.json" 
+     * OR
+     * => "TONSIL-1_40X_cellMask.json"
+     */   
+       
    getItemBoundariesFileName = () => {
         return  getItemName().split(".")[0]  + "_cellMask.json"
    } 
 
-   //  e.g "TONSIL-1_40X_channel_metadata.csv"
+
+    /**
+     *  Get CSV channel metadata file name
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getCsvChannelMetaDataFileName()
+     *
+     * =>  "LUNG-3-PR_40X_channel_metadata.csv" 
+     * OR 
+     * => "TONSIL-1_40X_channel_metadata.csv"
+     */      
+
    getCsvChannelMetaDataFileName = () => {
         return  getItemName().split(".")[0]  + "_channel_metadata.csv"
    }    
 
-   // This is for a generic mask   e.g "TONSIL-1_40X_cellMask.tiff"
+
+    /**
+     *  This is for a generic mask   e.g "TONSIL-1_40X_cellMask.tiff"
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getItemCellMaskImageName()
+     *
+     * =>  "LUNG-3-PR_40X_cellMask.tif"
+     */   
+
    getItemCellMaskImageName = () => {
         return  getItemName().split(".")[0]  + "_cellMask.tif"
    }    
 
-   // e.g. "boundaries/"
+
+   /**
+     *  Get boundaries home dir
+     *  
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0
+     * @returns {string}
+     * @example     
+     *
+     * getBoundariesHomeDir()
+     *
+     * =>  "boundaries/"
+     */    
+
    getBoundariesHomeDir = () => {
        return Opts.defaultBoundariesDir +"/"; 
    }
 
 
-   //getItemRootName( getItemName().split(".")[0] )
-
+      //--getItemRootName( getItemName().split(".")[0] )
       //     
-      //    //  storageItemName = config_1['Cohort'] 
-      //      classType='.gutmansSquare'
-      //      strokeWidth=10
-      //      tileType='Grid'
-      //      storageItemName_Ext="_Size_"+$$("tileSize").getValue()+"_Grid"; 
-      //      dirPath= docker_mounting_dir+featuresFolder+storageItemName+"/"+"Grid/"+"TileSize_"+($$("tileSize").getValue()).toString()+"/"           
-
+      //--  //  storageItemName = config_1['Cohort'] 
+      //--      classType='.gutmansSquare'
+      //--      strokeWidth=10
+      //--      tileType='Grid'
+      //--      storageItemName_Ext="_Size_"+$$("tileSize").getValue()+"_Grid"; 
+      //--      dirPath= docker_mounting_dir+featuresFolder+storageItemName+"/"+"Grid/"+"TileSize_"+($$("tileSize").getValue()).toString()+"/"           
       //  
+      //-- fetchedFeatures = getFeatures(storageItemName+storageItemName_Ext+".feat",dirPath)
 
-      // fetchedFeatures = getFeatures(storageItemName+storageItemName_Ext+".feat",dirPath)
+      //---------------------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------------------------
-
-    // resetGrpSelection = () => {
-    //     if(lastItemSelectionStates.grpIndex != null) {
-    //         document.getElementById("itemGrpLi" + lastItemSelectionStates.grpIndex).style.backgroundColor = Opts.defaultElemBgColor;
-    //         document.getElementById("itemGrpFont" + lastItemSelectionStates.grpIndex).style.color = Opts.defaultElemFontColor;
-    //         lastItemSelectionStates.grpIndex = null;
-    //     }
-    // }    
+      //-- resetGrpSelection = () => {
+      //--     if(lastItemSelectionStates.grpIndex != null) {
+      //--         document.getElementById("itemGrpLi" + lastItemSelectionStates.grpIndex).style.backgroundColor = Opts.defaultElemBgColor;
+      //--         document.getElementById("itemGrpFont" + lastItemSelectionStates.grpIndex).style.color = Opts.defaultElemFontColor;
+      //--         lastItemSelectionStates.grpIndex = null;
+      //--     }
+      //-- }    
 
 
 
 /**
- * 
+ * Open Analysis mode
  * 
  * @function
  * @memberof HistoJS
@@ -378,21 +803,19 @@
  * @version 1.0.0
  */
 
-
-
   openAnalysisLayout = () => {
 
             if( isGrpSelected() ) {  // item is loaded with OSD 
-                // var item = currentHostCollectSelectionStates.item;
+                //-- var item = currentHostCollectSelectionStates.item;
                    
                 if( isDAPIChannelSelected() ) {
-                    // if( (item.name.includes(".ome.tif") ) && (item.meta.omeSceneDescription != null)) {
-                        // var itemName = item.name.split(".")[0];
+                    //-- if( (item.name.includes(".ome.tif") ) && (item.meta.omeSceneDescription != null)) {
+                        //-- var itemName = item.name.split(".")[0];
                         initGrpChannelOptionsList();   
                         initGrpFeaturesList();
                         initChartOperationsList();
-                        // showPanel("channelListView",false);
-                        // showPanel("grpListView", false);
+                        //-- showPanel("channelListView",false);
+                        //-- showPanel("grpListView", false);
                         showPanel("grpOptionsView", true);
                         showPanel("grpFeaturesView", true);
                         showPanel("coordinates", true);
@@ -400,25 +823,23 @@
                         showBarExtension("grpOptionsViewBar");
                         initAccordionClick();
                         return true;
-                    // } else {
-                    //   triggerHint("Select Group ");            
-                    //   return 0; 
-                    // }
+                    //-- } else {
+                    //--   triggerHint("Select Group ");            
+                    //--   return 0; 
+                    //-- }
                 } else {
                       triggerHint("Specify DAPI or DNA channel by clicking on channel list","info", 7000);
                       openDAPIForm();
                       return 0;
-
                 } 
            } else {
                 triggerHint("Select Group from Design Mode");
                 return 0;
            }
-
   }
 
 /**
- * 
+ * Retrieve all OSD layers and composition
  * 
  * @function
  * @memberof HistoJS
@@ -448,7 +869,7 @@
 
 
 /**
- * 
+ * Build right panel in the analysis mode
  * 
  * @function
  * @memberof HistoJS
@@ -461,77 +882,9 @@
       initGrpBoundaryOptions();
       initGrpFeatureOptions();
       initGrpChnlDisplayOptions();
-
-   	  // let node = "";
-      // // let item = currentHostCollectSelectionStates.item;
-      // // let tileSourceName = item.name.split(".")[0]
-      // // node  +=  '<button class="accordion">';
-      // node +=  '<button class="accordion">';          
-      // node  +=     '<p class="just" style="font-weight: bold;">Group</p>';
-      // // node +=  '</button>';
-      // // node +=  '<div class="accordionpanel">';
-      // node  +=        '<ul class="just" id="currentGroup" style="line-height: 30%; margin-left: 0.5vw">';
-      // node  +=          '<li style="background-color: none" id="currentGrp">';
-      // node  +=            '<a href="javascript:void(0)" onclick="onCurGrpClick()">';
-      // node  +=              '<font  style="font-size:0.62vw" id="curGrpFont">'+ curGroup.Name +'</font>';
-      // node  +=             '</a>';
-      // node  +=    		 '</li>';   
-      // node  +=         '</ul>';
-      // // node +=  '</div>';	 
-
-      // document.getElementById("grpFeaturesView").innerHTML += node;
-
   } 
 
-      //  initGrpFeaturesList = () => { 
-      //  	  let curGroup = getSelectedGroup();
-      //     //return Object { Channels: (3) […], Colors: (3) […], Contrast_Max: (3) […], Contrast_Min: (3) […], Format: "jpg", Name: "Lymphocytes", Numbers: (3) […], Path: "0___DAPI 1---18___CD3D---35___CD20" }       	  
-
-      //  	  let node = "";
-      //     // let item = currentHostCollectSelectionStates.item;
-      //     // let tileSourceName = item.name.split(".")[0]
-      //     // node  +=  '<button class="accordion">';
-      //     node +=  '<button class="accordion">';          
-      //     node  +=     '<p class="just" style="font-weight: bold;">Group</p>';
-      //     // node +=  '</button>';
-      //     // node +=  '<div class="accordionpanel">';
-      //     node  +=        '<ul class="just" id="currentGroup" style="line-height: 30%; margin-left: 0.5vw">';
-      //     node  +=          '<li style="background-color: none" id="currentGrp">';
-      //     node  +=            '<a href="javascript:void(0)" onclick="onCurGrpClick()">';
-      //     node  +=              '<font  style="font-size:0.62vw" id="curGrpFont">'+ curGroup.Name +'</font>';
-      //     node  +=             '</a>';
-      //     node  +=    		 '</li>';   
-      //     node  +=         '</ul>';
-      //     // node +=  '</div>';	 
-
-
-
-      //     // node  +=  '</button>';
-      //     // node  +=  '<div class="panel">';
-      //     // node  +=     '<p> test to be coded later </p>';
-      //     // node  +=  '</div>';
-
-      //     document.getElementById("grpFeaturesView").innerHTML += node;
-
-
-      //     // initItemGroupsList()
-
-      // }   
-
-    // initTileInfo = () => { 
-	   // 	  const curTileName= getSelectedItem();
-	   //    //return Object { Channels: (3) […], Colors: (3) […], Contrast_Max: (3) […], Contrast_Min: (3) […], Format: "jpg", Name: "Lymphocytes", Numbers: (3) […], Path: "0___DAPI 1---18___CD3D---35___CD20" }       	  
-	   // 	  let node = "";
-	   //    // let item = currentHostCollectSelectionStates.item;
-	   //    // let tileSourceName = item.name.split(".")[0];
-	   //    node  +=     '<li style="background-color: none" id="currentTS">';
-	   //    // node  +=        '<a href="javascript:void(0)" onclick="onCurGrpClick()">';
-	   //    node  +=          `<font  style="font-size:0.62vw" id="curTSFont">${curGroup.Name}</font>`;
-	   //    // node  +=         '</a>';
-	   //    node  +=     '</li>';   
-
-	   //    document.getElementById("curAnalysisTileSource").innerHTML = node;
-    // }       
+     
 
 /**
  * 
@@ -543,12 +896,14 @@
  */
 
     initGrpInfo = () => { 
-
+          //-- e.g., LUNG Group: 
 	      document.getElementById("currentGrpTitle").innerHTML = getItemRootName( getItemName().split(".")[0] ) + " Group:";
 
 	   	  const curGroup = getSelectedGroup();
-          const curGroupIndex = getSelectedGrpIndex();          
-	      //return Object { Channels: (3) […], Colors: (3) […], Contrast_Max: (3) […], Contrast_Min: (3) […], Format: "jpg", Name: "Lymphocytes", Numbers: (3) […], Path: "0___DAPI 1---18___CD3D---35___CD20" }       	  
+          //--return Object { Channels: (3) […], Colors: (3) […], Contrast_Max: (3) […], Contrast_Min: (3) […], Format: "jpg", Name: "Lymphocytes", Numbers: (3) […], Path: "0___DAPI 1---18___CD3D---35___CD20" }            
+
+          const curGroupIndex = getSelectedGrpIndex();   
+
 	   	  let node = "";
 	      let item = currentHostCollectSelectionStates.item;
 	      let tileSourceName = item.name.split(".")[0];
@@ -560,7 +915,6 @@
 	      node  +=     '</li>';   
 
 	      document.getElementById("currentGroup").innerHTML = node;
-
     } 
 
 
@@ -569,7 +923,7 @@
 /*------------------------------------------------------------------------------------------------------------------*/
 
     /**
-     * 
+     * The eye icon on left bar to show/hide all channels
      * 
      * @function
      * @memberof HistoJS
@@ -588,7 +942,7 @@
    }
 
     /**
-     * 
+     * Toggle selected channel opacity
      * 
      * @function
      * @memberof HistoJS
@@ -622,7 +976,7 @@
      }
 
     /**
-     * 
+     * For Cell Filter slider with each channel, show value or tooltip when mouse over.
      * 
      * @function
      * @memberof HistoJS
@@ -639,17 +993,23 @@
       }
 
    /**
-    * 
+    * For Cell Filter slider with each channel, get its value for the selected channel
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {string} elemId
+    * @returns {number}
+    * @exmple
+    *
+    * getCellFilterSliderValue("cellFilterSlider.DAPI")
+    * => "0"
     */
 
     getCellFilterSliderValue = (elemId) => {
-        // console.log("elemId", elemId);
-        //id="cellFilterSlider.${idx}"
+        //-- console.log("elemId", elemId);
+        //--id="cellFilterSlider.${idx}"
         return document.getElementById(elemId).value;
     }
 
@@ -667,7 +1027,7 @@
 	}
 
    /**
-    * Set the variable to null
+    * Reset all cell filter dependencies
     * 
     * @function
     * @memberof HistoJS
@@ -684,12 +1044,17 @@
     }
 
    /**
-    * 
+    * Get cell navigator value.
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @returns {number}
+    * @exmple
+    *
+    * getNavigatorValue()
+    * => 0    
     */    
 
    getNavigatorValue = () => {
@@ -697,7 +1062,7 @@
    }
 
    /**
-    * Set the variable to zero
+    * Set the cell navigator variable to zero
     * 
     * @function
     * @memberof HistoJS
@@ -710,12 +1075,13 @@
    }  
 
     /**
-     * 
+     * Set the cell navigator variable to value
      * 
      * @function
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0
+     * @param {number} val
      */
 
    setNavigatorValue = (val) => {
@@ -723,7 +1089,7 @@
    } 
 
      /**
-     * 
+     * Set Navigator Valid cells comes from filtering 
      * 
      * @function
      * @memberof HistoJS
@@ -736,7 +1102,7 @@
    } 
 
    /**
-    * Set the variable to null
+    * Reset the variable to null
     * 
     * @function
     * @memberof HistoJS
@@ -749,7 +1115,7 @@
    }    
 
    /**
-    * 
+    * Get navigator valid cells
     * 
     * @function
     * @memberof HistoJS
@@ -762,7 +1128,7 @@
      } 
 
    /**
-    * 
+    * Navigate to first filtered cell
     * 
     * @function
     * @memberof HistoJS
@@ -775,11 +1141,11 @@
               triggerHint("No valid cells");
               return 0;
           }
-          // if (index == -1) {
-          //     validArray = allValidTiles;
-          // } else {
+          //-- if (index == -1) {
+          //--     validArray = allValidTiles;
+          //-- } else {
           //     validArray = allValidPhenotypes[index].validCells
-          // }
+          //-- }
 
           if( getNavigatorValue() ) {
               resetNavigatorValue();
@@ -792,7 +1158,7 @@
 
 
    /**
-    * 
+    * Navigate to previous filtered cells
     * 
     * @function
     * @memberof HistoJS
@@ -807,16 +1173,16 @@
               return 0;
           }      
 
-          // if (index == -1) {
-          //     validArray = allValidTiles;
-          // } else {
-          //     validArray = allValidPhenotypes[index].validCells
-          // }   
+          //-- if (index == -1) {
+          //--     validArray = allValidTiles;
+          //-- } else {
+          //--     validArray = allValidPhenotypes[index].validCells
+          //-- }   
 
-          // if( getNavigatorValue() > 0 ) {
-          //     setNavigatorValue(getNavigatorValue() - 1);
-          //     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
-          //     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length     
+          //-- if( getNavigatorValue() > 0 ) {
+          //--     setNavigatorValue(getNavigatorValue() - 1);
+          //--     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
+          //--     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length     
           if( getNavigatorValue() > 0 ) {
               setNavigatorValue(getNavigatorValue() - 1);
               if( getNavigatorValue() ) {
@@ -830,7 +1196,7 @@
 
 
    /**
-    * 
+    * Navigate to next filtered cell
     * 
     * @function
     * @memberof HistoJS
@@ -845,16 +1211,16 @@
               return 0;
           }      
 
-          // if (index == -1) {
-          //     validArray = allValidTiles;
-          // } else {
-          //     validArray = allValidPhenotypes[index].validCells
-          // }  
+          //-- if (index == -1) {
+          //--     validArray = allValidTiles;
+          //-- } else {
+          //--     validArray = allValidPhenotypes[index].validCells
+          //-- }  
 
-          // if( getNavigatorValue() < validArray.length -1 ) {
-          //     setNavigatorValue(getNavigatorValue() + 1);
-          //     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
-          //     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length   
+          //-- if( getNavigatorValue() < validArray.length -1 ) {
+          //--     setNavigatorValue(getNavigatorValue() + 1);
+          //--     zoomToTile(document.getElementById(validArray[getNavigatorValue()].id));
+          //--     document.getElementById("currentCell").innerHTML = (getNavigatorValue() + 1) + "/" + validArray.length   
           if( getNavigatorValue() < validArray.length ) {
               setNavigatorValue(getNavigatorValue() + 1);
               zoomToTile(document.getElementById(validArray[getNavigatorValue()-1].id));
@@ -866,12 +1232,17 @@
 
 
    /**
-    * 
+    * Check if there is any cells resulted from the filtering 
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @returns {bool}
+    * @example 
+    *
+    * isFilteredCellFound()
+    * => true
     */
 
      isFilteredCellFound = () => {
@@ -888,22 +1259,23 @@
 
 
    /**
-    * 
+    * Perform cell filtering
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {callback}
     */
 
  filterTiles = (callback) => {
           let tileClass = getClassType();
           allValidTiles = [];
           let numOfFrames = getCurGrpNumOfChannels();  
-          // For morphological features e.g. cell area, solidity..
+          // For morphological features e.g. cell area, solidity.. find mean,max, std, q1, q3
           let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData); 
 
-          // showPanel("cellNavigator", false);     
+          //-- showPanel("cellNavigator", false);     
 
           // Check for current active operation e.g. Tumor-Immune-Stromal or Phenotypes
           let curActiveOperationOnScreen = getActiveOperationOnScreen();
@@ -914,23 +1286,23 @@
               return 0;
           }
 
-          // if (! isGrpChannelsStatisticalDataAvailable() ) {          
-          //     return 0;
-          // }  
+          //-- if (! isGrpChannelsStatisticalDataAvailable() ) {          
+          //--     return 0;
+          //-- }  
 
           if( ! isSimilarRegionBtnEnabled() ) {  // <<<<<<<<<<<<<<<< --------- no need to "if" condition, findSimilarTiles by default can't be called if no tile selected
 
-              // for(let k = 0; k < allTilesFeatures.length; k++) {
-              //       let featuresDistance = computeDistance( currentTileData.features, allTilesFeatures[k].features, numOfFrames);
-              //       allFeaturesDistance.push({id: allTilesFeatures[k].id, Distance: featuresDistance});
-              // }
+              //-- for(let k = 0; k < allTilesFeatures.length; k++) {
+              //--       let featuresDistance = computeDistance( currentTileData.features, allTilesFeatures[k].features, numOfFrames);
+              //--       allFeaturesDistance.push({id: allTilesFeatures[k].id, Distance: featuresDistance});
+              //-- }
               
               if( isCellFiltersActive() ) { // check if there is at least channel filter slider with value > 0
                    // webix.message("Wait cell filter to apply");
                    // check right bar if empty 
                 
 
-                    allTilesFeatures.forEach(tile => {
+                    allTilesFeatures.forEach(tile => {  // for each tile or cell
                           let valid = true;
                           // For morphological features e.g. cell area, solidity..
                           morphFeatureNamesArr.forEach( (morphFeatName, idx) => {
@@ -949,9 +1321,9 @@
 
                                   let positiveThreshold = 0;
 
-                                  // if (Opts.markerPositiveThreshold!== "0") {
-                                  //    positiveThreshold = currentFrameBoxplotData[Opts.markerPositiveThreshold]; // e.g. currentFrameBoxplotData['q1']
-                                  // }                                   
+                                  //-- if (Opts.markerPositiveThreshold!== "0") {
+                                  //--    positiveThreshold = currentFrameBoxplotData[Opts.markerPositiveThreshold]; // e.g. currentFrameBoxplotData['q1']
+                                  //-- }                                   
 
                                   if (getMarkerPositiveThresholdValue(tile.features[k].Frame)!== "0") {
                                      // positiveThreshold = currentFrameBoxplotData[Opts.markerPositiveThreshold]; // e.g. currentFrameBoxplotData['q1']
@@ -976,9 +1348,9 @@
                               } else if( isCellNegativeSwitchEnabled(tile.features[k].Frame) ) {
                                   let negativeThreshold = 0;
 
-                                  // if (Opts.markerNegativeThreshold!== "0") {
-                                  //     negativeThreshold = currentFrameBoxplotData[Opts.markerNegativeThreshold]; 
-                                  // }                                   
+                                  //-- if (Opts.markerNegativeThreshold!== "0") {
+                                  //--     negativeThreshold = currentFrameBoxplotData[Opts.markerNegativeThreshold]; 
+                                  //-- }                                   
 
                                   if (getMarkerNegativeThresholdValue(tile.features[k].Frame)!== "0") {
                                      negativeThreshold = currentFrameBoxplotData[getMarkerNegativeThresholdValue(tile.features[k].Frame)] 
@@ -1005,7 +1377,7 @@
                           }
 
                           if(valid) {
-                               //allValidTiles.push({id: tile.id, features: tile.features});      // <<<<<<<<<<< can be option 
+                               //--allValidTiles.push({id: tile.id, features: tile.features});      // <<<<<<<<<<< can be option 
                                allValidTiles.push({id: tile.id});
                           }
                     })              
@@ -1136,14 +1508,14 @@
                                                                 let cellPhenotypeColors = {}; 
                                                                 let cellPhenotypeBinary = {};
 
-                                                                // allValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+                                                                //-- allValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
 
                                                                 allValidPhenotypes.forEach((cellPhenotype, idx) => {  
                                                                     cellPhenotype.validCells.forEach((cell, idx) => {  
                                                                            cellPhenotypeColors[cell.id] = cellPhenotype.phenotypeColor;
                                                                            cellPhenotypeBinary[cell.id] = cellPhenotype.binary;
-                                                                           //cellPhenotypeColors { "spx-36": "#ff0000", "spx-103": "#ff5900", "spx-188": "#ff5900", ...}
-                                                                           //cellPhenotypeBinary { "spx-36": "01010", "spx-103": "10101", "spx-188": "11001", ...}
+                                                                           //--cellPhenotypeColors { "spx-36": "#ff0000", "spx-103": "#ff5900", "spx-188": "#ff5900", ...}
+                                                                           //--cellPhenotypeBinary { "spx-36": "01010", "spx-103": "10101", "spx-188": "11001", ...}
                                                                     })
                                                                 })                                                        
                                                                 
@@ -1163,8 +1535,8 @@
                                                                 }    
 
                                                                filteredValidPhenotypes = [];
-                                                               // filteredValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
-                                                               // let allBinaryMarkersString = getBinaryStringsOfNbits(numOfFrames);
+                                                               //-- filteredValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+                                                               //-- let allBinaryMarkersString = getBinaryStringsOfNbits(numOfFrames);
 
                                                                let allFilteredvalidCells1Dim = [];
                                             
@@ -1214,10 +1586,10 @@
                                                                 // e.g filteredNeighbors["validNeighbors"][0] = { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] }  
 
                                                                 let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
-                                                                // chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
+                                                                //-- chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
 
                                                                 let cellTypeColors = getCellTypeColorObj(chnlNameType);
-                                                                // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+                                                                //-- return cellTypeColors obj: { Tumor: "#ff4846", ... }  
 
                                                                 let curSourceType = filteredNeighbors["cellType"];
                                                                 let curNeighborType = filteredNeighbors["neighborsType"];                                                                 
@@ -1317,12 +1689,12 @@
                                                         } else {  
 
                                                                 let cellClassesObject = array2ObjWithHashKey("id", cellBasicClassification)
-                                                                //cellClassesObject ={"spx-1": { id: "spx-3", KERATIN_norm: 1.627327085071684, CD45_norm: 7.001735334431132, ASMA_norm: 0.03491692141936298, Max: "CD45_norm", Type: "Others", label: 3 }, ...}
+                                                                //--cellClassesObject ={"spx-1": { id: "spx-3", KERATIN_norm: 1.627327085071684, CD45_norm: 7.001735334431132, ASMA_norm: 0.03491692141936298, Max: "CD45_norm", Type: "Others", label: 3 }, ...}
                                                                 let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
-                                                                // chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
+                                                                //-- chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
 
                                                                 let cellTypeColors = getCellTypeColorObj(chnlNameType);
-                                                                // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+                                                                //-- return cellTypeColors obj: { Tumor: "#ff4846", ... }  
 
                                                                 let validTileLen =  allValidTiles.length; // for best practise                                                       
 
@@ -1331,9 +1703,9 @@
                                                                        allValidTiles[i]["Type"] = cellClassesObject[allValidTiles[i].id].Type;
                                                                        allValidTiles[i]["color"] = clr;
                                                                        d3.select("#"+allValidTiles[i].id).style('fill', clr);
-                                                                       // d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
+                                                                       //-- d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
                                                                        d3.select("#"+allValidTiles[i].id).style('fill-opacity', getBoundaryFillOpacity());
-                                                                      // d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
+                                                                       //-- d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
                                                                        d3.select("#"+allValidTiles[i].id).style('stroke', 'black');
                                                                        d3.select("#"+allValidTiles[i].id).style('stroke-width', getStrokeWidth());
                                                                        d3.select("#"+allValidTiles[i].id).style('stroke-opacity', 1);
@@ -1350,7 +1722,7 @@
                                                                 });
 
                                                                 numOfcellsPerClass["Others"] = allValidTiles.filter(cell => cell.Type == "Others").length;
-                                                                // NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
+                                                                //-- NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
 
                                                                 drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  'Filtered Cells'); // second param is for x axis Title                                                              
 
@@ -1381,32 +1753,31 @@
                            
                         for(let i = 0; i < validTileLen ; i++) {
                                d3.select("#"+allValidTiles[i].id).style('fill', 'red');
-                               // d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
+                               //-- d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
                                d3.select("#"+allValidTiles[i].id).style('fill-opacity', getBoundaryFillOpacity());
-                              // d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
+                               //-- d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
                                d3.select("#"+allValidTiles[i].id).style('stroke', 'black');
                                d3.select("#"+allValidTiles[i].id).style('stroke-width', getStrokeWidth());
                                d3.select("#"+allValidTiles[i].id).style('stroke-opacity', 1);
 
-                              // function animateTile() {
-                              //     d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0)
-                              //       .each("end", function() {
-                              //         d3.select(this).transition().duration(1000).style("fill-opacity", 1)
-                              //           .each("end", function() { animateTile(); });
-                              //       });
-                              // }
+                              //-- function animateTile() {
+                              //--     d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0)
+                              //--       .each("end", function() {
+                              //--         d3.select(this).transition().duration(1000).style("fill-opacity", 1)
+                              //--           .each("end", function() { animateTile(); });
+                              //--       });
+                              //-- }
                                
                         }
                     
                         if(allValidTiles.length) {
                             initCellNavigator(allValidTiles);
-                            // document.getElementById("cellTitle").innerHTML = "Cells:";                    
-                            // document.getElementById("currentCell").innerHTML =  "-/" + allValidTiles.length   
-                            // showPanel("cellNavigator", true);                   
+                            //-- document.getElementById("cellTitle").innerHTML = "Cells:";                    
+                            //-- document.getElementById("currentCell").innerHTML =  "-/" + allValidTiles.length   
+                            //-- showPanel("cellNavigator", true);                   
                         } else {
                             showPanel("cellNavigator", false); 
                         }
-
 
 
 
@@ -1460,15 +1831,15 @@
                                                         } else {                                                                 
 
                                                             if(allValidPhenotypes.length) {
-                                                             // allValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+                                                             //-- allValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
                           
                                                                 let allValidPhenotypesArray1Dim = [];
                                                                 allValidPhenotypes.forEach((cellPhenotype, idx) => {  
                                                                     cellPhenotype.validCells.forEach((cell, idx) => {  
                                                                            d3.select("#"+cell.id).style('fill', cellPhenotype.phenotypeColor);
-                                                                           // d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
+                                                                           //-- d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
                                                                            d3.select("#"+cell.id).style('fill-opacity', getBoundaryFillOpacity());
-                                                                          // d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
+                                                                           //-- d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
                                                                            d3.select("#"+cell.id).style('stroke', 'black');
                                                                            d3.select("#"+cell.id).style('stroke-width', getStrokeWidth());
                                                                            d3.select("#"+cell.id).style('stroke-opacity', 1);
@@ -1533,7 +1904,7 @@
 
                                                              plotCellClassifications(cellBasicClassification);
                                                              showPanel("cellNavigator", false); 
-                                                             // initCellNavigator(cellBasicClassification)
+                                                             //-- initCellNavigator(cellBasicClassification)
                                                          }
                                                          break;             
                                                       }
@@ -1633,14 +2004,14 @@ cellClassifications = (cellsWithTypes, callback) => {
                clearViewBar("grpFeaturesViewBar");
           }
 
-          // showPanel("cellNavigator", false);
+          //-- showPanel("cellNavigator", false);
 
           if( isCellFiltersActive() ) {
                resetAllCellFilters();
           }  
 
 
-         //cellsWithTypes is array of  Objects [
+         // cellsWithTypes is array of  Objects [
          //{id: "spx-1", KERATIN_norm: 1.44, CD45_norm: 6.57, ASMA_norm: 0.56, Max: "CD45_norm", Type: "Others", label: 1 },..]
          if(cellsWithTypes.length) {
 
@@ -1654,14 +2025,14 @@ cellClassifications = (cellsWithTypes, callback) => {
               // create array of Types/Colors : [{ cellType: "Tumor", color: "#ff4846" }, ...]
               let cellTypeColorArr = [];
 
-              // let NumOfcellsPerClass = {}; 
+              //-- let NumOfcellsPerClass = {}; 
               chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
                    let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
                    let cellTypeColor = mainCellTypesList.filter(cell => cell.cellType == cellType)[0].cellTypeColor;
                    cellTypeColorArr.push({cellType: cellType, color: cellTypeColor });
 
-                   // NumOfcellsPerClass[cellType] = cellsWithTypes.filter(cell => cell.Type == cellType).length;
-                   // cellTypeColors[cellType] = mainCellTypesList.filter(cell => cell.cellType == cellType)[0].cellTypeColor;
+                   //-- NumOfcellsPerClass[cellType] = cellsWithTypes.filter(cell => cell.Type == cellType).length;
+                   //-- cellTypeColors[cellType] = mainCellTypesList.filter(cell => cell.cellType == cellType)[0].cellTypeColor;
 
               });
               //push cellType "Others" since it is normally excluding from chnlNameType array
@@ -1675,7 +2046,7 @@ cellClassifications = (cellsWithTypes, callback) => {
                  let cellType = typeColorEntry.cellType;
                  let clr  = typeColorEntry.color;
                  cellTypeColors[cellType] = clr; // cellTypeColors { Tumor: "#ff4846", ... }
-                 // let btoa_clr = btoa( clr);
+                 //-- let btoa_clr = btoa( clr);
 
 
                  document.getElementById("grpFeaturesViewBar").innerHTML += 
@@ -1696,9 +2067,9 @@ cellClassifications = (cellsWithTypes, callback) => {
             //Fill cells with related Tumor/Immune/Stromal color  
             cellsWithTypes.forEach((cell, idx) => {  
                    d3.select("#"+cell.id).style('fill', cellTypeColors[cell.Type]);
-                   // d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
+                   //-- d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
                    d3.select("#"+cell.id).style('fill-opacity', getBoundaryFillOpacity());
-                  // d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
+                   //-- d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
                    d3.select("#"+cell.id).style('stroke', 'black');
                    d3.select("#"+cell.id).style('stroke-width', getStrokeWidth());
                    d3.select("#"+cell.id).style('stroke-opacity', 1);
@@ -1724,7 +2095,7 @@ cellClassifications = (cellsWithTypes, callback) => {
 
 
   cellTypeNavigation = (elem) => {
-         // triggerHint(" To be coded.. ")
+       
          let cellType = elem.id.split('.')[1];
          let clr =  elem.style.backgroundColor
 
@@ -1732,27 +2103,25 @@ cellClassifications = (cellsWithTypes, callback) => {
 
               if(allValidTiles.length) {
                   initCellNavigator(allValidTiles.filter(cell => cell.Type == cellType), clr);
-                  // document.getElementById("cellTitle").innerHTML = '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";                     
-                  // document.getElementById("currentCell").innerHTML =  "-/" + allValidTiles.filter(cell => cell.Type == cellType).length;   
-                  // showPanel("cellNavigator", true);                   
+                  //-- document.getElementById("cellTitle").innerHTML = '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";                     
+                  //-- document.getElementById("currentCell").innerHTML =  "-/" + allValidTiles.filter(cell => cell.Type == cellType).length;   
+                  //-- showPanel("cellNavigator", true);                   
               } else {
                   showPanel("cellNavigator", false); 
               }  
 
          } else {
-              // triggerHint(" Currently available when filters switching with CHNL OPTIONS panel  ")
+              //-- triggerHint(" Currently available when filters switching with CHNL OPTIONS panel  ")
               if(cellBasicClassification.length) {
                   initCellNavigator(cellBasicClassification.filter(cell => cell.Type == cellType), clr);
 
-                  // document.getElementById("cellTitle").innerHTML =  '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";  
-                  // document.getElementById("currentCell").innerHTML =  "-/" + cellBasicClassification.filter(cell => cell.Type == cellType).length; 
-                  // showPanel("cellNavigator", true); 
+                  //-- document.getElementById("cellTitle").innerHTML =  '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";  
+                  //-- document.getElementById("currentCell").innerHTML =  "-/" + cellBasicClassification.filter(cell => cell.Type == cellType).length; 
+                  //-- showPanel("cellNavigator", true); 
 
               } else {
                   showPanel("cellNavigator", false); 
               }                
-
-
 
          }
 
@@ -1760,7 +2129,7 @@ cellClassifications = (cellsWithTypes, callback) => {
 
 
 /**
-* 
+* Show/Hide cell type e.g., tumor
 * 
 * @function
 * @memberof HistoJS
@@ -1782,13 +2151,13 @@ cellClassifications = (cellsWithTypes, callback) => {
                 if( isCellFiltersActive() ) { // if filtering is used for the cells with for example morphological features switches
                     allValidTiles.filter(cell => cell.Type == cellType).forEach((cell, idx)  => {  
                            d3.select("#"+cell.id).style('fill', "none");
-                           // d3.select("#"+cell.id).style('stroke', 'black');
+                           //-- d3.select("#"+cell.id).style('stroke', 'black');
                     })                    
 
                 } else {
                     cellBasicClassification.filter(cell => cell.Type == cellType).forEach((cell, idx)  => {  
                            d3.select("#"+cell.id).style('fill', "none");
-                           // d3.select("#"+cell.id).style('stroke', 'black');
+                           //-- d3.select("#"+cell.id).style('stroke', 'black');
                     })
 
                 }
@@ -1799,13 +2168,13 @@ cellClassifications = (cellsWithTypes, callback) => {
                 if( isCellFiltersActive() ) {// if filtering is used for the cells with for example morphological features switches
                      allValidTiles.filter(cell => cell.Type == cellType).forEach((cell, idx)  => {  
                            d3.select("#"+cell.id).style('fill', cellTypeColors[cellType]);
-                           // d3.select("#"+cell.id).style('fill', atob(btoa_clr));
+                           //-- d3.select("#"+cell.id).style('fill', atob(btoa_clr));
                     })                     
 
                 } else {
                      cellBasicClassification.filter(cell => cell.Type == cellType).forEach((cell, idx)  => {  
                            d3.select("#"+cell.id).style('fill', cellTypeColors[cellType]);
-                           // d3.select("#"+cell.id).style('fill', atob(btoa_clr));
+                           //-- d3.select("#"+cell.id).style('fill', atob(btoa_clr));
                     }) 
                 }                
           }
@@ -1821,6 +2190,7 @@ cellClassifications = (cellsWithTypes, callback) => {
     * @since 1.0.0
     * @version 1.0.0
     */    
+
      resetCellTypeDependencies = () => {
           if(! isViewBarEmpty("grpFeaturesViewBar") ) {
                clearViewBar("grpFeaturesViewBar");
@@ -1852,6 +2222,7 @@ cellClassifications = (cellsWithTypes, callback) => {
 *
 * //=> Array(8) [ "000", "001", "010", "011", "100", "101", "110", "111" ]
 */     
+
  getBinaryStringsOfNbits = (n) => {
         let binaryStrings = [];
         // get max number of possible strings
@@ -1903,7 +2274,7 @@ cellClassifications = (cellsWithTypes, callback) => {
 }
 
    /**
-    * 
+    * Check if cell phenotyp is active
     * 
     * @function
     * @memberof HistoJS
@@ -1917,13 +2288,18 @@ cellClassifications = (cellsWithTypes, callback) => {
  } 
 
    /**
-    * 
+    * Get the current configration of cell phenotyping button selection from left menu
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
     * @returns {Array}
+    * @example
+    *
+    * getCellPhenotypesCurrentSettings()
+    *
+    * => Array(10) [ "mean", "min", "mean", "q1", "mean", "q1", "mean", "q1", "mean", "q1" ]
     */  
 
  getCellPhenotypesCurrentSettings = () => {
@@ -1940,13 +2316,18 @@ cellClassifications = (cellsWithTypes, callback) => {
  }
 
    /**
-    * 
+    * Get the last configration of cell phenotyping button selection from left menu
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
     * @returns {Array}
+    * @example
+    *
+    * getCellPhenotypesCurrentSettings()
+    *
+    * => Array(10) [ "mean", "min", "mean", "q1", "mean", "q1", "mean", "q1", "mean", "q1" ]
     */  
 
  getCellPhenotypesLastSettings = () => {
@@ -1955,6 +2336,9 @@ cellClassifications = (cellsWithTypes, callback) => {
 
    /**
     * 
+    * Check if there is a change happen in the settings after last call of the function
+    * This condition save calculate phenotypes each time, and only do with changes then last time.
+    * If a change detected at settings, save make last as current one for next around check    
     * 
     * @function
     * @memberof HistoJS
@@ -1967,12 +2351,14 @@ cellClassifications = (cellsWithTypes, callback) => {
  } 
 
    /**
-    * 
+    * Check if there is a change happen in the settings after last call of the function
+    * This condition save calculate phenotypes each time, and only do with changes then last time.
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {Array} curSettings
     * @returns {boolean}
     */   
 
@@ -1981,12 +2367,13 @@ cellClassifications = (cellsWithTypes, callback) => {
  }
 
    /**
-    * 
+    * Perform Cell phenotyping 
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {callback}
     */  
 
 cellPhenotypes = (callback) => {
@@ -1999,7 +2386,6 @@ cellPhenotypes = (callback) => {
                clearViewBar("grpFeaturesViewBar");
           }
 
-          
 
           if( isCellFiltersActive() ) {
                resetAllCellFilters();
@@ -2033,9 +2419,9 @@ cellPhenotypes = (callback) => {
                               if( markerState ) { // markerState is Postive  e.g. CD45 positive button is ON
                                   let positiveThreshold = 0;
 
-                                  // if (Opts.markerPositiveThreshold!== "0") {
-                                  //    positiveThreshold = currentFrameBoxplotData[Opts.markerPositiveThreshold]; // e.g. currentFrameBoxplotData['q1']
-                                  // } 
+                                  //-- if (Opts.markerPositiveThreshold!== "0") {
+                                  //--    positiveThreshold = currentFrameBoxplotData[Opts.markerPositiveThreshold]; // e.g. currentFrameBoxplotData['q1']
+                                  //-- } 
 
 
                                   if (getMarkerPositiveThresholdValue(tile.features[k].Frame)!== "0") {
@@ -2059,9 +2445,9 @@ cellPhenotypes = (callback) => {
 
                                   let negativeThreshold = 0;
 
-                                  // if (Opts.markerNegativeThreshold!== "0") {
-                                  //     negativeThreshold = currentFrameBoxplotData[Opts.markerNegativeThreshold]; 
-                                  // } 
+                                  //-- if (Opts.markerNegativeThreshold!== "0") {
+                                  //--     negativeThreshold = currentFrameBoxplotData[Opts.markerNegativeThreshold]; 
+                                  //-- } 
 
 
                                   if (getMarkerNegativeThresholdValue(tile.features[k].Frame)!== "0") {
@@ -2084,7 +2470,7 @@ cellPhenotypes = (callback) => {
                           }
 
                           if(valid) {
-                               //allValidTiles.push({id: tile.id, features: tile.features});      // <<<<<<<<<<< can be option 
+                               //-- allValidTiles.push({id: tile.id, features: tile.features});      // <<<<<<<<<<< can be option 
                                allValidCells.push({id: tile.id});
                           }
                     })
@@ -2101,14 +2487,14 @@ cellPhenotypes = (callback) => {
             // Turn all channels Opacity to zero for best visualization of cell phenotypes
             resetAllChannelsOpacity();
             let allPhenotypeColors = createCellPhenotypesColorsArray(allValidPhenotypes.length);
-            // for(let i = 0; i < allValidPhenotypes.length; i++) {
-            //       allValidPhenotypes[i]['phenotypeColor'] = allPhenotypeColors[i];
-            // }
+            //-- for(let i = 0; i < allValidPhenotypes.length; i++) {
+            //--       allValidPhenotypes[i]['phenotypeColor'] = allPhenotypeColors[i];
+            //-- }
 
 
             allPhenotypeColors.forEach((clr, idx) => {
                  allValidPhenotypes[idx]['phenotypeColor'] = clr;
-                 // let showPhenotypeBinaryAsSigns = allValidPhenotypes[idx].binary.replaceAll("1", "+").replaceAll("0", " - ");
+                 //-- let showPhenotypeBinaryAsSigns = allValidPhenotypes[idx].binary.replaceAll("1", "+").replaceAll("0", " - ");
 
                  let phenotypeTxt = allValidPhenotypes[idx].binary
                   
@@ -2131,14 +2517,14 @@ cellPhenotypes = (callback) => {
             d3.selectAll(tileClass).style('stroke', 'none');  
             d3.selectAll(tileClass).style('fill-opacity', getBoundaryFillOpacity()); 
 
-            // for(let i = 0; i < allValidPhenotypes.length; i++) {
-            //     for(let j = 0; j < allValidPhenotypes[i].validCells.length; j++) {
+            //-- for(let i = 0; i < allValidPhenotypes.length; i++) {
+            //--     for(let j = 0; j < allValidPhenotypes[i].validCells.length; j++) {
             allValidPhenotypes.forEach((cellPhenotype, idx) => {  
                 cellPhenotype.validCells.forEach((cell, idx) => {  
                        d3.select("#"+cell.id).style('fill', cellPhenotype.phenotypeColor);
-                       // d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
+                       //-- d3.select("#"+allValidTiles[i].id).attr('class', 'validTileClass'); 
                        d3.select("#"+cell.id).style('fill-opacity', getBoundaryFillOpacity());
-                      // d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
+                       //-- d3.select("#"+allValidTiles[i].id).transition().duration(1000).style("fill-opacity", 0);
                        d3.select("#"+cell.id).style('stroke', 'black');
                        d3.select("#"+cell.id).style('stroke-width', getStrokeWidth());
                        d3.select("#"+cell.id).style('stroke-opacity', 1);
@@ -2157,12 +2543,13 @@ cellPhenotypes = (callback) => {
 
 
    /**
-    * 
+    * Navigate phenotyping cells
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {number} phenotypeIndex
     */  
 
   phenotypeNavigation = (phenotypeIndex) => {
@@ -2170,40 +2557,36 @@ cellPhenotypes = (callback) => {
          if( isCellFiltersActive() ) {
 
               if(filteredValidPhenotypes.length) {
-                 // filteredValidPhenotypes = [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+                  //e.g. filteredValidPhenotypes  [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
                   let clr =  filteredValidPhenotypes[phenotypeIndex]['phenotypeColor'];
                   initCellNavigator(filteredValidPhenotypes[phenotypeIndex].validCells, clr);
-                  // document.getElementById("cellTitle").innerHTML = '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";                     
-                  // document.getElementById("currentCell").innerHTML =  "-/" + allValidTiles.filter(cell => cell.Type == cellType).length;   
-                  // showPanel("cellNavigator", true);                   
+                  //-- document.getElementById("cellTitle").innerHTML = '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";                     
+                  //-- document.getElementById("currentCell").innerHTML =  "-/" + allValidTiles.filter(cell => cell.Type == cellType).length;   
+                  //-- showPanel("cellNavigator", true);                   
               } else {
                   showPanel("cellNavigator", false); 
               }  
 
          } else {
-              // triggerHint(" Currently available when filters switching with CHNL OPTIONS panel  ")
+              //-- triggerHint(" Currently available when filters switching with CHNL OPTIONS panel  ")
               if(allValidPhenotypes.length) {
-                   // allValidPhenotypes [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+                  //e.g. allValidPhenotypes [{ binary: "10001", validCells: (6211) […], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
                   let clr =  allValidPhenotypes[phenotypeIndex]['phenotypeColor'];
                   initCellNavigator(allValidPhenotypes[phenotypeIndex].validCells, clr);
 
-                  // document.getElementById("cellTitle").innerHTML =  '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";  
-                  // document.getElementById("currentCell").innerHTML =  "-/" + cellBasicClassification.filter(cell => cell.Type == cellType).length; 
-                  // showPanel("cellNavigator", true); 
+                  //-- document.getElementById("cellTitle").innerHTML =  '<span  style="background-color:'+clr+'; padding-left:0.5vw;">&nbsp</span>'+" Cells:";  
+                  //-- document.getElementById("currentCell").innerHTML =  "-/" + cellBasicClassification.filter(cell => cell.Type == cellType).length; 
+                  //-- showPanel("cellNavigator", true); 
 
               } else {
                   showPanel("cellNavigator", false); 
               }                
-
-
-
          }
-
   }            
 
 
    /**
-    * 
+    * Initiat cell navigator
     * 
     * @function
     * @memberof HistoJS
@@ -2245,12 +2628,13 @@ cellPhenotypes = (callback) => {
 
 
    /**
-    * 
+    * Show/Hide phenotype cells
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {number} phenotypeIndex
     */  
 
    onPhenotypeShowHide = (phenotypeIndex) => {
@@ -2272,7 +2656,7 @@ cellPhenotypes = (callback) => {
 
 
    /**
-    * 
+    * For future use
     * 
     * @function
     * @memberof HistoJS
@@ -2292,9 +2676,11 @@ cellPhenotypes = (callback) => {
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    *
+    *
+    * <option value="10101"> "10101" </option>
     */  
-
-    //<option value="10101"> "10101" </option>
+    
     addNewSelectOption = (SelectListId, newOptionTxt, newOptionValue) => {
             let newOption = new Option(newOptionTxt, newOptionValue);
             document.getElementById(SelectListId).add(newOption,undefined);
@@ -2302,13 +2688,20 @@ cellPhenotypes = (callback) => {
 
 
    /**
-    * 
+    * Get phenotype binary index, this is for the phenotypes list from chart 
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {string} binaryVal  e.g. "10010"
+    * @returns {number}
+    * @example
+    *
+    * getPhenotypeBinaryIndex("10010")
+    * => 2
     */  
+
     getPhenotypeBinaryIndex  = (binaryVal) => {
         return allValidPhenotypes.findIndex(entry => entry.binary === binaryVal);
     }
@@ -2323,108 +2716,26 @@ cellPhenotypes = (callback) => {
     * @version 1.0.0
     */  
 
-updateSelectList = (SelectListId, oldOptionTxt, newOptionTxt) => {
-     let selectListObj = document.getElementById(SelectListId);
-     let totalListOptions = selectListObj.options.length;
+    updateSelectList = (SelectListId, oldOptionTxt, newOptionTxt) => {
+         let selectListObj = document.getElementById(SelectListId);
+         let totalListOptions = selectListObj.options.length;
 
-     for(let optionIdx = 0; optionIdx < totalListOptions; optionIdx ++) {
-                if(selectListObj.options[optionIdx].innerHTML == oldOptionTxt) {
-                    selectListObj.options[optionIdx].innerHTML = newOptionTxt;
-                }
-     }
+         for(let optionIdx = 0; optionIdx < totalListOptions; optionIdx ++) {
+                    if(selectListObj.options[optionIdx].innerHTML == oldOptionTxt) {
+                        selectListObj.options[optionIdx].innerHTML = newOptionTxt;
+                    }
+         }
 
-     // selectListObj.options.forEach(option => {
-     //            if(option.innerHTML == oldOptionTxt) {
-     //                option.innerHTML = newOptionTxt;
-     //            }
-     // })
+         //-- selectListObj.options.forEach(option => {
+         //--            if(option.innerHTML == oldOptionTxt) {
+         //--                option.innerHTML = newOptionTxt;
+         //--            }
+         //-- })
 
-}
-
-   /**
-    * 
-    * 
-    * @function
-    * @memberof HistoJS
-    * @since 1.0.0
-    * @version 1.0.0
-    */ 
-
-saveClosePhenotypeName = () => {
-      applyPhenotypeName();
-      document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
-}
-
-   /**
-    * 
-    * 
-    * @function
-    * @memberof HistoJS
-    * @since 1.0.0
-    * @version 1.0.0
-    */ 
-
-cancelPhenotypeName = () => {
-      document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
-}
-
-   /**
-    * 
-    * 
-    * @function
-    * @memberof HistoJS
-    * @since 1.0.0
-    * @version 1.0.0
-    */ 
-
-applyPhenotypeName = () => {
-    let curOptionBinaryValue  =  document.getElementById("phenotypeList").value;
-    let phenoName  =  document.getElementById("phenotypeName").value;
-    // let phenoAbbrev  =  document.getElementById("phenotypeAbbreviation").value;
-    let newOptionTxt;
-
-    // if( !(phenoAbbrev.length || phenoName.length) ) {
-    //       triggerHint(" Please enter a  phenotype Abbreviation or Name");
-    //       return 0;
-    // }    
-
-    if(phenoName.length) {
-          if( isLetter(phenoName.charAt(0)) ) {
-                newOptionTxt = phenoName.trim();
-                setPhenotypeName(curOptionBinaryValue, newOptionTxt);
-          } else {
-                triggerHint(" Phenotype added Name should start with a letter");
-                return 0;
-          }
-
-    } else {
-          triggerHint(" Please enter a  phenotype Abbreviation or Name");
-          return 0;
     }
 
-    // if(phenoAbbrev.length) {
-    //       if( isLetter(phenoAbbrev.charAt(0)) ) {
-    //             newOptionTxt = phenoAbbrev.trim();
-    //             setPhenotypeAbbreviation(curOptionBinaryValue, newOptionTxt);
-    //       } else {
-    //             triggerHint(" Phenotype Abbreviation should start with a letter");
-    //             return 0;
-    //       }
-
-    // } 
-
-
-    updateSelectList("phenotypeList", curOptionBinaryValue, newOptionTxt);
-
-    let idx = getPhenotypeBinaryIndex(curOptionBinaryValue);
-    document.getElementById("phenotypeFontId."+ idx).innerHTML = "&nbsp&nbsp" + newOptionTxt;
-
-    triggerHint("Phenotype list updated...")
-}
-
-
    /**
-    * 
+    * or the button close on edit phenotype
     * 
     * @function
     * @memberof HistoJS
@@ -2432,35 +2743,117 @@ applyPhenotypeName = () => {
     * @version 1.0.0
     */ 
 
-requestPhenotypeInfo = (elem) => {
-
-    switch (elem.id) {
-                   case 'phenotypeInfo':  {
-                                           triggerHint("List of all found phenotypes");
-                                           break;
-                                          }
-
-        case 'phenotypeDescriptionInfo':  {
-                                           triggerHint("Give a full description of the phenotype binary in terms of channels positivity/negativity");
-                                          break;
-                                          }
-
-              case 'phenotypeBinaryInfo': {
-                                           triggerHint("For current phenotype binary, where 0 for negative markers and 1 for positivity");
-                                          break;
-                                          }
-                case 'phenotypeNameInfo': {
-                                           triggerHint("For giving a name or an Abbreviation to the phenotype binary e.g. Dendritic or DCs");
-                                          break;
-                                          }
-
-        // case 'phenotypeAbbreviationInfo': {
-        //                                    triggerHint("For giving an Abbreviation for the phenotype binary or name e.g. Dendritic cells to DCs ");
-        //                                   break;
-        //                                   }                       
+    saveClosePhenotypeName = () => {
+          applyPhenotypeName();
+          document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
     }
 
-}
+   /**
+    * For the button cancel
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
+    cancelPhenotypeName = () => {
+          document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
+    }
+
+   /**
+    * Add names to phenotypes instead of shows 10101, show name for it
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
+    applyPhenotypeName = () => {
+        // Need to open phenotype chart and edit form
+        let curOptionBinaryValue  =  document.getElementById("phenotypeList").value;
+        let phenoName  =  document.getElementById("phenotypeName").value;
+        //-- let phenoAbbrev  =  document.getElementById("phenotypeAbbreviation").value;
+        let newOptionTxt;
+
+        //-- if( !(phenoAbbrev.length || phenoName.length) ) {
+        //--       triggerHint(" Please enter a  phenotype Abbreviation or Name");
+        //--       return 0;
+        //-- }    
+
+        if(phenoName.length) {
+              if( isLetter(phenoName.charAt(0)) ) {
+                    newOptionTxt = phenoName.trim();
+                    setPhenotypeName(curOptionBinaryValue, newOptionTxt);
+              } else {
+                    triggerHint(" Phenotype added Name should start with a letter");
+                    return 0;
+              }
+
+        } else {
+              triggerHint(" Please enter a  phenotype Abbreviation or Name");
+              return 0;
+        }
+
+        //-- if(phenoAbbrev.length) {
+        //--       if( isLetter(phenoAbbrev.charAt(0)) ) {
+        //--             newOptionTxt = phenoAbbrev.trim();
+        //--             setPhenotypeAbbreviation(curOptionBinaryValue, newOptionTxt);
+        //--       } else {
+        //--             triggerHint(" Phenotype Abbreviation should start with a letter");
+        //--             return 0;
+        //--       }
+        //-- } 
+
+
+        updateSelectList("phenotypeList", curOptionBinaryValue, newOptionTxt);
+
+        let idx = getPhenotypeBinaryIndex(curOptionBinaryValue);
+        document.getElementById("phenotypeFontId."+ idx).innerHTML = "&nbsp&nbsp" + newOptionTxt;
+
+        triggerHint("Phenotype list updated...");
+    }
+
+
+   /**
+    * For the info icon with phenotype chart editing
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
+    requestPhenotypeInfo = (elem) => {
+
+        switch (elem.id) {
+                       case 'phenotypeInfo':  {
+                                               triggerHint("List of all found phenotypes");
+                                               break;
+                                              }
+
+            case 'phenotypeDescriptionInfo':  {
+                                               triggerHint("Give a full description of the phenotype binary in terms of channels positivity/negativity");
+                                              break;
+                                              }
+
+                  case 'phenotypeBinaryInfo': {
+                                               triggerHint("For current phenotype binary, where 0 for negative markers and 1 for positivity");
+                                              break;
+                                              }
+                    case 'phenotypeNameInfo': {
+                                               triggerHint("For giving a name or an Abbreviation to the phenotype binary e.g. Dendritic or DCs");
+                                              break;
+                                              }
+
+            //-- case 'phenotypeAbbreviationInfo': {
+            //--                                    triggerHint("For giving an Abbreviation for the phenotype binary or name e.g. Dendritic cells to DCs ");
+            //--                                   break;
+            //--                                   }                       
+        }
+
+    }
 
 
 
@@ -2485,25 +2878,100 @@ requestPhenotypeInfo = (elem) => {
     * =>  "DAPI+ KERATIN- ASMA+ CD45- IBA1+ "
     */ 
 
-getPhenoBinaryDescription = (phenotypeVal, grpChnlNameArr) => {
-        let phenoDescription = '';   
+    getPhenoBinaryDescription = (phenotypeVal, grpChnlNameArr) => {
+            let phenoDescription = '';   
 
-        for(let chIdx = 0; chIdx < phenotypeVal.length; chIdx ++ ) {
-                    let markerStatus = parseInt(phenotypeVal.charAt(chIdx));
+            for(let chIdx = 0; chIdx < phenotypeVal.length; chIdx ++ ) {
+                        let markerStatus = parseInt(phenotypeVal.charAt(chIdx));
 
-                    if(markerStatus) { // -- if 1
-                        phenoDescription += grpChnlNameArr[chIdx] + "+";
+                        if(markerStatus) { // -- if 1
+                            phenoDescription += grpChnlNameArr[chIdx] + "+";
 
-                    } else {  // -- if 0
-                        phenoDescription += grpChnlNameArr[chIdx] + "-";
+                        } else {  // -- if 0
+                            phenoDescription += grpChnlNameArr[chIdx] + "-";
 
-                    }
+                        }
 
-                    phenoDescription += ' ';
-        }
+                        phenoDescription += ' ';
+            }
 
-        return phenoDescription;  //--e.g. DAPI+ KERATIN- ASMA- CD45+ IBA1+ 
-}
+            return phenoDescription;  //--e.g. DAPI+ KERATIN- ASMA- CD45+ IBA1+ 
+    }
+
+
+   /**
+    * Get the name of the binary phenotype
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} binary  "10011"
+    * @returns {string}
+    * @example 
+    *
+    *  getPhenotypeName("10110")
+    * => "SomePhenotypeName"
+    */ 
+
+    getPhenotypeName = (binary) => {
+          return allValidPhenotypes.filter( entry => entry.binary === binary)[0].phenotypeName;
+    }
+
+
+   /**
+    * Set the name of the binary phenotype
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} binary e.g. "10011"
+    * @param {string} phenotypeName e.g. "SomePhenotypeName"        
+    */ 
+
+    setPhenotypeName = (binary, phenotypeName) => {
+
+          allValidPhenotypes.forEach((phenotypeEntry, idx) => {   
+              if(phenotypeEntry.binary == binary) {
+                  phenotypeEntry.phenotypeName = phenotypeName;
+              } 
+          });      
+
+    }
+
+//-- getPhenotypeAbbreviation = (binary) => {
+//--       return allValidPhenotypes.filter( entry => entry.binary === binary)[0].nameAbbreviation;
+//-- }
+
+//-- setPhenotypeAbbreviation = (binary, nameAbbreviation) => {
+//--       allValidPhenotypes.forEach((phenotypeEntry, idx) => {   
+//--           if(phenotypeEntry.binary == binary) {
+//--              phenotypeEntry.nameAbbreviation =  nameAbbreviation;
+//--           } 
+//--       });      
+//-- }
+
+
+   /**
+    * Get phenotype binary color
+    * 
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} binary  "10011"
+    * @returns {string}
+    * @example 
+    *
+    *  getPhenotypeBinaryColor("10110")
+    *
+    * => "#00ff80"
+    */ 
+
+    getPhenotypeBinaryColor = (binary) => {
+          return allValidPhenotypes.filter( entry => entry.binary === binary)[0].phenotypeColor;
+    }
 
 
    /**
@@ -2513,11 +2981,13 @@ getPhenoBinaryDescription = (phenotypeVal, grpChnlNameArr) => {
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {string} fieldId  e.g. "phenotypeName"
+    * @param {string} value     
     */ 
 
-getPhenotypeName = (binary) => {
-      return allValidPhenotypes.filter( entry => entry.binary === binary)[0].phenotypeName;
-}
+    setPhenotypeNamesFormField = (fieldId, value) => {
+            document.getElementById(fieldId).value = value;
+    }
 
 
    /**
@@ -2527,75 +2997,31 @@ getPhenotypeName = (binary) => {
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {string} fieldId  e.g. "phenotypeName"
+    * @returns {string}   
+    * @example
+    *
+    * getPhenotypeNamesFormField("phenotypeName")
+    * => "somePhenotypeName"
     */ 
 
-setPhenotypeName = (binary, phenotypeName) => {
+    getPhenotypeNamesFormField  = (fieldId) => {
+            return document.getElementById(fieldId).value;
+    }
 
-      allValidPhenotypes.forEach((phenotypeEntry, idx) => {   
-          if(phenotypeEntry.binary == binary) {
-              phenotypeEntry.phenotypeName = phenotypeName;
-          } 
-      });      
-
-}
-
-// getPhenotypeAbbreviation = (binary) => {
-//       return allValidPhenotypes.filter( entry => entry.binary === binary)[0].nameAbbreviation;
-// }
-
-// setPhenotypeAbbreviation = (binary, nameAbbreviation) => {
-//       allValidPhenotypes.forEach((phenotypeEntry, idx) => {   
-//           if(phenotypeEntry.binary == binary) {
-//              phenotypeEntry.nameAbbreviation =  nameAbbreviation;
-//           } 
-//       });      
-// }
-
-
-   /**
-    * 
+    /**
+    * Reset the variable  
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
-    */ 
+    * @param {string} fieldId  e.g. "phenotypeName"    
+    */  
 
-getPhenotypeBinaryColor = (binary) => {
-      return allValidPhenotypes.filter( entry => entry.binary === binary)[0].phenotypeColor;
-}
-
-
-   /**
-    * 
-    * 
-    * @function
-    * @memberof HistoJS
-    * @since 1.0.0
-    * @version 1.0.0
-    */ 
-
-setPhenotypeNamesFormField = (fieldId, value) => {
-        document.getElementById(fieldId).value = value;
-}
-
-
-getPhenotypeNamesFormField  = (fieldId) => {
-        return document.getElementById(fieldId).value;
-}
-
-/**
-* reset the variable  
-* 
-* @function
-* @memberof HistoJS
-* @since 1.0.0
-* @version 1.0.0
-*/  
-
-resetPhenotypeNamesFormField = (fieldId) => {
-        document.getElementById(fieldId).value = "";
-}
+    resetPhenotypeNamesFormField = (fieldId) => {
+            document.getElementById(fieldId).value = "";
+    }
 
 
    /**
@@ -2615,12 +3041,13 @@ resetPhenotypeNamesFormField = (fieldId) => {
     }
 
    /**
-    * 
+    * Set the phenotype color for the binary
     * 
     * @function
     * @memberof HistoJS
     * @since 1.0.0
     * @version 1.0.0
+    * @param {string} phenotypeVal  e.g. "10110"    
     */ 
 
     initPhenotypeBinaryColor = (phenotypeVal) => {
@@ -2642,7 +3069,7 @@ resetPhenotypeNamesFormField = (fieldId) => {
             setPhenotypeNamesFormField("phenotypeDescription", getPhenoBinaryDescription(phenotypeVal, grpChnlNameArr));
             setPhenotypeNamesFormField("phenotypeBinaryField", phenotypeVal);        
             setPhenotypeNamesFormField("phenotypeName", getPhenotypeName(phenotypeVal));
-            // setPhenotypeNamesFormField("phenotypeAbbreviation", getPhenotypeAbbreviation(phenotypeVal));
+            //-- setPhenotypeNamesFormField("phenotypeAbbreviation", getPhenotypeAbbreviation(phenotypeVal));
             initPhenotypeBinaryColor(phenotypeVal);
 
     }
@@ -2660,7 +3087,7 @@ resetPhenotypeNamesFormField = (fieldId) => {
     * @version 1.0.0
     */ 
 
-initPhenotypeNamesForm = () => {
+   initPhenotypeNamesForm = () => {
 
       if(! allValidPhenotypes.length) {
           triggerHint("No phenotypes data found ..."); 
@@ -2760,19 +3187,19 @@ initPhenotypeNamesForm = () => {
       nodes +=    '</tr>';  
 
       //-- Abbreviation Field
-      // nodes +=    '<tr style="margin-top: 1vh;">';                      
-      // nodes +=      '<th style="text-align: left; margin-left: 0vw; ">'
-      // nodes +=         '<label style="margin-left: 0.69vw; margin-Top: 0vh">Abbreviation</label>';
-      // nodes +=      '</th>';  
+      //-- nodes +=    '<tr style="margin-top: 1vh;">';                      
+      //-- nodes +=      '<th style="text-align: left; margin-left: 0vw; ">'
+      //-- nodes +=         '<label style="margin-left: 0.69vw; margin-Top: 0vh">Abbreviation</label>';
+      //-- nodes +=      '</th>';  
 
-      // nodes +=      '<th style="text-align: left">'; 
-      // nodes +=        `<input type="text" id="phenotypeAbbreviation" value = ""  style="background-color:white; margin-Left: 0vw; margin-Top: 0vh; font-size: 0.62vw; width: 40%; height:1vh;" />`      
-      // nodes +=      '</th>';      
-      // nodes +=      '<th style="padding-left:0;">'; 
-      // nodes +=        `<a  href="javascript:void(0)" id="phenotypeAbbreviationInfo" onclick="requestPhenotypeInfo(this)"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
-      // nodes +=      '</th>';
+      //-- nodes +=      '<th style="text-align: left">'; 
+      //-- nodes +=        `<input type="text" id="phenotypeAbbreviation" value = ""  style="background-color:white; margin-Left: 0vw; margin-Top: 0vh; font-size: 0.62vw; width: 40%; height:1vh;" />`      
+      //-- nodes +=      '</th>';      
+      //-- nodes +=      '<th style="padding-left:0;">'; 
+      //-- nodes +=        `<a  href="javascript:void(0)" id="phenotypeAbbreviationInfo" onclick="requestPhenotypeInfo(this)"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
+      //-- nodes +=      '</th>';
 
-      // nodes +=    '</tr>';              
+      //-- nodes +=    '</tr>';              
   
 
       nodes +=  '</table>';                
@@ -2792,7 +3219,7 @@ initPhenotypeNamesForm = () => {
       document.getElementById("chartContainer").innerHTML  = nodes;
 
       document.getElementById("phenotypeName").maxLength = Opts.phenotypeNamingMaxLen;
-      // document.getElementById("phenotypeAbbreviation").maxLength = Opts.phenotypeAbbrevMaxLen;
+      //-- document.getElementById("phenotypeAbbreviation").maxLength = Opts.phenotypeAbbrevMaxLen;
       
 
 
@@ -2823,13 +3250,19 @@ initPhenotypeNamesForm = () => {
  }
 
 /**
-*  
+*  Check if a view bar is empty
 *  
 * 
 * @function
 * @memberof HistoJS
 * @since 1.0.0
 * @version 1.0.0
+* @param {string} viewBarId e.g. "grpFeaturesViewBar"
+* @returns {bool}
+* @example
+*
+* isViewBarEmpty("grpFeaturesViewBar")
+* => true
 */ 
 
  isViewBarEmpty = (viewBarId) => {
@@ -2837,13 +3270,14 @@ initPhenotypeNamesForm = () => {
  }
 
 /**
-*  
+*  clear a view bar
 *  
 * 
 * @function
 * @memberof HistoJS
 * @since 1.0.0
 * @version 1.0.0
+* @param {string} viewBarId e.g. "grpFeaturesViewBar"
 */ 
   
   clearViewBar = (viewBarId) => {
@@ -2851,7 +3285,7 @@ initPhenotypeNamesForm = () => {
              var node = document.getElementById(viewBarId + "Btn");
              document.getElementById(viewBarId).innerHTML = ""
              document.getElementById(viewBarId).append(node)
-             // showPanel("chColorContrastPanel", false) 
+             //-- showPanel("chColorContrastPanel", false) 
         }
   }
 
@@ -2922,12 +3356,13 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   }  
 
  /**
- * 
+ * Freeze all cell filters on the left panel
  * 
  * @function
  * @memberof HistoJS
  * @since 1.0.0
  * @version 1.0.0
+ * @param {bool} freezeFlag 
  */
 
   freezeAllCellFilters = (freezeFlag = true) => {
@@ -2939,7 +3374,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         document.getElementById("cellNegativeSwitch." + channelName).disabled = freezeFlag;       
      })
 
-     // morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ]
+     //-- morphFeatureNamesArr :[ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ]
      const morphFeatureNamesArr = cellMorphFeatureList.map(entry => {
                                     return entry.morphFeature
                                 })
@@ -2961,12 +3396,12 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
  */
 
   resetAllCellFilters = () => {
-     const curGroup = getSelectedGroup();
-     curGroup.Channels.forEach(channelName => {
+    const curGroup = getSelectedGroup();
+    curGroup.Channels.forEach(channelName => {
         document.getElementById("cellFilterSlider." + channelName).value = 0;
         document.getElementById("cellPositiveSwitch." + channelName).checked = false;
         document.getElementById("cellNegativeSwitch." + channelName).checked = false;
-     }) 
+    }) 
 
      // For morphological features e.g. cell area, solidity..
     let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData)
@@ -2976,17 +3411,16 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
           }
     }) 
 
-
-     setBoundaryFillOpacity(Opts.defaultBoundaryFillOpacity);
-     resetCellFilterDependencies();
-     if( isPanelActive("cellNavigator") ) {
+    setBoundaryFillOpacity(Opts.defaultBoundaryFillOpacity);
+    resetCellFilterDependencies();
+    if( isPanelActive("cellNavigator") ) {
         showPanel("cellNavigator", false); 
-     }
+    }
 
-  }
+ }
 
 /**
- * 
+ * Check if cell filter is active
  * 
  * @function
  * @memberof HistoJS
@@ -3017,7 +3451,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   }  
 
 /**
- * 
+ * Event fired when cell filter slider changes
  * 
  * @function
  * @memberof HistoJS
@@ -3054,7 +3488,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
 /**
- * 
+ * Event fired when cell morphology filter slider changes, filter as area, etc
  * 
  * @function
  * @memberof HistoJS
@@ -3069,14 +3503,12 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
          // Update tooltip value 
          document.getElementById(`cellFilterValueTooltip.${morphFeatureName}`).innerHTML = getCellFilterSliderValue(elem.id);
 
-         // if(parseFloat(document.getElementById("cellFilterSlider." + featureName).value)){
-         // } else {
-         // }
+         //-- if(parseFloat(document.getElementById("cellFilterSlider." + featureName).value)){
+         //-- } else {
+         //-- }
 
          if( isCellFiltersActive() ) { // check if there is at least channel filter slider with value > 0
              webix.message("Filtering in progress");
-
-          
          } 
 
          filterTiles(() => {
@@ -3085,17 +3517,18 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
      });
     
-	}
+  }
 
    
 
 /**
- * check whether the cell postive ON/OFF button toggled to ON
+ * Check whether the cell postive ON/OFF button toggled to ON
  * 
  * @function
  * @memberof HistoJS
  * @since 1.0.0
  * @version 1.0.0
+ * @param {string} channelName
  * @returns {bool}
  */    
   
@@ -3111,6 +3544,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
  * @memberof HistoJS
  * @since 1.0.0
  * @version 1.0.0
+ * @param {string} channelName 
  */
    resetCellPositiveSwitch = (channelName) => {
       document.getElementById("cellPositiveSwitch." + channelName).checked = false;
@@ -3124,6 +3558,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
  * @memberof HistoJS
  * @since 1.0.0
  * @version 1.0.0
+ * @param {object} elem 
  */  
 
 
@@ -3133,9 +3568,9 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
      if(isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() )) {
            showLoadingIcon().then( result => {
 
-                // if (! isGrpChannelsStatisticalDataAvailable() ) {
-                //     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
-                // } 
+                //-- if (! isGrpChannelsStatisticalDataAvailable() ) {
+                //--     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
+                //-- } 
 
                 if (! isGrpChannelsStatisticalDataAvailable() ) {
                     if(Opts.isBoxplotChannelBased) {
@@ -3187,6 +3622,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
  * @memberof HistoJS
  * @since 1.0.0
  * @version 1.0.0
+ * @param {string} channelName  
  * @returns {bool}
  */    
    isCellNegativeSwitchEnabled = (channelName) => {
@@ -3199,6 +3635,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
  * @function
  * @memberof HistoJS
  * @since 1.0.0
+ * @param {string} channelName  
  * @version 1.0.0
  */   
 
@@ -3215,6 +3652,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
  * @memberof HistoJS
  * @since 1.0.0
  * @version 1.0.0
+ * @param {object} elem  
  */  
 
   toggleChannelCellNegative = (elem) => {
@@ -3223,9 +3661,9 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
      if(isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() )) {
            showLoadingIcon().then( result => {
 
-                // if (! isGrpChannelsStatisticalDataAvailable() ) {
-                //     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
-                // }      
+                //-- if (! isGrpChannelsStatisticalDataAvailable() ) {
+                //--     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
+                //-- }      
 
                 if (! isGrpChannelsStatisticalDataAvailable() ) {
                     if(Opts.isBoxplotChannelBased) {
@@ -3282,14 +3720,18 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
   /**
-   * 
+   * Get marker positive threshold value
    * 
    * @function
    * @memberof HistoJS
    * @since 1.0.0
    * @version 1.0.0
    * @param {string} channelName
-   * @returns {number}
+   * @returns {string} e.g. min, max
+   * @example
+   *
+   * getMarkerPositiveThresholdValue("DAPI") 
+   * => "mean"     
    */  
 
    getMarkerPositiveThresholdValue = (channelName) => {
@@ -3304,7 +3746,11 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @since 1.0.0
    * @version 1.0.0
    * @param {string} channelName
-   * @returns {number}
+   * @returns {string} e.g. min, max
+   * @example
+   *
+   * getMarkerNegativeThresholdValue("DAPI") 
+   * => "min"     
    */  
 
    getMarkerNegativeThresholdValue = (channelName) => {
@@ -3320,6 +3766,10 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @version 1.0.0
    * @param {string} channelName
    * @returns {number}
+   * @example
+   *
+   * getMarkerPositiveThresholdIndex("DAPI") 
+   * => 2
    */ 
 
    getMarkerPositiveThresholdIndex= (channelName) => {
@@ -3335,6 +3785,10 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @version 1.0.0
    * @param {string} channelName
    * @returns {number}
+   * @example
+   *
+   * getMarkerNegativeThresholdIndex("DAPI") 
+   * => 4   
    */ 
 
    getMarkerNegativeThresholdIndex= (channelName) => {
@@ -3343,7 +3797,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
   /**
-   * 
+   * Set marker positive threshold value
    * 
    * @function
    * @memberof HistoJS
@@ -3360,7 +3814,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
   /**
-   * 
+   * Set marker negative threshold value
    * 
    * @function
    * @memberof HistoJS
@@ -3376,7 +3830,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
   /**
-   * 
+   * For future use
+   * Event fire when marker postive threshold changed
    * 
    * @function
    * @memberof HistoJS
@@ -3385,19 +3840,19 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    */  
 
    onChangeMarkerPositiveThreshold = (elem) => {
-       // let channelName = elem.id.split('.')[1];
-       // let curPositiveThreshold = document.getElementById(elem.id).value;
+       //-- let channelName = elem.id.split('.')[1];
+       //-- let curPositiveThreshold = document.getElementById(elem.id).value;
 
-       // if( getMarkerPositiveThresholdIndex(channelName) > getMarkerNegativeThresholdIndex(channelName) ) {
+       //-- if( getMarkerPositiveThresholdIndex(channelName) > getMarkerNegativeThresholdIndex(channelName) ) {
 
-       // }
+       //-- }
 
-       // curPositiveThresholdIndex = cellPositiveThresholdOptions.indexOf(curPositiveThreshold)
+       //-- curPositiveThresholdIndex = cellPositiveThresholdOptions.indexOf(curPositiveThreshold)
    }
 
 
   /**
-   * 
+   * For future use
    * 
    * @function
    * @memberof HistoJS
@@ -3410,8 +3865,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   }  
 
 
- /**
-   * 
+  /**
+   * Info
    * 
    * @function
    * @memberof HistoJS
@@ -3424,13 +3879,14 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   } 
 
 
- /**
-   * 
+  /**
+   * Info
    * 
    * @function
    * @memberof HistoJS
    * @since 1.0.0
    * @version 1.0.0
+   * @param {object} elem
    */  
 
   requestCellMorphologicalInfo = (elem) => { // e.g. area, solidity etc
@@ -3441,7 +3897,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
  /**
-   * 
+   * Info
    * 
    * @function
    * @memberof HistoJS
@@ -3455,7 +3911,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
  /**
-   * 
+   * Info
    * 
    * @function
    * @memberof HistoJS
@@ -3470,7 +3926,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
   /**
-   * 
+   * Initiat group channel optional list
    * 
    * @function
    * @memberof HistoJS
@@ -3483,33 +3939,33 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 	    let nodes = "";
 	    document.getElementById("channelOptionsList").innerHTML = ""; 
 	    const curGroup = getSelectedGroup();
-	    // document.getElementById("grpName").innerHTML = '<i style="font-size:1.4vw"  class="fa fa-sliders" ></i> &nbsp&nbsp' + "CHNL" + " OPTIONS";	    
+	    //-- document.getElementById("grpName").innerHTML = '<i style="font-size:1.4vw"  class="fa fa-sliders" ></i> &nbsp&nbsp' + "CHNL" + " OPTIONS";	    
 
 	    curGroup.Channels.forEach( (channelName, idx) => {
-  	      // let channelName = channel; 
+  	      //-- let channelName = channel; 
   	      let channelNumber = curGroup.Numbers[idx];
   	      let channelColor = curGroup.Colors[idx];
-	      // viewer.world.getItemAt(idx).setOpacity(1);
+	      //-- viewer.world.getItemAt(idx).setOpacity(1);
           nodes +=  '<button class="accordion">';
 	      nodes +=    `<li style="background-color: none" id="grpChannel${channelNumber}">`;
           nodes +=      `<span  style="background-color:\#${channelColor};   padding-left:0.5vw;">&nbsp</span>&nbsp`;	      
-	      // nodes +=    '<a href="javascript:void(0)" class="channelCheckboxClass" id="ChannelCheckboxId'+ channelNumber +'"  onclick="onChannelCheckboxClick('+ channelNumber +')">';
-	      // nodes +=      '<i class="fa fa-square" >&nbsp&nbsp</i></a>';
-	      // nodes +=    '<a href="javascript:void(0)"  onclick="onSelectedChannelOption('+ channelNumber +')">';
+	      //-- nodes +=    '<a href="javascript:void(0)" class="channelCheckboxClass" id="ChannelCheckboxId'+ channelNumber +'"  onclick="onChannelCheckboxClick('+ channelNumber +')">';
+	      //-- nodes +=      '<i class="fa fa-square" >&nbsp&nbsp</i></a>';
+	      //-- nodes +=    '<a href="javascript:void(0)"  onclick="onSelectedChannelOption('+ channelNumber +')">';
 	      nodes +=      `<font  style="font-size:0.77vw"  id="grpChannelFont${channelNumber}">${channelName}</font>`;
-	      // nodes +=     '</a>';
+	      //-- nodes +=     '</a>';
 	      nodes +=    '</li>';
           nodes +=  '</button>';
           nodes +=  '<div class="accordionpanel">';
           nodes +=     '<table>';
           nodes +=       '<colgroup> <col style="width:45%"> <col style="width:40%"><col style="width:15%"> </colgroup>';
 
-          // nodes +=       '<tr><th></th>'          
-          // nodes +=         '<th ><label class="switch"><input type="checkbox" id="togBtn"><div class="slider round"><span class="on">ON</span><span class="off">OFF</span></div></label>';
-          // // nodes +=           '<input type="checkbox" checked>';
-          // // nodes +=           '<span class="slider round"></span>';
-          // nodes +=         '</th>';
-          // nodes +=       '</tr>'          
+          //-- nodes +=       '<tr><th></th>'          
+          //-- nodes +=         '<th ><label class="switch"><input type="checkbox" id="togBtn"><div class="slider round"><span class="on">ON</span><span class="off">OFF</span></div></label>';
+          //-- nodes +=           '<input type="checkbox" checked>';
+          //-- nodes +=           '<span class="slider round"></span>';
+          //-- nodes +=         '</th>';
+          //-- nodes +=       '</tr>'          
 
           nodes +=       '<tr>';         
           nodes +=         '<th style="text-align: left"><p> Opacity </p></th>'; 
@@ -3521,23 +3977,23 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
           nodes +=         '<th></th>';          
           nodes +=       '</tr>';  
 
-          // nodes +=       '<tr>';         
-          // nodes +=         '<th style="text-align: center"><p> Cell+ Thre </p></th>'; 
-          // nodes +=         '<th style="padding-left:15%;">';
-          // nodes +=         '<select name="markerPositiveThresholds" style="width:30%;" id="markerPositiveThresholds."'+ idx +'onchange="onChangeMarkerPositiveThreshold()" disabled>';
+          //-- nodes +=       '<tr>';         
+          //-- nodes +=         '<th style="text-align: center"><p> Cell+ Thre </p></th>'; 
+          //-- nodes +=         '<th style="padding-left:15%;">';
+          //-- nodes +=         '<select name="markerPositiveThresholds" style="width:30%;" id="markerPositiveThresholds."'+ idx +'onchange="onChangeMarkerPositiveThreshold()" disabled>';
 
-          //                   cellThresholdOptions.forEach((threshold, idx) => {
+          //--                   cellThresholdOptions.forEach((threshold, idx) => {
 
-          //                       if(threshold === Opts.markerPositiveThreshold) {
-          //                           nodes +=    `<option value=${threshold} selected>${threshold}</option>`;        
-          //                       } else {
-          //                           nodes +=    `<option value=${threshold}>${threshold}</option>`;  
-          //                       }
-          //                   });
+          //--                       if(threshold === Opts.markerPositiveThreshold) {
+          //--                           nodes +=    `<option value=${threshold} selected>${threshold}</option>`;        
+          //--                       } else {
+          //--                           nodes +=    `<option value=${threshold}>${threshold}</option>`;  
+          //--                       }
+          //--                   });
 
-          // nodes +=         '</select>'; 
-          // nodes +=         '</th>';
-          // nodes +=       '</tr>'; 
+          //-- nodes +=         '</select>'; 
+          //-- nodes +=         '</th>';
+          //-- nodes +=       '</tr>'; 
 
 
           nodes +=       '<tr>';         
@@ -3604,21 +4060,21 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
              
           nodes +=       '</tr>';                     
 
-          // nodes +=       '<tr>'          
-          // nodes +=         '<th ><label class="switch">';
-          // nodes +=           '<input type="checkbox" checked>';
-          // nodes +=           '<div class="slider round"></span>';
-          // nodes +=         '</label></th>';
-          // nodes +=       '</tr>'          
+          //-- nodes +=       '<tr>'          
+          //-- nodes +=         '<th ><label class="switch">';
+          //-- nodes +=           '<input type="checkbox" checked>';
+          //-- nodes +=           '<div class="slider round"></span>';
+          //-- nodes +=         '</label></th>';
+          //-- nodes +=       '</tr>'          
 
 /*        //// for future use ..
-          nodes +=       '<tr>';
-          nodes +=         '<th style="text-align: center"><p> Opacity </p></th>';      
-          nodes +=         `<th style="vertical-align:middle;">`;
-          nodes +=            `<div class="tooltip">`;
-          nodes +=             `<input type="range" min="0" max="1" value="1" step="0.1" id="opacity.${idx}" onchange="chOpacityChanged(this)" onmouseover="onChOpacitySliderMouseover(this)"  >`;
-          nodes +=             `<span class="tooltiptext" style="width: 50%; left: 50%;" id="chOpacityValueTooltip"></span></div></th>`;
-          nodes +=       '</tr>';      
+        --  nodes +=       '<tr>';
+        --  nodes +=         '<th style="text-align: center"><p> Opacity </p></th>';      
+        --  nodes +=         `<th style="vertical-align:middle;">`;
+        --  nodes +=            `<div class="tooltip">`;
+        --  nodes +=             `<input type="range" min="0" max="1" value="1" step="0.1" id="opacity.${idx}" onchange="chOpacityChanged(this)" onmouseover="onChOpacitySliderMouseover(this)"  >`;
+        --  nodes +=             `<span class="tooltiptext" style="width: 50%; left: 50%;" id="chOpacityValueTooltip"></span></div></th>`;
+        --  nodes +=       '</tr>';      
 */              
           nodes +=       '<tr>';
           nodes +=         '<th style="text-align: left"><p> Cell Filter </p></th>';      
@@ -3628,7 +4084,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
           }
           nodes +=       '</tr>';
           nodes +=      '</table>';  
-          // nodes +=  ' <input type="range" min="1" max="100" value="50">';	            
+          //-- nodes +=  ' <input type="range" min="1" max="100" value="50">';	            
           nodes +=  '</div>';	      
 	    });
 
@@ -3637,9 +4093,9 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         //////-------------- Initiat Cell Morphological Options -------------------//////
         //////---------------------------------------------------------------------//////
 
-        //let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData);
+        //--let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData);
 
-        // morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ]
+        //-- morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ]
         let morphFeatureNamesArr = cellMorphFeatureList.map(entry => {
                                         return entry.morphFeature
                                     })
@@ -3658,9 +4114,9 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         morphFeatureNamesArr.forEach( (morphFeatureName, idx) => {
               // morphFeatureName e.g. area  
               // featureStates is object e.g. { mean: 389.9538807755854, std: 182.39338373199172, min: 133.5, "25%": 260.5, "50%": 363.5, "75%": 469.5, max: 1666 }
-              // let morphFeatureStates = dapiMorphStatisticalData[morphFeatureName];
-              let morphFeatMaxVal = 10; //dapiMorphStatisticalData[morphFeatureName].max;
-              let morphFeatMinVal = 0 ; //dapiMorphStatisticalData[featureName].min;
+              //-- let morphFeatureStates = dapiMorphStatisticalData[morphFeatureName];
+              let morphFeatMaxVal = 10; //-- dapiMorphStatisticalData[morphFeatureName].max;
+              let morphFeatMinVal = 0 ; //-- dapiMorphStatisticalData[featureName].min;
               let stepVal = (morphFeatMaxVal - morphFeatMinVal)/10;
               // To make first letter at morphological feature name capital e.g. Area
               let capitalizeName =  morphFeatureName.charAt(0).toUpperCase() + morphFeatureName.slice(1);           
@@ -3676,7 +4132,6 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
             
         nodes +=  '</div>';         
 
-
 	    document.getElementById("channelOptionsList").innerHTML += nodes;
 	}  
 
@@ -3688,30 +4143,28 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @memberof HistoJS
    * @since 1.0.0
    * @version 1.0.0
+   * @param {Object}  dapiMorphStatisticalData is Object { area: {…}, eccentricity: {…}, extent: {…}, ..}
    */  
 
 
     activateDapiCellsMorphOptionsList = (dapiMorphStatisticalData) => { 
 
-            //morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ] 
+            //-- morphFeatureNamesArr = [ "area", "eccentricity", "extent", "orientation", "solidity", "major_axis_length", "minor_axis_length" ] 
             let morphFeatureNamesArr  = Object.keys(dapiMorphStatisticalData)
-
          
             morphFeatureNamesArr.forEach( (morphFeatureName, idx) => {
                   // morphFeatureName e.g. area  
                   // featureStates is object e.g. { mean: 389.9538807755854, std: 182.39338373199172, min: 133.5, "25%": 260.5, "50%": 363.5, "75%": 469.5, max: 1666 }
                   let morphFeatureStates = dapiMorphStatisticalData[morphFeatureName];
                   let morphFeatMaxVal = dapiMorphStatisticalData[morphFeatureName].max;
-                  let morphFeatMinVal = 0 ; //dapiMorphStatisticalData[featureName].min;
+                  let morphFeatMinVal = 0 ; //-- dapiMorphStatisticalData[featureName].min;
                   let stepVal = (morphFeatMaxVal - morphFeatMinVal)/10;             
 
                   document.getElementById(`cellFilterSlider.${morphFeatureName}`).max = morphFeatMaxVal;
                   document.getElementById(`cellFilterSlider.${morphFeatureName}`).min = morphFeatMinVal;
                   document.getElementById(`cellFilterSlider.${morphFeatureName}`).step = stepVal;
                   document.getElementById(`cellFilterSlider.${morphFeatureName}`).disabled = false;
-
             });
-
     }  
 
 /*--------------------------------------------------Right Panel-----------------------------------------------------*/
@@ -3735,13 +4188,12 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    }
 
    // check whether Grid/Spx boundares loaded
-   // isBoundaryLoaded = () => {
-
-   // }
+   //-- isBoundaryLoaded = () => {
+   //-- }
 
    
   /**
-   * check whether button toggled to SPX
+   * Check whether button toggled to SPX
    * 
    * @function
    * @memberof HistoJS
@@ -3751,7 +4203,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    */    
 
    isSuperPixel = () => {
-    //   return document.getElementById("toggleBoundaries").checked ? true: false;
+    //--  return document.getElementById("toggleBoundaries").checked ? true: false;
     // I removed grid option and kept only spx option 
          return true; 
    }
@@ -3788,9 +4240,9 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
           enableBoundarySliders(!freezeFlag); 
           freezeInput("tileSearchBox", freezeFlag); 
           freezeInput("findTileBtn", freezeFlag); 
-          // freezeInput("createLoadFeaturesBtn", freezeFlag);           
-          // freezeInput("boundaryFillColor", freezeFlag); 
-          // freezeInput("strokeColor", freezeFlag); 
+          //-- freezeInput("createLoadFeaturesBtn", freezeFlag);           
+          //-- freezeInput("boundaryFillColor", freezeFlag); 
+          //-- freezeInput("strokeColor", freezeFlag); 
    }   
 
   /**
@@ -3822,7 +4274,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
 
   /**
-   * 
+   * Reset boundary switch dependencies
    * 
    * @function
    * @memberof HistoJS
@@ -3831,9 +4283,11 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    */     
 
    resetBoundarySwitchDependencies = () => {
+
         if( isSimilarRegionBtnEnabled() ) {
               resetSimilarTilesSwitch();
         } 
+
         freezeInput("findSimilarTileBtn", true);
         freezeAllCellFilters(true);
    } 
@@ -3879,11 +4333,12 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @example
    *
    * searchFileRemotely("LUNG-3-PR_40X.ome.tif")
+   *
    * => "658d3bd0a45554f5d9171dc4"    
    */    
 
   searchFileRemotely = (fileName) =>{
- //https://styx.neurology.emory.edu/girder/api/v1/resource/search?q=%22TONSIL-1_40X_channel_metadata.csv%22&mode=text&types=%5B%22item%22%5D&limit=10
+         //https://styx.neurology.emory.edu/girder/api/v1/resource/search?q=%22TONSIL-1_40X_channel_metadata.csv%22&mode=text&types=%5B%22item%22%5D&limit=10
          let searchResult = [];
          webix.ajax().sync().get(getHostApi() + "resource/search?q=%22" + fileName + "%22&mode=text&types=%5B%22item%22%5D&limit=10", (result) => {
               searchResult = JSON.parse(result)['item'][0];
@@ -3892,7 +4347,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   }
 
   /**
-   *
+   * Check if remote file exists
    * 
    * @function
    * @memberof HistoJS
@@ -3919,6 +4374,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @example 
    *
    * getRemoteFileInfo("LUNG-3-PR_40X.ome.tif")
+   *
    * => { _id: "658d3bd0a45554f5d9171dc4", folderId: "658d3bd0a45554f5d9171dc0", meta: Object { omeDatasetUpdate: {…}, omeSceneDescription: (44) […], settings: {…} },
    *       name: "LUNG-3-PR_40X.ome.tif",...}
    */    
@@ -3947,6 +4403,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @example
    *
    * getRemoteFileId("LUNG-3-PR_40X.ome.tif")
+   *
    * => "658d3bd0a45554f5d9171dc4"
    */   
 
@@ -3956,17 +4413,16 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
         return remoteFileInfo ? remoteFileInfo._id : Opts.searchEntirHostForResource ?  searchFileRemotely(fileName)  :  null;
 
-        // if(! searchEntireHost) {
+        //-- if(! searchEntireHost) {
 
-        // } else {
-
-        //       if (remoteFileInfo){
-        //          return remoteFileInfo._id;
-        //       } else { // if not exist with same ome folder, search entire host
-        //          let searchedFileId =  searchFileRemotely(fileName);
-        //          return searchedFileId ? searchedFileId : null;
-        //       }
-        // }
+        //-- } else {
+        //--       if (remoteFileInfo){
+        //--          return remoteFileInfo._id;
+        //--       } else { // if not exist with same ome folder, search entire host
+        //--          let searchedFileId =  searchFileRemotely(fileName);
+        //--          return searchedFileId ? searchedFileId : null;
+        //--       }
+        //-- }
   }    
 
 
@@ -4123,7 +4579,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
               success: function (response) {
                 csvDataObj = response  
                 //-- csvDataObj  'key1, key2
-                //                val1, val2'    
+                //--              val1, val2'    
               }
             });
 
@@ -4144,11 +4600,12 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    */ 
 
   createApiKey = () => {
-    if( isLoggedIn() ){
-        webix.ajax().sync().post( getHostApi() + "api_key?name=" + getUserInfo().lastName + "&active=true");
-    } else {
-        triggerHint("Internal process needs host login to complete");
-    }
+
+        if( isLoggedIn() ){
+            webix.ajax().sync().post( getHostApi() + "api_key?name=" + getUserInfo().lastName + "&active=true");
+        } else {
+            triggerHint("Internal process needs host login to complete");
+        }
   }
 
   /**
@@ -4162,21 +4619,33 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
    getApiKey = () => {
        let apiKey = null;
+
        try {
            webix.ajax().sync().get(getHostApi() + "api_key?userId=" + getUserId() + "&limit=1&sort=name&sortdir=1", (result) => {
                 // console.log(result)
                 apiKey = JSON.parse(result);
               })
-       }catch(err){
+        } catch(err) {
            console.log("Error : ", err);
            triggerHint(" No api_key found on host", "error", 3000);
            apiKey = null;
-      }
-      // console.log("apiKey : ", apiKey)
-      return apiKey.length ? apiKey[0].key : null;      
+        }
+        // console.log("apiKey : ", apiKey)
+        return apiKey.length ? apiKey[0].key : null;      
 
    }
 
+
+  /**
+   * Download file from host
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName is the name on host  e.g "TONSIL-1_40X_cellMask.json"
+   * @param {string} localDir
+   */ 
 
   downloadHostFile = (fileName, localDir) => { // fileName is the name on host  e.g "TONSIL-1_40X_cellMask.json"
          let remoteJSON = {};
@@ -4186,84 +4655,178 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
          webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/downloadFile","filename=" + fileName + "&outfolder=" + localDir + "&baseUrl=" + apiUrl + "&apiKey=" + apiKey + "&requestUrl=" + requestUrl, (result) => {
 
-                                                // remoteJSON = JSON.parse(result);
+                                                //-- remoteJSON = JSON.parse(result);
                                                 console.log(result)
                                               })
         
-         // return remoteJSON ? remoteJSON : null;
+         //-- return remoteJSON ? remoteJSON : null;
   }   
 
  
-// download user output to user selected  local folder
-downloadUserData = (data, fileName) =>{
-      // const data = 'a,b,c\n5,6,7',
-      // fileName = "my-csv.csv";
-      let a = document.getElementById('downloadUserData');
-      if(a == null) {
-         a = document.createElement("a");
-         document.body.appendChild(a);
-         a.style = "display: none";
-         a.id = "downloadUserData";
-      }
-       const blob = new Blob([data], {type: "octet/stream"});
-       const url = window.URL.createObjectURL(blob);   
+ 
+  /**
+   * download user output to user selected  local folder
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} data  e.g., data = 'a,b,c\n5,6,7',
+   * @param {string} fileName e.g.,  "my-csv.csv"
+   */   
+    downloadUserData = (data, fileName) =>{
+          //-- const data = 'a,b,c\n5,6,7',
+          //-- fileName = "my-csv.csv";
+          let a = document.getElementById('downloadUserData');
 
-       a.href = url;
-       a.download = fileName;       
-       a.click();
-       window.URL.revokeObjectURL(url);  
+          if(a == null) {
+               a = document.createElement("a");
+               document.body.appendChild(a);
+               a.style = "display: none";
+               a.id = "downloadUserData";
+          }
+          
+          const blob = new Blob([data], {type: "octet/stream"});
+          const url = window.URL.createObjectURL(blob);   
 
-       //document.body.removeChild(a);     
-}
+          a.href = url;
+          a.download = fileName;       
+          a.click();
+          window.URL.revokeObjectURL(url);  
 
-  // check if file exists locally within the project folder
-  isLocalFileExist = (fileName, Dir) => {
-     let isExist;
-     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/checkFile","filename=" + fileName + "&outfolder=" + Dir, function(response) {
-       isExist = JSON.parse(response);
-     });
+          //--document.body.removeChild(a);     
+    }
 
-     return isExist   // true: exits, false: not exists
-  }
+    /**
+    * check if file exists locally within the project folder
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} fileName - file name e.g., "LUNG-3-PR_40X_cellMask.json"
+    * @param {string} Dir - file path e.g., "boundaries/LUNG-3-PR_40X/"     
+    * @returns {boo}
+    * @example
+    *
+    * isLocalFileExist( "LUNG-3-PR_40X_cellMask.json", "boundaries/LUNG-3-PR_40X/")
+    * => true
+    *
+    */ 
 
-  removeLocalFile = (fileName, Dir) => {
-     let isRemoved;
-     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/removeFile","filename=" + fileName + "&outfolder=" + Dir, function(response) {
-       isRemoved = JSON.parse(response);
-     });
+     isLocalFileExist = (fileName, Dir) => {
+         let isExist;
+         webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/checkFile","filename=" + fileName + "&outfolder=" + Dir, function(response) {
+           isExist = JSON.parse(response);
+         });
 
-     return isRemoved   // true: exits, false: not exists
-  }  
+         return isExist;   // true: exits, false: not exists
+    }
 
-   // read  from local JSON file at dir  .. 
-  readJsonFile = (fileName, Dir) => {
-     let jsonContent;
-     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readJsonFile","filename=" + fileName + "&outfolder=" + Dir, function(response) {
-       jsonContent = JSON.parse(response);
-     });
 
-     return jsonContent != "notExist" ?  jsonContent : [];   
-  } 
+    /**
+    * Check if file exists locally within the project folder without flask need.
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} fileURL - file url e.g., local "./download/myData.json". or remote "https://styx.neurology.emory.edu/girder/api/v1/item/61dfb57d4874d4ffdf4e3144/download?contentDisposition=inline"
+    * @returns {boo}
+    * @example
+    *
+    * isLocalFileExistByAjax("boundaries/LUNG-3-PR_40X/LUNG-3-PR_40X_cellMask.json")
+    * => true
+    *
+    */    
 
-   // isSpxBoundaryFileExist = () => {
+    isLocalFileExistByAjax = (fileURL) => {
+        let isExist = false;
 
-   // 	 // return isLocalFileExist( getItemBoundariesFileName(), getBoundariesHomeDir()) ||
-   //   //        // isLocalFileExist( getGrpBoundaryFileName(), getBoundariesLocalPath()) ||
-   //   //      	isRemoteFileExist( getItemBoundariesFileName() )
+        $.ajax({
+            type: 'HEAD',
+            url: fileURL,  //--e.g., 'http://www.example.com/index.php'
+            async: false,
+            success: function() {
+                isExist = true;
+            },
+            error: function() {
+                isExist = false;
+            }
+        });
+
+       return isExist;   // true: exits, false: not exists
+    }
+
+    /**
+    * Remove local file 
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} fileName - file name e.g., "LUNG-3-PR_40X_cellMask.json"
+    * @param {string} Dir - file path e.g., "boundaries/LUNG-3-PR_40X/"     
+    * @example
+    *
+    * removeLocalFile( "LUNG-3-PR_40X_cellMask.json", "boundaries/LUNG-3-PR_40X/")
+    * => true
+    *
+    */   
+
+    removeLocalFile = (fileName, Dir) => {
+         let isRemoved;
+         webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/removeFile","filename=" + fileName + "&outfolder=" + Dir, function(response) {
+           isRemoved = JSON.parse(response);
+         });
+
+         return isRemoved;   // true: exits, false: not exists
+    }  
+
+
+   /**
+    * Read  from local JSON file at dir  .. 
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} fileName - file name e.g., "LUNG-3-PR_40X_cellMask.json"
+    * @param {string} Dir - file path e.g., "boundaries/LUNG-3-PR_40X/"     
+    * @returns {object}
+    * @example
+    *
+    * readJsonFile( "LUNG-3-PR_40X_cellMask.json", "boundaries/LUNG-3-PR_40X/")
+    * => object {...}
+    *
+    */  
+
+     readJsonFile = (fileName, Dir) => {
+         let jsonContent;
+         webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readJsonFile","filename=" + fileName + "&outfolder=" + Dir, function(response) {
+           jsonContent = JSON.parse(response);
+         });
+
+         return jsonContent != "notExist" ?  jsonContent : [];   
+     } 
+
    
-   // }  
+   /**
+    * create boundaries from item mask e.g. "TONSIL-1_40X_cellMask.tiff"
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {string} remoteCellMaskFileId  
+    * @returns {object}
+    * @example
+    *
+    * createBoundariesFromMask( )
+    * => object {...}
+    *
+    */ 
 
-   // read boundaries from local JSON file at dir boundaries .. 
-  //  getBoundaries = (fileName, boundaryFolder = Opts.defaultBoundariesDir) => {   // read boundaries file
-  //     var results=[];
-  //     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readBoundaries","filename="+fileName+"&outfolder="+boundaryFolder, function(response) {
-  //        results = response;
-  //      });
-
-  //     return results != "notExist" ?  results : "[]";
-  // }
-
-  // create boundaries from item mask e.g. "TONSIL-1_40X_cellMask.tiff"
   createBoundariesFromMask = (remoteCellMaskFileId) => {
       let fileName = getItemBoundariesFileName();
       let outFolder = getBoundariesLocalPath();
@@ -4285,7 +4848,10 @@ downloadUserData = (data, fileName) =>{
     /**
     * Get Tile BBox 
     *
+    * @function
+    * @memberof HistoJS
     * @since 1.0.0
+    * @version 1.0.0
     * @param {string} spxBoundaries
     * @returns {string}
     * @example
@@ -4309,41 +4875,23 @@ downloadUserData = (data, fileName) =>{
 
   }  
 
+
+   /**
+    * create boundaries from Dapi channel
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {object}
+    * @example
+    *
+    * createBoundariesFromDapiChannel( )
+    * => object {...}
+    *
+    */ 
   createBoundariesFromDapiChannel = () => {
   
-      //  is_boundary_extraction_contours_based = request.args.get('isBoundaryExtractionContoursBased', 0, type=bool)
-      //  print("Boundary extraction is contours based: ", is_boundary_extraction_contours_based)
-
-      //  # if remove outliers is need
-      //  is_remove_outliers_required = request.args.get('isRemoveOutliersRequired', 0, type=bool)
-      //  print("Remove outliers is required: ", is_remove_outliers_required)
-
-      //  # if removing all outliers of all morphologies  are need
-      //  all_features_outliers_considered = request.args.get('allFeaturesOutliersConsidered', 0, type=bool)
-      //  print("Remove all Features outliers is required: ", all_features_outliers_considered)  
-
-      //  reset_boundaries_label_after_outlier_filter = request.args.get('resetBoundaryLabelAfterOutlierFilter', 0, type=bool)
-      //  print("Reset boundaries label after outlier filter: ", reset_boundaries_label_after_outlier_filter)
-
-      //  approximation_requested = request.args.get('contourApproxRequest', 0, type=bool)
-      //  print("approximation_requested: ", approximation_requested)
-
-      //  use_95_05_percentile = request.args.get('use95_05Percentile', 0, type=bool)
-      //  percentile_lower = request.args.get('percentileLower', 0)
-      //  percentile_upper = request.args.get('percentileUpper', 0)
-      //  print("use_95_05_percentile requested: ", use_95_05_percentile)
-      //  if use_95_05_percentile:
-      //  print("percentile_lower requested: ", percentile_lower)
-      //  print("percentile_upper requested: ", percentile_upper)
-
-      // file_name = request.args.get('filename', 0)
-      // out_folder = request.args.get('outfolder', 0)  
-      // base_url = request.args.get('baseUrl', 0)
-      // item_id = request.args.get('itemId', 0)
-      // api_key = request.args.get('apiKey', 0)
-      // dapi_ch_index = request.args.get('dapiChannelIdx', 0)
-      // contour_scale_factor = request.args.get('contourScaleFactor', 0)
-
       let fileName = getItemBoundariesFileName();
       let outFolder = getBoundariesLocalPath();
       let apiUrl = getHostApi();
@@ -4353,7 +4901,7 @@ downloadUserData = (data, fileName) =>{
 
       var results = [];
 
-      // webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultCellBoundaryApiPort + 
+      //-- webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultCellBoundaryApiPort + 
       webix.ajax().sync().get("http://127.0.0.1:" +  Opts.defaultRestApiPort +
         "/createBoundariesFromDapiChannel", "filename=" + fileName + "&outfolder=" + outFolder +
         "&baseUrl=" + apiUrl + "&apiKey=" + apiKey + "&itemId=" + itemId  + 
@@ -4376,174 +4924,125 @@ downloadUserData = (data, fileName) =>{
   }
 
 
+   /**
+    * initiat boundaries overlay on OSD
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {promise}
+    */ 
 
   initSpxOverlay = ( /*allSpxBoundaryData = [] */) => {
-          var defer = $.Deferred();
-          triggerHint("Wait cell boundaries to load","info", 10000);
-          openProgressBar();
-          let allSpxBoundaryData = readJsonFile( getItemBoundariesFileName(), getBoundariesLocalPath() ) ;
+         var defer = $.Deferred();
+         enforcedTriggerHint("Wait cell boundaries to load").then( result => { 
+                  
+                  //-- triggerHint("Wait cell boundaries to load","info", 10000);
+                  openProgressBar();
+                  let allSpxBoundaryData = readJsonFile( getItemBoundariesFileName(), getBoundariesLocalPath() ) ;
 
-          if(! allSpxBoundaryData.length) {
-              triggerHint("No cell boundaries data found ..","info", 5000);
-              closeProgressBar();
-              return 0;
-           }
-          
-          allSelection = []; 
+                  if(! allSpxBoundaryData.length) {
+                      triggerHint("No cell boundaries data found ..","info", 5000);
+                      closeProgressBar();
+                      return 0;
+                   }
+                  
+                  allSelection = []; 
 
-          //To activate progress bar
-          let chunkIdx = 0;
-          let allSpxBoundaryDataChunks = [];
+                  //To activate progress bar
+                  let chunkIdx = 0;
+                  let allSpxBoundaryDataChunks = [];
 
-          allSpxBoundaryDataChunks = chunkArray(allSpxBoundaryData, Opts.numOfPrgBarJumps);
+                  allSpxBoundaryDataChunks = chunkArray(allSpxBoundaryData, Opts.numOfPrgBarJumps);
 
-          // if arrayOfSomeValues.length < numOfPrgBarJumps
-          if(allSpxBoundaryDataChunks == null) {
-            triggerHint("Progress bar settings are Invalid due to small data to partition, try please to decrease numOfPrgBarJumps");
-            allSpxBoundaryDataChunks = [allSpxBoundaryData]; //So allChunks[0] is applicable
-          }
-
-
-          let intervalId = window.setInterval(function() {
-
-                           $.each(allSpxBoundaryDataChunks[chunkIdx], function(index, tile) {
-                                 let fillColor = d3.schemeCategory20[index % 20];
-                                 let spxPoints;
-
-                                 if(Opts.defaultSpxBoundaryShapes.polygon == true) {
-                                      spxPoints = tile.spxBoundaries;
-                                 } else {
-                                      spxPoints = getTileBboxFormat(tile.spxBoundaries);
-                                 }
-
-                                 d3.select(overlay.node())
-                                    .append("polygon")
-                                    // .attr("Xcentroid", tile.x_cent)
-                                    // .attr("Ycentroid", tile.y_cent)
-                                    .attr("points", spxPoints)
-                                    .style('fill', getBoundaryFillColor()) //was fillcolor
-                                    .attr('fill-opacity', getBoundaryFillOpacity())
-                                    .attr('class', 'spx')
-                                    .attr('id', 'spx-' + tile.label)      
-                                    .attr('index', tile.label)
-                                    .style('stroke', getStrokeColor())
-                                    .attr('origStrokeColor', Opts.defaultStrokeColor)
-                                    .style('stroke-width', getStrokeWidth())
-                                    // .style('stroke-opacity', $$("strokeOpacity").getValue())
-                                    .attr('origStroke-width', Opts.defaultStrokeWidth)  
-                                    .attr('origColor', Opts.defaultBoundaryFillColor)  //was fillcolor
-                                    .style('stroke-opacity', getStrokeOpacity())
-                                    // .on('.zoom',webix.message("zooming"))
-                                    .on('dblclick',  onSelectedTile)
-                                    .on('contextmenu', handleMouseRightClick) 
-                                    .on('mouseleave', handleTileMouseLeave)  
-                                    .on('mouseover', handleMouseOver);
-
-                           });
-                         
-                          document.getElementById("progressBar").style.width=  (chunkIdx+1)*100/allSpxBoundaryDataChunks.length + "%";                      
-
-                          if( chunkIdx == allSpxBoundaryDataChunks.length-1 ) {
-                               window.clearInterval( intervalId );
-                               document.getElementById("progressBar").style.width = 0;  
+                  // if arrayOfSomeValues.length < numOfPrgBarJumps
+                  if(allSpxBoundaryDataChunks == null) {
+                    triggerHint("Progress bar settings are Invalid due to small data to partition, try please to decrease numOfPrgBarJumps");
+                    allSpxBoundaryDataChunks = [allSpxBoundaryData]; //So allChunks[0] is applicable
+                  }
 
 
-                              d3.select(overlay.node()).on('mouseleave',handleMouseLeave)
-                                .call(d3.behavior.zoom().on("zoom", function () { 
-                                          d3.select('.d3-context-menu').style('display', 'none');
-                                }))
-                                .on('contextmenu', function(d, i) { 
-                                    if( isSuperPixel() ){ 
-                                       contextMenu(menu1);
-                                    }
-                                }); 
+                  let intervalId = window.setInterval(function() {
 
-                               triggerHint("Boundaries loaded","info", 5000);  
+                                   $.each(allSpxBoundaryDataChunks[chunkIdx], function(index, tile) {
+                                         let fillColor = d3.schemeCategory20[index % 20];
+                                         let spxPoints;
 
-                               // remain code till the end of original function 
-                               closeProgressBar();
-                               defer.resolve(); // When this fires, the code in initSpxOverlay().then(/..../); is executed.
-                          }
+                                         if(Opts.defaultSpxBoundaryShapes.polygon == true) {
+                                              spxPoints = tile.spxBoundaries;
+                                         } else {
+                                              spxPoints = getTileBboxFormat(tile.spxBoundaries);
+                                         }
 
-                          chunkIdx++;                      
-          }, 0);
+                                         d3.select(overlay.node())
+                                            .append("polygon")
+                                            //-- .attr("Xcentroid", tile.x_cent)
+                                            //-- .attr("Ycentroid", tile.y_cent)
+                                            .attr("points", spxPoints)
+                                            .style('fill', getBoundaryFillColor()) //was fillcolor
+                                            .attr('fill-opacity', getBoundaryFillOpacity())
+                                            .attr('class', 'spx')
+                                            .attr('id', 'spx-' + tile.label)      
+                                            .attr('index', tile.label)
+                                            .style('stroke', getStrokeColor())
+                                            .attr('origStrokeColor', Opts.defaultStrokeColor)
+                                            .style('stroke-width', getStrokeWidth())
+                                            //-- .style('stroke-opacity', $$("strokeOpacity").getValue())
+                                            .attr('origStroke-width', Opts.defaultStrokeWidth)  
+                                            .attr('origColor', Opts.defaultBoundaryFillColor)  //was fillcolor
+                                            .style('stroke-opacity', getStrokeOpacity())
+                                            //-- .on('.zoom',webix.message("zooming"))
+                                            .on('dblclick',  onSelectedTile)
+                                            .on('contextmenu', handleMouseRightClick) 
+                                            .on('mouseleave', handleTileMouseLeave)  
+                                            .on('mouseover', handleMouseOver);
 
-        return defer;        
-}
+                                   });
+                                 
+                                  document.getElementById("progressBar").style.width=  (chunkIdx+1)*100/allSpxBoundaryDataChunks.length + "%";                      
+
+                                  if( chunkIdx == allSpxBoundaryDataChunks.length-1 ) {
+                                       window.clearInterval( intervalId );
+                                       document.getElementById("progressBar").style.width = 0;  
 
 
+                                      d3.select(overlay.node()).on('mouseleave',handleMouseLeave)
+                                        .call(d3.behavior.zoom().on("zoom", function () { 
+                                                  d3.select('.d3-context-menu').style('display', 'none');
+                                        }))
+                                        .on('contextmenu', function(d, i) { 
+                                            if( isSuperPixel() ){ 
+                                               contextMenu(menu1);
+                                            }
+                                        }); 
 
-  // Not in use currenlty 
-  initSpxOverlay_v1 = ( /*allSpxBoundaryData = [] */) => {
-     webix.message("Wait cell boundaries to load");
-     triggerHint("Wait cell boundaries to load","info", 10000);
-      // let allSpxBoundaryData = JSON.parse(getBoundaries( getItemBoundariesFileName(), getBoundariesLocalPath() ) );
-      let allSpxBoundaryData = readJsonFile( getItemBoundariesFileName(), getBoundariesLocalPath() ) ;
+                                       triggerHint("Boundaries loaded","info", 5000);  
 
-     // $.getJSON( getBoundariesLocalPath() + getItemBoundariesFileName(), function(allSpxBoundaryData){
-    
-           if(! allSpxBoundaryData.length) {
-              triggerHint("No cell boundaries data found ..","info", 5000);
-              return 0;
-           }
-          
-          allSelection = []; 
-          //*** later to be modified such that  : 
-          //*** let boundarData = readJsonFile getItemBoundariesFileName(), getBoundariesLocalPath() )
-          //function addOverlay(tiles, overlayHandler) 
+                                       // remain code till the end of original function 
+                                       closeProgressBar();
+                                       defer.resolve(); // When this fires, the code in initSpxOverlay().then(/..../); is executed.
+                                  }
+
+                                  chunkIdx++;                      
+                  }, 0);
+
+                 closeHint();
+                 
+        }); // end of enforce trigger   
+        return defer;     
+  }
 
 
-           $.each(allSpxBoundaryData, function(index, tile) {
-                 let fillColor = d3.schemeCategory20[index % 20];
-                 let spxPoints;
-
-                 if(Opts.defaultSpxBoundaryShapes.polygon == true) {
-                      spxPoints = tile.spxBoundaries;
-                 } else {
-                      spxPoints = getTileBboxFormat(tile.spxBoundaries);
-                 }
-
-                 d3.select(overlay.node())
-                    .append("polygon")
-                    // .attr("Xcentroid", tile.x_cent)
-                    // .attr("Ycentroid", tile.y_cent)
-                    .attr("points", spxPoints)
-                    .style('fill', getBoundaryFillColor()) //was fillcolor
-                    .attr('fill-opacity', getBoundaryFillOpacity())
-                    .attr('class', 'spx')
-                    .attr('id', 'spx-' + tile.label)      
-                    .attr('index', tile.label)
-                    .style('stroke', getStrokeColor())
-                    .attr('origStrokeColor', Opts.defaultStrokeColor)
-                    .style('stroke-width', getStrokeWidth())
-                    // .style('stroke-opacity', $$("strokeOpacity").getValue())
-                    .attr('origStroke-width', Opts.defaultStrokeWidth)  
-                    .attr('origColor', Opts.defaultBoundaryFillColor)  //was fillcolor
-                    .style('stroke-opacity', getStrokeOpacity())
-                    // .on('.zoom',webix.message("zooming"))
-                    .on('dblclick',  onSelectedTile)
-                    .on('contextmenu', handleMouseRightClick) 
-                    .on('mouseleave', handleTileMouseLeave)  
-                    .on('mouseover', handleMouseOver);
-
-           });
-
-          d3.select(overlay.node()).on('mouseleave',handleMouseLeave)
-            .call(d3.behavior.zoom().on("zoom", function () { 
-                      d3.select('.d3-context-menu').style('display', 'none');
-            }))
-            .on('contextmenu', function(d, i) { 
-                if( isSuperPixel() ){ 
-                   contextMenu(menu1);
-                }
-            }); 
-
-          webix.message("Boundaries loaded");    
-          triggerHint("Boundaries loaded","info", 5000);      
-     // });
-     
-     
-  } 
+   /**
+    * load boundaries form file that they saved in
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {promise}
+    */ 
 
    loadSpxBoundaries = () => {
 
@@ -4552,12 +5051,12 @@ downloadUserData = (data, fileName) =>{
    		// need wizard to allocate the cellmask image or create it.
         if( isLocalFileExist( getItemBoundariesFileName(), getBoundariesLocalPath()) ) {
                //to be coded
-               // let allSpxBoundaryData = JSON.parse(getBoundaries( getItemBoundariesFileName(), getBoundariesLocalPath() ) );
-               // initSpxOverlay(allSpxBoundaryData);
+               //-- let allSpxBoundaryData = JSON.parse(getBoundaries( getItemBoundariesFileName(), getBoundariesLocalPath() ) );
+               //-- initSpxOverlay(allSpxBoundaryData);
                initSpxOverlay().then( result => {
                        defer.resolve(); // When this fires, the code in loadSpxBoundaries().then(/..../); is executed.
                 });
-               // triggerHint(" to be coded ");
+               //-- triggerHint(" to be coded ");
         } else  {
                 /// get remote boundary JSON file id from host is exist
                 /// if Opts.searchEntirHostForResource is false, it will search for JSON file within the item remote folder only
@@ -4565,7 +5064,7 @@ downloadUserData = (data, fileName) =>{
 
                     let remoteFileId = getRemoteFileId( getItemBoundariesFileName() );
                     if(remoteFileId != null) {
-                         // download it to boundaries folder
+                               // download it to boundaries folder
 
                                // check if the user has access to download the file
                                if( getApiKey() != null ) {
@@ -4578,15 +5077,13 @@ downloadUserData = (data, fileName) =>{
                                     loadSpxBoundaries();
                                 }
 
-
-
                     } else { // Create cell boundaries from Dapi channel or cellMask image on host
                         
                          if ( isDAPIChannelSelected() ) {
                                  // related functions: getSelectedDAPIChannelName()
-                                 // triggerHint("No SPX data found, create them from DAPI/DNA channel?  " + 
-                                 //        '<a href="javascript:void(0)" onclick="createBoundariesFromDapiChannel()">[<b><font color="green">Yes</font></b>]</a>' + 
-                                 //        '<a href="javascript:void(0)" onclick="closeHint()">[<b><font color="red">No</font></b>]</a>', "error", 10000);
+                                 //-- triggerHint("No SPX data found, create them from DAPI/DNA channel?  " + 
+                                 //--        '<a href="javascript:void(0)" onclick="createBoundariesFromDapiChannel()">[<b><font color="green">Yes</font></b>]</a>' + 
+                                 //--        '<a href="javascript:void(0)" onclick="closeHint()">[<b><font color="red">No</font></b>]</a>', "error", 10000);
 
 
                                 triggerHint("No cell boundaries found, please wait while creating them from " + getSelectedDAPIChannelName() + " Channel" , "info", 10000);
@@ -4597,20 +5094,20 @@ downloadUserData = (data, fileName) =>{
                                                     {
                                                       triggerHint("Status of creating boundaries from channel: " + 
                                                                   '<b><font color="green">' + dapiBoundCreationStatus + '</font></b>', "info", Infinity )
-                                                      // webix.message("Boundaries created and saved");
-                                                      // setTimeout(() => { initSpxOverlay(); }, 5000 );  
+                                                      //-- webix.message("Boundaries created and saved");
+                                                      //-- setTimeout(() => { initSpxOverlay(); }, 5000 );  
                                                        initSpxOverlay().then( result => {
                                                                defer.resolve(); // When this fires, the code in loadSpxBoundaries().then(/..../); is executed.
                                                         });
                                                       break;                 
                                                     }
-                                      // case 'Not a Valid Mask':
-                                      //               {
-                                      //             //  reloadOSD(curGroup, true, compositeType);
-                                      //                 triggerHint("Status of creating boundaries from mask: " + 
-                                      //                             '<b><font color="red">' + dapiBoundCreationStatus + '</font></b>', "error", 4000 )
-                                      //                  break;                
-                                      //               }
+                                      //-- case 'Not a Valid Mask':
+                                      //--               {
+                                      //--             //  reloadOSD(curGroup, true, compositeType);
+                                      //--                 triggerHint("Status of creating boundaries from mask: " + 
+                                      //--                             '<b><font color="red">' + dapiBoundCreationStatus + '</font></b>', "error", 4000 )
+                                      //--                  break;                
+                                      //--               }
 
                                       case 'Failed':
                                                     {
@@ -4633,8 +5130,8 @@ downloadUserData = (data, fileName) =>{
                                                         {
                                                           triggerHint("Status of creating boundaries from mask: " + 
                                                                       '<b><font color="green">' + boundariesCreationStatus + '</font></b>', "info", Infinity )
-                                                          // webix.message("Boundaries created and saved");
-                                                          // setTimeout(() => { initSpxOverlay(); }, 5000 );  
+                                                          //-- webix.message("Boundaries created and saved");
+                                                          //-- setTimeout(() => { initSpxOverlay(); }, 5000 );  
                                                            initSpxOverlay().then( result => {
                                                                    defer.resolve(); // When this fires, the code in loadSpxBoundaries().then(/..../); is executed.
                                                             });
@@ -4642,7 +5139,7 @@ downloadUserData = (data, fileName) =>{
                                                         }
                                           case 'Not a Valid Mask':
                                                         {
-                                                      //  reloadOSD(curGroup, true, compositeType);
+                                                          //--reloadOSD(curGroup, true, compositeType);
                                                           triggerHint("Status of creating boundaries from mask: " + 
                                                                       '<b><font color="red">' + boundariesCreationStatus + '</font></b>', "error", 4000 )
                                                            break;                
@@ -4666,12 +5163,27 @@ downloadUserData = (data, fileName) =>{
        return defer; 
    }
 
-   // loadGridBoundaries = () => {
-   // 	   initGridOverlay();
-   // }
 
-   // init Grid / Spx boundaries
+
+   //-- loadGridBoundaries = () => {
+   //-- 	   initGridOverlay();
+   //-- }
+
+
+
+   /**
+    * Init Spx boundaries
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {promise}
+    */ 
+
+   
    initBoundaries = () => {
+
        if( isRestApiAvailable() ) {     
 
    		   loadSpxBoundaries().then( result => {
@@ -4687,14 +5199,12 @@ downloadUserData = (data, fileName) =>{
                        
                    } else {
                        freezeBoundaryDependentControls(true); 
-                       // triggerHint("No boundaries loaded ..","error", 4000 );
+                       //-- triggerHint("No boundaries loaded ..","error", 4000 );
                    }
 
-                   // setTimeout(() => { closeHint(); }, 4000 ); 
+                   //-- setTimeout(() => { closeHint(); }, 4000 ); 
            })
-
  
-
        } else {
            triggerHint("Flask app is not responding, try to restart it... ","info", 7000); 
            setTimeout(() => { 
@@ -4702,72 +5212,182 @@ downloadUserData = (data, fileName) =>{
                             }, Opts.resetSwitchTimeOut );  
        }       
        
-
-       // if( isFeaturesLoaded() ) {
-       //     freezeInput("createLoadFeaturesBtn", true);    
-       // } else {
-       //     freezeInput("createLoadFeaturesBtn", false);  
-       // }    
+       //-- if( isFeaturesLoaded() ) {
+       //--     freezeInput("createLoadFeaturesBtn", true);    
+       //-- } else {
+       //--     freezeInput("createLoadFeaturesBtn", false);  
+       //-- }    
             
    }
 
-
+   /**
+    * Get boundary fill opacity
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {string} e.g. "0.9"
+    * @example
+    *
+    * getBoundaryFillOpacity()
+    *
+    * => "0.25"
+    */ 
 
     getBoundaryFillOpacity = () => {
        return document.getElementById("boundaryFillOpacity").value;
     }
 
+   /**
+    * Set boundary fill opacity
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @param {number} opacityValue
+    */ 
+
     setBoundaryFillOpacity = (opacityValue) => {
         document.getElementById("boundaryFillOpacity").value = opacityValue;
     }    
  
+    /**
+    * Event fired when boundary fill opacity change
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    */ 
+
     boundaryFillOpacityChanged = () => {
     	updateInputTooltip("boundaryFillOpacityValueTooltip", getBoundaryFillOpacity);
         d3.selectAll("polygon").style("fill-opacity", getBoundaryFillOpacity());
 	}
 
+   /**
+    * Get strock opacity
+    *
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {string} e.g. "0.9"
+    * @example
+    *
+    * getStrokeOpacity()
+    *
+    * => "0.25"
+    */ 
+
     getStrokeOpacity = () => {
        return document.getElementById("strokeOpacity").value;
     }
+
+   /**
+    * Event fired when strock opacity change
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
 
     strokeOpacityChanged = () => {
 		updateInputTooltip("strokeOpacityValueTooltip", getStrokeOpacity);
         d3.selectAll("polygon").style("stroke-opacity", getStrokeOpacity());		
 	}			
 
+   /**
+    * Event fired when mouseover boundary
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
 
     boundaryFillOpacitySliderMouseOver = () => {
     	updateInputTooltip("boundaryFillOpacityValueTooltip", getBoundaryFillOpacity);
-    //    document.getElementById("boundaryFillOpacityValueTooltip").innerHTML = getBoundaryFillOpacity();
+        //-- document.getElementById("boundaryFillOpacityValueTooltip").innerHTML = getBoundaryFillOpacity();
 	}
+
+   /**
+    * Event fired when mouseover strock
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
 
 	strokeOpacitySliderMouseOver = () => {
 		updateInputTooltip("strokeOpacityValueTooltip", getStrokeOpacity);
-    //    document.getElementById("strokeOpacityValueTooltip").innerHTML = getStrokeOpacity();
+       //-- document.getElementById("strokeOpacityValueTooltip").innerHTML = getStrokeOpacity();
 	}
 
 
-
-
+   /**
+    * Get strock width
+    *
+    * @since 1.0.0
+    * @returns {string} e.g. "0.3"
+    * @example
+    *
+    * getStrokeWidth()
+    *
+    * => "0.3"
+    */ 
 
     getStrokeWidth = () => {
        return document.getElementById("strokeWidth").value;
     }
+
+   /**
+    * Event fired when strock width change
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
 
     strokeWidthChanged = () => {
 		updateInputTooltip("strokeWidthValueTooltip", getStrokeWidth);
         d3.selectAll("polygon").style("stroke-width", getStrokeWidth());		
 	}	
 
+   /**
+    * Event fired when strock width mouseover
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
+
 	strokeWidthSliderMouseOver = () => {
 		updateInputTooltip("strokeWidthValueTooltip", getStrokeWidth);
-    //    document.getElementById("strokeOpacityValueTooltip").innerHTML = getStrokeOpacity();
+        //-- document.getElementById("strokeOpacityValueTooltip").innerHTML = getStrokeOpacity();
 	}
 
 
-
-
-
+   /**
+    * Event fired when boundary fill color change
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
 
 	boundaryFillColorChanged = () => {
    	     if( isBoundarySwitchEnabled() ) {
@@ -4776,14 +5396,47 @@ downloadUserData = (data, fileName) =>{
 
 	}
 	
+   /**
+    * Get strock fill color
+    *
+    * @since 1.0.0
+    * @returns {string} e.g. "white"
+    * @example
+    *
+    * getStrokeColor()
+    *
+    * => "white"
+    */ 
+
 	getStrokeColor = () => {
  	     return getColorValue("strokeColor") ? "#" + getColorValue("strokeColor") : Opts.defaultStrokeColor;
 	}
 
+   /**
+    * Get boundaries (segmented cells) fill color
+    *
+    * @since 1.0.0
+    * @returns {string} e.g. "#bd5656" 
+    * @example
+    *
+    * getBoundaryFillColor()
+    *
+    * =>   "#bd5656" 
+    */  
 
 	getBoundaryFillColor = () => {
  	     return getColorValue("boundaryFillColor") ? "#" + getColorValue("boundaryFillColor") : Opts.defaultBoundaryFillColor;
 	}
+
+   /**
+    * Event fired when strok color change
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0    
+    * @since 1.0.0
+    *
+    */ 
 
 	strokeColorChanged = () => {
    	     if( isBoundarySwitchEnabled() ) {
@@ -4791,6 +5444,14 @@ downloadUserData = (data, fileName) =>{
    	     }   		
 	}
 
+   /**
+    * initial group boundary options e.g., strock width, color, fill color, etc
+    *
+    * @function
+    * @memberof HistoJS
+    * @version 1.0.0      
+    * @since 1.0.0
+    */ 
 
 	initGrpBoundaryOptions = () => { 
 	    let nodes="";
@@ -4867,11 +5528,11 @@ downloadUserData = (data, fileName) =>{
 		nodes +=  '</div>';	      
 
 
-    document.getElementById("grpBoundaryOptions").innerHTML += nodes;
-    document.getElementById("boundaryFillOpacity").value = Opts.defaultBoundaryFillOpacity;
-    document.getElementById("strokeWidth").max = Opts.maxStrokeWidth;
-    document.getElementById("strokeWidth").value = Opts.defaultStrokeWidth;
-    document.getElementById("strokeOpacity").value = Opts.defaultStrokeOpacity
+        document.getElementById("grpBoundaryOptions").innerHTML += nodes;
+        document.getElementById("boundaryFillOpacity").value = Opts.defaultBoundaryFillOpacity;
+        document.getElementById("strokeWidth").max = Opts.maxStrokeWidth;
+        document.getElementById("strokeWidth").value = Opts.defaultStrokeWidth;
+        document.getElementById("strokeOpacity").value = Opts.defaultStrokeOpacity
 
 		$("#boundaryFillColor").spectrum({
 		    color: Opts.defaultBoundaryFillColor,
@@ -4892,28 +5553,66 @@ downloadUserData = (data, fileName) =>{
 /*------------------------------------------------------------------------------------------------------------------*/
 
 
+  
+  /**
+   * check whether the ON/OFF button toggled to ON
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   */   
 
-
-
-
-
-   // check whether the ON/OFF button toggled to ON
    isSimilarRegionBtnEnabled = () => {
         return document.getElementById("findSimilarTileBtn").checked ? true : false;
    }
+
+  /**
+   * check whether the ON/OFF button toggled to ON
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   */      
 
    isFeaturesCreateBtnEnabled = () => {
       return document.getElementById("createLoadFeaturesBtn").disabled ? false : true;
    } 
 
-   // Check if Heatmap switch is ON 
+  /**
+   * Check if Heatmap switch is ON 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   */  
+
    isHeatmapBtnEnabled = () => {
       return document.getElementById("heatmap").checked ? true : false;
    }       
 
-   // disableSimilarTilesBtn = (disableFlag) => {
-   //    document.getElementById("findSimilarTileBtn").disabled = disableFlag; 
-   // }
+
+
+   //-- disableSimilarTilesBtn = (disableFlag) => {
+   //--    document.getElementById("findSimilarTileBtn").disabled = disableFlag; 
+   //-- }
+
+
+  /**
+   * Freeze features control
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {boo} freezeFlag
+   *
+   */ 
 
     freezeFeaturesControls = (freezeFlag = true) => {
         freezeInput("nearestTileMatching", freezeFlag);
@@ -4921,25 +5620,43 @@ downloadUserData = (data, fileName) =>{
         freezeInput("heatmap", freezeFlag); 
    }
 
-   //  ON-OFF Similar Region Switch
+  
+  /**
+   * ON-OFF Similar Region Switch
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */ 
+
    similarTilesSwitchClicked = () => {
          //  is switch ON
          if( isSimilarRegionBtnEnabled() ) {
                 freezeFeaturesControls(false);
                 findSimilarTiles(); 
-
                 freezeAllCellFilters(true);
 
-
          } else { 
-            //   switch is OFF
+                //  switch is OFF
                 restoreBoundarySettings();
                 resetSimilarTilesSwitchDependencies();    // <<<<<<<<<<<<<<<<<------
                 freezeFeaturesControls(true);
                 freezeAllCellFilters(false);
-               // initBoundaries();                
+               //-- initBoundaries();                
          }
    }
+
+  /**
+   * Reset SimilarTiles switch dependencies
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */ 
 
    resetSimilarTilesSwitchDependencies = () => {
           if( isHeatmapBtnEnabled() ) {
@@ -4950,107 +5667,224 @@ downloadUserData = (data, fileName) =>{
           resetSimilaritySlider();
    }
  
+   /**
+   * Reset SimilarTiles switch  
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */ 
+
    resetSimilarTilesSwitch = () => {
        if( isSimilarRegionBtnEnabled() ) {
           document.getElementById("findSimilarTileBtn").checked = false;
 
-          // if( isBoundarySwitchEnabled() ) {           // <<<<<<<<<<<<<<<<<<<<<<
+          //-- if( isBoundarySwitchEnabled() ) {           // <<<<<<<<<<<<<<<<<<<<<<
           similarTilesSwitchClicked();
-          // }
+          //-- }
 
-          // resetSimilarTilesSwitchDependencies();
+          //-- resetSimilarTilesSwitchDependencies();
        }  
    }  
 
 
+  /**
+   * Reset heatmap switch 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */ 
+
    resetHeatmapSwitch = () => {
      if( isHeatmapBtnEnabled() ) {
          document.getElementById("heatmap").checked = false;
-        // if( isSimilarRegionBtnEnabled() ) {     // <<<<<<<<<<<<<<<
+        //-- if( isSimilarRegionBtnEnabled() ) {     // <<<<<<<<<<<<<<<
          roiHeatmapSwitchClicked();
-        // }  
+        //-- }  
       }  
    }  
+
+
    //  ON-OFF Heatmap Switch
-   // heatmapSwitchClicked = () => {
-   //       //  is switch ON
-   //       // if( isHeatmapBtnEnabled() ) {
-   //              // freezeFeaturesControls(false);
-   //              roiHeatmapSwitchClicked(); 
+   //-- heatmapSwitchClicked = () => {
+   //         //  is switch ON
+   //--       // if( isHeatmapBtnEnabled() ) {
+   //--              // freezeFeaturesControls(false);
+   //--              roiHeatmapSwitchClicked(); 
+   //--       // } else { 
+   //         //    //   switch is OFF
+   //--       //        // freezeFeaturesControls(true);
+   //--       //       // initBoundaries();                
+   //--       // }
+   //-- }   
 
-   //       // } else { 
-   //       //    //   switch is OFF
-   //       //        // freezeFeaturesControls(true);
-   //       //       // initBoundaries();                
 
-   //       // }
-   // }   
+///////////////////////////////////
 
-////////////////////
-function compare(dist1, dist2) {   // use this function to sort  allcolorFeatures
+  /**
+   * Use this function to sort  allcolorFeatures or similar
+   * e.g. sortedFeaturesDistance = allFeaturesDistance.sort(compare);
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Array} dist1
+   * @param {Array} dist2
+   * @returns {number} 1 or -1
+   * @example
+   *
+   * let dist1 = [], dist2 = [];
+   * dist1.Distance = 3;
+   * dist1.Distance = 4;
+   *
+   * compare(dist1, dist2)
+   * => 1
+   *
+   */    
+
+ compare = (dist1, dist2) => {   // use this function to sort  allcolorFeatures
     return dist1.Distance < dist2.Distance ? 1 : -1;
 }
 
 /////////////////////////////////
-// compute multiplexed tile distance with other tiles
-function computeDistance(features1, features2, numOfFrames) {
-     let dist = 0; 
-     for (let n = 0; n < checkboxSelectedFeatures.length; n++) { // if unchecked, this feature Key will not selected
-        for (let k = 0; k < numOfFrames; k++) {   // computer each key for all frames first
-             dist = dist + math.pow(features1[k][checkboxSelectedFeatures[n]] - features2[k][checkboxSelectedFeatures[n]], 2);
-        }
+
+
+  /**
+   * compute multiplexed tile distance with other tiles
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Array} features1
+   * @param {Array} features2
+   * @param {number} numOfFrames   
+   * @returns {number} dist
+   *
+   *
+   */ 
+
+    computeDistance = (features1, features2, numOfFrames) => {
+         let dist = 0; 
+         for (let n = 0; n < checkboxSelectedFeatures.length; n++) { // if unchecked, this feature Key will not selected
+            for (let k = 0; k < numOfFrames; k++) {   // computer each key for all frames first
+                 dist = dist + math.pow(features1[k][checkboxSelectedFeatures[n]] - features2[k][checkboxSelectedFeatures[n]], 2);
+            }
+         }
+
+         return dist;
      }
 
-     return dist;
- }
 
-restoreBoundarySettings = () => {
-            let currentTileId = getSelectedTileId();
-            let tileClass = getClassType();
+  /**
+   * Restore boundary settings
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   *
+   */      
 
+    restoreBoundarySettings = () => {
+                let currentTileId = getSelectedTileId();
+                let tileClass = getClassType();
 
-            d3.selectAll(tileClass).style('fill', getBoundaryFillColor());
-            d3.selectAll(tileClass).style('stroke', getStrokeColor());  
-            d3.selectAll(tileClass).style('fill-opacity', getBoundaryFillOpacity()); 
+                d3.selectAll(tileClass).style('fill', getBoundaryFillColor());
+                d3.selectAll(tileClass).style('stroke', getStrokeColor());  
+                d3.selectAll(tileClass).style('fill-opacity', getBoundaryFillOpacity()); 
 
-            d3.select("#"+currentTileId).style('fill', Opts.selectedTileFillColor);
-            d3.select("#"+currentTileId).style('fill-opacity', Opts.selectedTileFillOpacity);            
-
-}
-////////////////////
-addHeatmapAnnotations = () =>{
-   triggerHint("To be coded");
-}
-
-removeHeatmapAnnotations = () =>{
-   triggerHint("To be coded");
-}
-
-roiHeatmapSwitchClicked = () => {
-  viewer.viewport.goHome();
-  if( isHeatmapBtnEnabled() ){
-
-      prevOpacity = getBoundaryFillOpacity();
-  //    setBoundaryFillOpacity($$("SpxOpacity").config.max)          <<<<<<<<<<--------------
-      setBoundaryFillOpacity(1);
-      resetAllChannelsOpacity();      
- //     findSimilarTiles();
-      // removeFrameAnnotations();
-      addHeatmapAnnotations();
-      freezeInput("findSimilarTileBtn", true);
-    } else {
-      setBoundaryFillOpacity(prevOpacity);
-      removeHeatmapAnnotations();
-      setAllChannelsOpacity(); 
-      // addFrameAnnotations()
-      freezeInput("findSimilarTileBtn", false);
+                d3.select("#"+currentTileId).style('fill', Opts.selectedTileFillColor);
+                d3.select("#"+currentTileId).style('fill-opacity', Opts.selectedTileFillOpacity);            
 
     }
 
-    findSimilarTiles();
-}
 
-///////////////////
+    ////////////////////
+  /**
+   * Futue use
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   *
+   */      
+    addHeatmapAnnotations = () =>{
+       triggerHint("To be coded");
+    }
+
+  /**
+   * Futue use
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   *
+   */  
+
+    removeHeatmapAnnotations = () => {
+       triggerHint("To be coded");
+    }
+
+
+  /**
+   * Fire event when rio heatmap switch clicked
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   *
+   */  
+
+    roiHeatmapSwitchClicked = () => {
+          viewer.viewport.goHome();
+
+          if( isHeatmapBtnEnabled() ){
+              prevOpacity = getBoundaryFillOpacity();
+              //-- setBoundaryFillOpacity($$("SpxOpacity").config.max)          <<<<<<<<<<--------------
+              setBoundaryFillOpacity(1);
+              resetAllChannelsOpacity();      
+              //-- findSimilarTiles();
+              //-- removeFrameAnnotations();
+              addHeatmapAnnotations();
+              freezeInput("findSimilarTileBtn", true);
+          } else {
+              setBoundaryFillOpacity(prevOpacity);
+              removeHeatmapAnnotations();
+              setAllChannelsOpacity(); 
+              //-- addFrameAnnotations()
+              freezeInput("findSimilarTileBtn", false);
+          }
+
+          findSimilarTiles();
+    }
+
+  
+
+  /**
+   * Find similar tile
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   *
+   */      
+
     findSimilarTiles = () => {
           let currentTileId = getSelectedTileId();
           let tileClass = getClassType();
@@ -5063,19 +5897,19 @@ roiHeatmapSwitchClicked = () => {
 
           if( isTileSelected() && isSimilarRegionBtnEnabled() ) {  // <<<<<<<<<<<<<<<< --------- no need to "if" condition, findSimilarTiles by default can't be called if no tile selected
 
-              // currentTileData = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(currentTileObj).attr('id')); 
+              //-- currentTileData = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(currentTileObj).attr('id')); 
               let currentTileData = findObjectByKeyValue(allTilesFeatures, 'id', currentTileId); 
               let numOfFrames = getSelectedGroup().Channels.length;              
               
-              // let numOfFrames =  currentTileData.features.length;              
+              //-- let numOfFrames =  currentTileData.features.length;              
               // console.log("currentTileData :", currentTileData)
 
               let allFeaturesDistance = []; // tile features distance with other tiles
 
-              // for(let k = 0; k < allTilesFeatures.length; k++) {
-              //       let featuresDistance = computeDistance( currentTileData.features, allTilesFeatures[k].features, numOfFrames);
-              //       allFeaturesDistance.push({id: allTilesFeatures[k].id, Distance: featuresDistance});
-              // }
+              //-- for(let k = 0; k < allTilesFeatures.length; k++) {
+              //--       let featuresDistance = computeDistance( currentTileData.features, allTilesFeatures[k].features, numOfFrames);
+              //--       allFeaturesDistance.push({id: allTilesFeatures[k].id, Distance: featuresDistance});
+              //-- }
 
               allTilesFeatures.forEach(tile => {
                     let featuresDistance = computeDistance( currentTileData.features, tile.features, numOfFrames);
@@ -5083,7 +5917,7 @@ roiHeatmapSwitchClicked = () => {
               })              
             
               sortedFeaturesDistance = allFeaturesDistance.sort(compare);
-              // sortedFeaturesDistance = allFeaturesDistance.sort((dist1, dist2) => dist1 - dist2);              
+              //-- sortedFeaturesDistance = allFeaturesDistance.sort((dist1, dist2) => dist1 - dist2);              
        
               if(sortedFeaturesDistance[0].Distance > sortedFeaturesDistance[sortedFeaturesDistance.length-1].Distance) {
                     sortedFeaturesDistance.reverse();
@@ -5096,25 +5930,23 @@ roiHeatmapSwitchClicked = () => {
               let maxNearest = sortedFeaturesDistance.length - 1;
               let numOfNears = Math.max(getNearTilesSliderValue(), Math.floor(getSimilaritySliderValue() * maxNearest / 100));
         
-              // if(numOfNears==0){
-              //   $$("PrevSPX").setValue("Original");
-              //   $$("PrevSPX").disable();
-              //   $$("NextSPX").disable();
-              //   var boundID
-              //   boundID= sortedFeaturesDistance[0].id; 
-              //   locatSPX(tileClass,boundID);
-              //   }else{
-              //      if(numOfNears< SPXNavigationPointer){
-              //           SPXNavigationPointer=numOfNears;
-              //           $$("PrevSPX").enable();
-              //           $$("NextSPX").disable();
-              //         }else{
-              //           $$("PrevSPX").enable();
-              //           $$("NextSPX").enable();                
-
-              //         }
-
-              //   }
+              //-- if(numOfNears==0) {
+              //--   $$("PrevSPX").setValue("Original");
+              //--   $$("PrevSPX").disable();
+              //--   $$("NextSPX").disable();
+              //--   var boundID
+              //--   boundID= sortedFeaturesDistance[0].id; 
+              //--   locatSPX(tileClass,boundID);
+              //--   } else {
+              //--      if(numOfNears< SPXNavigationPointer) {
+              //--           SPXNavigationPointer=numOfNears;
+              //--           $$("PrevSPX").enable();
+              //--           $$("NextSPX").disable();
+              //--         }else{
+              //--           $$("PrevSPX").enable();
+              //--           $$("NextSPX").enable();                
+              //--         }
+              //--   }
 
               d3.selectAll(tileClass).style('fill', 'white');
               d3.selectAll(tileClass).style('stroke', 'none');  
@@ -5140,9 +5972,6 @@ roiHeatmapSwitchClicked = () => {
                   d3.select("#"+sortedFeaturesDistance[0].id).style('fill', d3.rgb(heatmapColor(sortedFeaturesDistance[0].Distance)));               
 
               }
-
-
- 
 
 
               if( !isHeatmapBtnEnabled() ) { // heatmap switch is OFF
@@ -5176,7 +6005,7 @@ roiHeatmapSwitchClicked = () => {
                         let sortedFeaturesDistanceLen = sortedFeaturesDistance.length; // for best practise
 
                         for(let k = 1; k < sortedFeaturesDistanceLen; k++) {
-                           // to normalize-->  NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin 
+                            // To normalize-->  NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin 
                             // since oldMin and NewMin = 0 
                             // NewValue=OldValue*Newmax/oldMax 
                              document.getElementById("similarityThreshold").max = 100;
@@ -5192,26 +6021,25 @@ roiHeatmapSwitchClicked = () => {
                          }
                     }
 
-               // for(var k=0;k<eval(tileType+"TilesLabel").length;k++)
-               //    {
-               //        if(eval(tileType+"TilesLabel")[k].tilelabel=='P'){
-               //             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('fill', 'green');
-               //             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('stroke', 'green');
-               //         }
-               //         else
-               //         {
-               //             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('fill', 'red');
-               //             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('stroke', 'red');
-               //         }
-
-               //     }
+               //-- for(var k=0;k<eval(tileType+"TilesLabel").length;k++)
+               //--    {
+               //--        if(eval(tileType+"TilesLabel")[k].tilelabel=='P'){
+               //--             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('fill', 'green');
+               //--             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('stroke', 'green');
+               //--         }
+               //--         else
+               //--         {
+               //--             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('fill', 'red');
+               //--             d3.select("#"+eval(tileType+"TilesLabel")[k].id).style('stroke', 'red');
+               //--         }
+               //--     }
 
 
                } else {  // heatmap switch is ON
 
                      if(Opts.isHeatmapColorManual){
 
-                          //if($$("HeatmapBasedTech").getValue()=="Dist") { 
+                          //-- if($$("HeatmapBasedTech").getValue()=="Dist") { 
 
                                  let sortedFeaturesDistanceLen = sortedFeaturesDistance.length;  // for best practise
 
@@ -5224,14 +6052,14 @@ roiHeatmapSwitchClicked = () => {
                                        d3.select("#" + sortedFeaturesDistance[k].id).style('fill-opacity', getBoundaryFillOpacity());
                                  }
 
-                          //}
-                          //if($$("HeatmapBasedTech").getValue()=="FNN"){ 
-                          //       fnnPrediction(allTilesFeatures);
-                          //}                         
+                          //--}
+                          //--if($$("HeatmapBasedTech").getValue()=="FNN"){ 
+                          //--        fnnPrediction(allTilesFeatures);
+                          //--}                         
 
                      } else { // heatmap auto with scale function
                      
-                         // if($$("HeatmapBasedTech").getValue()=="Dist"){ 
+                         //-- if($$("HeatmapBasedTech").getValue()=="Dist"){ 
 
                                  let sortedFeaturesDistanceLen = sortedFeaturesDistance.length; // for best practise;
 
@@ -5241,47 +6069,88 @@ roiHeatmapSwitchClicked = () => {
 
                                  }
 
-                          //}
-                          //if($$("HeatmapBasedTech").getValue()=="FNN"){ 
-                          //       fnnPrediction(allTilesFeatures);
-                          //}                           
+                          //--}
+                          //--if($$("HeatmapBasedTech").getValue()=="FNN"){ 
+                          //--       fnnPrediction(allTilesFeatures);
+                          //--}                           
                      }   
 
                }  
                 
                freezeInput("nearestTileMatching", false);
                freezeInput("heatmap", false);
-           // end if(currentTileId!=''){
-          // } else {
-          //        if( !isSimilarRegionBtnEnabled() ) {  
-          //             freezeInput("heatmap", true);
+           //--  end if   currentTileId!='' 
+          //-- } else {
+          //--        if( !isSimilarRegionBtnEnabled() ) {  
+          //--             freezeInput("heatmap", true);
 
-          //             d3.selectAll(tileClass).style('fill', 'white');
-          //             d3.selectAll(tileClass).style('stroke', 'none');  
-          //             d3.selectAll(tileClass).style('fill-opacity', 0.1); 
-          //             d3.select("#"+sortedFeaturesDistance[0].id).style('fill', "white");
-          //             d3.select("#"+sortedFeaturesDistance[0].id).style('fill-opacity', 0.4);
-          //           }
+          //--             d3.selectAll(tileClass).style('fill', 'white');
+          //--             d3.selectAll(tileClass).style('stroke', 'none');  
+          //--             d3.selectAll(tileClass).style('fill-opacity', 0.1); 
+          //--             d3.select("#"+sortedFeaturesDistance[0].id).style('fill', "white");
+          //--             d3.select("#"+sortedFeaturesDistance[0].id).style('fill-opacity', 0.4);
+          //--           }
 
-          }
+          }  // end if   currentTileId!='' 
 
     }
 
 
-    // disableNearestTileSlider = (disableFlag) => {
-    //   document.getElementById("nearestTileMatching").disabled = disableFlag; 
-    // }
+    //-- disableNearestTileSlider = (disableFlag) => {
+    //--   document.getElementById("nearestTileMatching").disabled = disableFlag; 
+    //-- }
+
+
+  /**
+   * Get near tiles slider value
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {number}  e.g. "0"
+   */   
+
     getNearTilesSliderValue = () => {
        return document.getElementById("nearestTileMatching").value;
     }
+
+
+  /**
+   * Reset near tiles slider value and set it to equal the othe control of neareast tile matching.
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */      
 
     resetNearTilesSlider = () => {
         document.getElementById("nearestTileMatching").value = document.getElementById("nearestTileMatching").min ;
     }    
 
+  /**
+   * Event fires when mouse over nearest tile matching, show the value in tooltip
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
     nearestTileMatchingMouseOver = () => {
        updateInputTooltip("nearestTileMatchingTooltip", getNearTilesSliderValue); 
     }
+
+
+  /**
+   * Event fires when   nearest tile matching value changes
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */   
 
     nearestTileMatchingChanged = () => {
        updateInputTooltip("nearestTileMatchingTooltip", getNearTilesSliderValue); 
@@ -5295,30 +6164,72 @@ roiHeatmapSwitchClicked = () => {
     }
 
 
+  /**
+   * Get similarity slider value 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {number} e.g. "0"
+   */  
+
     getSimilaritySliderValue = () => {
        return document.getElementById("similarityThreshold").value;
     }
 
+
+  /**
+   * Reset similarity slider value to min value
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
     resetSimilaritySlider = () => {
         document.getElementById("similarityThreshold").value = document.getElementById("similarityThreshold").min ;
-    }    
-    // strokeWidthChanged = () => {
-    // updateInputTooltip("strokeWidthValueTooltip", getStrokeWidth);
-    //     d3.selectAll("polygon").style("stroke-width", getStrokeWidth());    
-    // } 
+    }  
 
-    // strokeWidthSliderMouseOver = () => {
-    //   updateInputTooltip("strokeWidthValueTooltip", getStrokeWidth);
-    //   //    document.getElementById("strokeOpacityValueTooltip").innerHTML = getStrokeOpacity();
-    // }
 
-    // disableSimilarityThresholdSlider = (disableFlag) => {
-    //   document.getElementById("similarityThreshold").disabled = disableFlag; 
-    // }
+    //-- strokeWidthChanged = () => {
+    //-- updateInputTooltip("strokeWidthValueTooltip", getStrokeWidth);
+    //--     d3.selectAll("polygon").style("stroke-width", getStrokeWidth());    
+    //-- } 
+
+    //-- strokeWidthSliderMouseOver = () => {
+    //--   updateInputTooltip("strokeWidthValueTooltip", getStrokeWidth);
+    //--   //    document.getElementById("strokeOpacityValueTooltip").innerHTML = getStrokeOpacity();
+    //-- }
+
+    //-- disableSimilarityThresholdSlider = (disableFlag) => {
+    //--   document.getElementById("similarityThreshold").disabled = disableFlag; 
+    //-- }
+
+  /**
+   * Event fires when mouse over similarity threshold control, show the value in tooltip
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
 
     similarityThresholdMouseOver = () => {
        updateInputTooltip("similarityThresholdTooltip", getSimilaritySliderValue);      
     }
+
+
+  /**
+   * Event fires when similarity threshold change
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
     similarityThresholdChanged = () => {
        updateInputTooltip("similarityThresholdTooltip", getSimilaritySliderValue);  
@@ -5333,24 +6244,56 @@ roiHeatmapSwitchClicked = () => {
 
 
   
-  // selectedFeature = (elem) => {
-
-  //      if(elem.checked) {
-  //       	// console.log(" elem checked", elem);
-  //         insertArrayElem(checkboxSelectedFeatures, elem.value, checkboxSelectedFeatures.length)
-  //      } else {
-  //       	// console.log(" elem unchecked", elem);
-  //         removeArrayElem(checkboxSelectedFeatures, elem.value);
-  //      }    	
-  // }
+  //-- selectedFeature = (elem) => {
+  //--      if(elem.checked) {
+  //--       	// console.log(" elem checked", elem);
+  //--         insertArrayElem(checkboxSelectedFeatures, elem.value, checkboxSelectedFeatures.length)
+  //--      } else {
+  //--       	// console.log(" elem unchecked", elem);
+  //--         removeArrayElem(checkboxSelectedFeatures, elem.value);
+  //--      }    	
+  //-- }
   
+
+
+  /**
+   * Check if features selected
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   */  
+
   isFeaturesSelected = () => {
        return checkboxSelectedFeatures.length ? true : false;
   }
 
+  /**
+   * Check if features element selected 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} elem
+   * @returns {bool}
+   */  
+
   isFeatureElemChecked = (elem) => {
        return document.getElementById(elem.id).innerHTML == "<i class=\"fa fa-check-square\">&nbsp;</i>" ? true : false;
   }
+
+  /**
+   * Event fire when feature checkbox clicked 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} elem   
+   */  
 
   onFeatureCheckboxClick =  (elem) => {
 
@@ -5363,6 +6306,15 @@ roiHeatmapSwitchClicked = () => {
        }      
   }
 
+  /**
+   * Event fire when current ROI title clicked
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
   onCurRoiTitleClick = () => {
      if( isTileSelected() ) {
        let roiObj = getSelectedTile();
@@ -5370,20 +6322,56 @@ roiHeatmapSwitchClicked = () => {
      }  
   }
 
+  /**
+   * For future use..
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
   goToStartRoi = () => {
     // for future use  
   }
 
+  /**
+   * For future use..
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
   prevRoi = () => {
     // for future use  
   }
+
+  /**
+   * For future use..
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
 
   nextRoi = () => {
     // for future use  
   }
 
 
-	
+
+  /**
+   * Initiat group features options
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
   initGrpFeatureOptions = () => { 
     let nodes="";
     let featureKeysCounter = 0;
@@ -5414,9 +6402,9 @@ roiHeatmapSwitchClicked = () => {
         if(!(idx % 3)) { // 3 checkboxs in every row
            nodes +=      '<tr>';            
         }
-        // nodes +=       '<tr>';  
+        //-- nodes +=       '<tr>';  
         nodes +=         '<th>';
-        // nodes +=           `<label class="inputcontainer"><p>${key}</p><input type="checkbox" name="${key}" value="${key}" onclick="selectedFeature(this)" checked ><span class="checkmarkrect"></span></label>`;
+        //-- nodes +=           `<label class="inputcontainer"><p>${key}</p><input type="checkbox" name="${key}" value="${key}" onclick="selectedFeature(this)" checked ><span class="checkmarkrect"></span></label>`;
         nodes +=            `<a href="javascript:void(0)" class="featuresCheckboxClass" id="${key}"  onclick="onFeatureCheckboxClick(this)">`;
         nodes +=              `<i class="fa fa-check-square">&nbsp</i></a>`;
         nodes +=         '</th>'; 
@@ -5462,24 +6450,24 @@ roiHeatmapSwitchClicked = () => {
     nodes +=         '</th>';  
     nodes +=       '</tr>';  
 
-    // nodes +=       '<tr>'         
-    // nodes +=         '<th colspan="2" style="padding-left:10%;text-align: left"><p> Navigate </p></th>'; 
-    // nodes +=         '<th colspan="1">';
-    // nodes +=             '<a href="javascript:void(0)" onclick="goToStartRoi()">';
-    // nodes +=               '<i class="fa fa-fast-backward"></i>';
-    // nodes +=              '</a>';
-    // nodes +=         '</th>';
-    // nodes +=         '<th colspan="1">';
-    // nodes +=             '<a href="javascript:void(0)" onclick="prevRoi()">';
-    // nodes +=               '<i class="fa fa-step-backward"></i>';
-    // nodes +=              '</a>';
-    // nodes +=         '</th>';
-    // nodes +=         '<th colspan="1">';
-    // nodes +=             '<a href="javascript:void(0)" onclick="nextRoi()">';
-    // nodes +=               '<i class="fa fa-step-forward"></i>';
-    // nodes +=              '</a>';
-    // nodes +=         '</th>';
-    // nodes +=       '</tr>'     
+    //-- nodes +=       '<tr>'         
+    //-- nodes +=         '<th colspan="2" style="padding-left:10%;text-align: left"><p> Navigate </p></th>'; 
+    //-- nodes +=         '<th colspan="1">';
+    //-- nodes +=             '<a href="javascript:void(0)" onclick="goToStartRoi()">';
+    //-- nodes +=               '<i class="fa fa-fast-backward"></i>';
+    //-- nodes +=              '</a>';
+    //-- nodes +=         '</th>';
+    //-- nodes +=         '<th colspan="1">';
+    //-- nodes +=             '<a href="javascript:void(0)" onclick="prevRoi()">';
+    //-- nodes +=               '<i class="fa fa-step-backward"></i>';
+    //-- nodes +=              '</a>';
+    //-- nodes +=         '</th>';
+    //-- nodes +=         '<th colspan="1">';
+    //-- nodes +=             '<a href="javascript:void(0)" onclick="nextRoi()">';
+    //-- nodes +=               '<i class="fa fa-step-forward"></i>';
+    //-- nodes +=              '</a>';
+    //-- nodes +=         '</th>';
+    //-- nodes +=       '</tr>'     
 
     nodes +=       '<tr>';
     nodes +=         '<th colspan="2" style="padding-left:10%;text-align: left"><p> Similar % </p></th>';      
@@ -5490,7 +6478,7 @@ roiHeatmapSwitchClicked = () => {
     nodes +=         '</th>';  
     nodes +=       '</tr>';
 
-    // nodes +=       '<tr style="border: 3px solid grey">&nbsp</tr>';        //<<<<<<<<<<<<<<<<<<<---
+    //-- nodes +=       '<tr style="border: 3px solid grey">&nbsp</tr>';        //<<<<<<<<<<<<<<<<<<<---
 
 
     nodes +=       '<tr>'         
@@ -5516,15 +6504,15 @@ roiHeatmapSwitchClicked = () => {
 /*------------------------------------------------------------------------------------------------------------------*/
 
 
-  // <input type="radio" id="layerOption" name="renderMode" value="layer">
-  // <label for="male">Layers</label><br>
-  // <input type="radio" id="blendOption" name="renderMode" value="blend">
-  // <label for="blend">Blend</label><br>
-  // <input type="radio" id="compositeOption" name="renderMode" value="composite">
-  // <label for="composite">Composite</label>
+// <input type="radio" id="layerOption" name="renderMode" value="layer">
+// <label for="male">Layers</label><br>
+// <input type="radio" id="blendOption" name="renderMode" value="blend">
+// <label for="blend">Blend</label><br>
+// <input type="radio" id="compositeOption" name="renderMode" value="composite">
+// <label for="composite">Composite</label>
 
 
-//   <label class="container">Layers
+// <label class="container">Layers
 //   <input type="radio" checked="checked" name="renderMode">
 //   <span class="checkmark"></span>
 // </label>
@@ -6185,7 +7173,7 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
         isOperationActiveOnScreen[operationType] = true;
    } 
 
-   // return e.g "Phenotypes" or "Tumor-Immune-Stromal"
+   // Check for current active operation e.g. Tumor-Immune-Stromal or Phenotypes
    getActiveOperationOnScreen = () => {
         let activeOperation = Object.keys(isOperationActiveOnScreen).filter( operation => isOperationActiveOnScreen[operation])[0];
         return activeOperation ? activeOperation : null;
@@ -6281,9 +7269,8 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                                    
                                    if(isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() )) {
 
-                                        showLoadingIcon().then( result => {
-
-                                                              triggerHint("Please wait while finding phenotypes ..."); 
+                                            enforcedTriggerHint("Please wait while finding phenotypes ...").then( result => { 
+                                                    showLoadingIcon().then( result => {
 
                                                               // if (! isGrpChannelsStatisticalDataAvailable() ) {
                                                               //     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
@@ -6330,9 +7317,14 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                                                                      // drawCellPhenotypesPieGradientChart(allValidPhenotypes);
                                                                 } 
                                                               })
+                                                    
+                                                    closeHint();
+                                                    
+                                                    }); 
 
-                                                         }); 
-                                                     
+                                                      
+
+                                            });         
                                                                                               
 
 
@@ -6354,9 +7346,7 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
 
 
 
-                              } else {
-                                 triggerHint(" Grid boundaries have not phenotypes, change boundaries to spx, ..");
-                              }
+                              } 
                               break;
                             }  
        case 'Tumor-Immune-Stromal':
@@ -8096,55 +9086,61 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
 
         if(jsonString_allTypeSamples.length < maxFileSize) {
 
-            try {
-            // Calculate dimReducer e.g. t-SNE for the sample
-            triggerHint("Please wait while calculating " + dimReducer + " for sample ");
+            //-- triggerHint("Please wait while calculating " + dimReducer + " for sample ");
+            enforcedTriggerHint("Please wait while calculating " + dimReducer + " for sample ").then( result => { 
 
-            allTypeSamples =  calculateDimReductionRandomSample(dimReducer, allTypeSamples, chnlNames, plotDim);
-            //--{ id: "spx-25603", KERATIN_norm: 157.28, CD45_norm: 3.74, ASMA_norm: 2.07, Max: "KERATIN_norm", Type: "Tumor", label: 25603, tsne_x: -28.05, tsne_y: -19.51 }
+                try {
+                    // Calculate dimReducer e.g. t-SNE for the sample
+                    
 
-            } catch(err) {
-                  let rowSize = JSON.stringify(allTypeSamples[0]).length;
-                  let RecommendNumRows = Math.round(500000/rowSize);
-                  triggerHint("Sample size is too large for passing to RestApi "  + 
-                              ",try to minimize total sample size to : " + RecommendNumRows, "info", 7000);  
-                  
-                  return 0;
-            }
+                    allTypeSamples =  calculateDimReductionRandomSample(dimReducer, allTypeSamples, chnlNames, plotDim);
+                    //--{ id: "spx-25603", KERATIN_norm: 157.28, CD45_norm: 3.74, ASMA_norm: 2.07, Max: "KERATIN_norm", Type: "Tumor", label: 25603, tsne_x: -28.05, tsne_y: -19.51 }
 
-            // File scatterData and plot
-            let scatterData = [];
-            //-- scatterData [{ name: Tumor, color: TumorColor, data: [[100, 161], [175, 122] .. ] }, {...}]  
- 
-            curCellTypes.forEach(type => {
-               let filterSampleByTypeAndReducerOut; 
+                    } catch(err) {
+                          let rowSize = JSON.stringify(allTypeSamples[0]).length;
+                          let RecommendNumRows = Math.round(500000/rowSize);
+                          triggerHint("Sample size is too large for passing to RestApi "  + 
+                                      ",try to minimize total sample size to : " + RecommendNumRows, "info", 7000);  
+                          
+                          return 0;
+                    }
 
-               if(plotDim == 3) {
-                    filterSampleByTypeAndReducerOut = allTypeSamples.filter(entry => entry.Type == type)
-                                                                 .map(entry => [entry[ dimReducer + "_x" ], entry[ dimReducer + "_y" ], entry[ dimReducer + "_z" ] ]);
-               } else {
-                 // is 2D
-                    filterSampleByTypeAndReducerOut = allTypeSamples.filter(entry => entry.Type == type)
-                                                                 .map(entry => [entry[ dimReducer + "_x" ], entry[ dimReducer + "_y" ]]);                 
-               }   
+                    // File scatterData and plot
+                    let scatterData = [];
+                    //-- scatterData [{ name: Tumor, color: TumorColor, data: [[100, 161], [175, 122] .. ] }, {...}]  
+         
+                    curCellTypes.forEach(type => {
+                       let filterSampleByTypeAndReducerOut; 
 
-               if(phenoBinaryName[type]) { // if there is naming for binary
-                  scatterData.push({name: phenoBinaryName[type], color: cellTypeColors[type], data: filterSampleByTypeAndReducerOut });
-               } else {
-                  scatterData.push({name: type, color: cellTypeColors[type], data: filterSampleByTypeAndReducerOut });
-               }                                         
+                       if(plotDim == 3) {
+                            filterSampleByTypeAndReducerOut = allTypeSamples.filter(entry => entry.Type == type)
+                                                                         .map(entry => [entry[ dimReducer + "_x" ], entry[ dimReducer + "_y" ], entry[ dimReducer + "_z" ] ]);
+                       } else {
+                         // is 2D
+                            filterSampleByTypeAndReducerOut = allTypeSamples.filter(entry => entry.Type == type)
+                                                                         .map(entry => [entry[ dimReducer + "_x" ], entry[ dimReducer + "_y" ]]);                 
+                       }   
+
+                       if(phenoBinaryName[type]) { // if there is naming for binary
+                          scatterData.push({name: phenoBinaryName[type], color: cellTypeColors[type], data: filterSampleByTypeAndReducerOut });
+                       } else {
+                          scatterData.push({name: type, color: cellTypeColors[type], data: filterSampleByTypeAndReducerOut });
+                       }                                         
+
+                    });
+
+                    if(plotDim == 3) {
+                        //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
+                        drawScatterChart3D(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , dimReducer + "-x", dimReducer + "-y", dimReducer + "-z"); 
+
+                    } else {
+                        //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
+                        drawScatterChart(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , dimReducer + "-x" + "( Sample #" + allTypeSamples.length+")", dimReducer + "-y"); 
+                    }  
+
+                closeHint();      
 
             });
-
-            if(plotDim == 3) {
-                //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
-                drawScatterChart3D(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , dimReducer + "-x", dimReducer + "-y", dimReducer + "-z"); 
-
-            } else {
-                //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
-                drawScatterChart(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , dimReducer + "-x" + "( Sample #" + allTypeSamples.length+")", dimReducer + "-y"); 
-            }    
-
 
         } else {
               let rowSize = JSON.stringify(allTypeSamples[0]).length;
@@ -11340,8 +12336,10 @@ menu3 = [{
       }
     }]
 
- 
-////////////////////////////////////
+////////////////////////////////////////////////////////////////// 
+//////////////////---------- Features ----------//////////////////
+//////////////////////////////////////////////////////////////////
+
 isFeaturesLoaded = () => {
    return allTilesFeatures.length ? true : false;
 }
@@ -11371,7 +12369,7 @@ zoomToTile = (obj) => {
     // console.log(obj)
     var obj_bbox = find_bbox(obj);
     let topFrame = viewer.world.getItemAt(0);
-    // var zoomArea = viewer.viewport.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);
+    //-- var zoomArea = viewer.viewport.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);
     var zoomArea = topFrame.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);    
     viewer.viewport.fitBounds(zoomArea);
 }
@@ -11415,6 +12413,7 @@ findTile = () => {
 
   
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////
 initBoundariesFeatures = () => {
       let featuresLoadedFlag = false;
@@ -11452,16 +12451,16 @@ initBoundariesFeatures = () => {
 
 
   // Get the class of selected boundary type
-  getClassType = () =>{
+  getClassType = () => {
       return isSuperPixel() ? ".spx" : ".grid";
   }
 
   // Get tile type 
-  getTileType = () =>{
+  getTileType = () => {
       return isSuperPixel() ? "SPX" : "Grid";
   }
 
-  getTileIdPrefix = () =>{
+  getTileIdPrefix = () => {
     return isSuperPixel() ? "spx-" : "grid-";
   }
 

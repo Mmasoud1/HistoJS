@@ -538,7 +538,7 @@
 
        setTimeout(function() {
             defer.resolve(); // When this fires, the code in a().then(/..../); is executed.
-       }, 300);
+       }, 1000);
 
        return defer;        
        
@@ -1938,7 +1938,7 @@
 //--------DSA functions ---------------//  
 
 getCollectionsList = (hostApi) => {
-  var hostCollectionsList = [];
+  let hostCollectionsList = [];
   webix.ajax().sync().get(hostApi + "/collection", (result) => {
     hostCollectionsList = JSON.parse(result)
   })
@@ -1947,7 +1947,7 @@ getCollectionsList = (hostApi) => {
 
 
 getFoldersList = (hostApi, parentId, parentType="collection") => {
-  var foldersList = [];
+  let foldersList = [];
   webix.ajax().sync().get(hostApi + "/folder?parentType=" + parentType + "&parentId=" + parentId + "&sort=lowerName&sortdir=1", (result) => {
     foldersList = JSON.parse(result)
   })
@@ -1957,7 +1957,7 @@ getFoldersList = (hostApi, parentId, parentType="collection") => {
 
 
 getFolderDetails = (hostApi, folderId) => {
-  var folderDetails = [];
+  let folderDetails = [];
   webix.ajax().sync().get(hostApi + "/folder/" + folderId+"/details", (result) => {
     folderDetails = JSON.parse(result)
   })
@@ -1967,7 +1967,7 @@ getFolderDetails = (hostApi, folderId) => {
 
 
 getFolderItemsList = (hostApi, folderId) => {
-  var itemsList = [];
+  let itemsList = [];
   webix.ajax().sync().get(hostApi + "/item?folderId=" + folderId + "&sort=lowerName&sortdir=1", (result) => {
     itemsList = JSON.parse(result)
   })
@@ -1976,7 +1976,7 @@ getFolderItemsList = (hostApi, folderId) => {
 
 
 getItemObject = (hostApi, itemId) => {
-  var item = [];
+  let item = [];
   webix.ajax().sync().get(hostApi + "/item/" + itemId, (result) => {
     item = JSON.parse(result)
   })
@@ -1984,7 +1984,7 @@ getItemObject = (hostApi, itemId) => {
 }
 
 getTileSourceInfo = (hostApi, itemId, type = "ome") => {
-    var tileInfo=[];
+    let tileInfo=[];
     webix.ajax().sync().get(hostApi + "/item/" + itemId + "/tiles", (data) => {
       tileInfo = JSON.parse(data);
       tileInfo['maxLevel'] = tileInfo['levels'] - 1;
@@ -1999,7 +1999,7 @@ getTileSourceInfo = (hostApi, itemId, type = "ome") => {
   }
 
 getTileSource = (hostApi, itemId) => {
-    var tile=[];
+    let tile=[];
     webix.ajax().sync().get(hostApi + "/item/" + itemId + "/tiles", (data) => {
       tile = JSON.parse(data);
       tile['maxLevel'] = tile['levels'] - 1;
