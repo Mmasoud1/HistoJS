@@ -1,15 +1,20 @@
 /*
 =========================================================
-* HistoJS - v1.0.0 - ((------Testing-------))
+*             ((------Testing-------))
 =========================================================
-* Description:  A user interface for whole slide image channel design and analysis. 
-*               It is based on DSA as backbone server 
-*                                                
+* HistoJS  
+=========================================================
+* @see {@link  https://github.com/Mmasoud1/HistoJS}
+* @description   A user interface for multiplexed image channels design and analysis.
+*                It is based on DSA as backbone server.
+*
+* @version 1.0.0
+* @license MIT  
 *
 * @author Mohamed Masoud <mmasoud2@outlook.com>
 =========================================================
 =========================================================
-         Main Design Phase Functions Unit Test (Mocha)
+     Main Design Phase Functions Unit Test (Mocha)
 =========================================================*/ 
 
 

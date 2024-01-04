@@ -1,12 +1,14 @@
 /*!
 =========================================================
-* HistoJS Demo - v1.0.0
+* HistoJS Demo 
 =========================================================
 
-* Github:  https://github.com/Mmasoud1
-* Description:  A user interface for whole slide image channel design and analysis. 
-*               It is based on DSA as backbone server.
-* 
+* @see {@link  https://github.com/Mmasoud1/HistoJS}
+* @description   A user interface for multiplexed image channels design and analysis.
+*                It is based on DSA as backbone server.
+*
+* @version 1.0.0
+* @license MIT  
 *
 * @author Mohamed Masoud <mmasoud2@outlook.com>
 
@@ -6806,7 +6808,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @memberof HistoJS
    * @since 1.0.0
    * @version 1.0.0
-   * @param {string} tileId
+   * @param {string} tileId e.g. "spx-59944"
    */  
 
    removeTile = (tileId) => {
@@ -6814,30 +6816,30 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    }  
   
 //////////////////////////////////////////////////////////////////////////////////////
-//-- function loadTilesLabel(){
-//--     let tileType =  "SPX";
-//--     let tileSize =   64;
-//--     let saveFileName = slideName + "." + currentIndex + "." + tileType + "." + tileSize.toString(); 
+    //-- function loadTilesLabel(){
+    //--     let tileType =  "SPX";
+    //--     let tileSize =   64;
+    //--     let saveFileName = slideName + "." + currentIndex + "." + tileType + "." + tileSize.toString(); 
 
-//--     let savedTileLabels = getFeatures(saveFileName);
-//--     if((savedTileLabels == null)||(savedTileLabels == "Notexist")){
-//--        webix.message("no saved labels");
-//--     }else{
-//--          if(tileType == "SPX")
-//--             SPXTilesLabel = JSON.parse(savedTileLabels);
-//--          webix.message("labels Loaded"); 
-//--     }
-//--   }
+    //--     let savedTileLabels = getFeatures(saveFileName);
+    //--     if((savedTileLabels == null)||(savedTileLabels == "Notexist")){
+    //--        webix.message("no saved labels");
+    //--     }else{
+    //--          if(tileType == "SPX")
+    //--             SPXTilesLabel = JSON.parse(savedTileLabels);
+    //--          webix.message("labels Loaded"); 
+    //--     }
+    //--   }
 
 ////////////////////////// Features functions ////////////////////////////////////////
 
-//-- getFeatures = (fileName, featuresFolder) => {            <<<<<<<<<<<<<-----------
-//--     let results = [];
-//--     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readFeatures","filename=" + fileName + "&outfolder=" +featuresFolder, response => {
-//--        results = response;
-//--      });
-//--     return results;
-//-- }
+    //-- getFeatures = (fileName, featuresFolder) => {            <<<<<<<<<<<<<-----------
+    //--     let results = [];
+    //--     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readFeatures","filename=" + fileName + "&outfolder=" +featuresFolder, response => {
+    //--        results = response;
+    //--      });
+    //--     return results;
+    //-- }
 
   /**
    * Save features to local file
@@ -6853,22 +6855,22 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @param {number} lastChunkFlag            
    */     
 
-saveFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
-    webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
-          "name=" + filename + "&Dir=" + Directory + "&featuresDicData=" + featuresDic + "&lastChunkFlag=" + lastChunkFlag + "&mode=" + writeMode,
-           function(response) {
-              console.log(response)
-           });
-  }   
+    saveFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
+        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
+              "name=" + filename + "&Dir=" + Directory + "&featuresDicData=" + featuresDic + "&lastChunkFlag=" + lastChunkFlag + "&mode=" + writeMode,
+               function(response) {
+                  console.log(response)
+               });
+      }   
 
 
-//-- calculateFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
-//--     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
-//--           "name=" + filename + "&Dir=" + Directory + "&featuresDicData=" + featuresDic + "&lastChunkFlag=" + lastChunkFlag + "&mode=" + writeMode,
-//--            function(response) {
-//--               console.log(response)
-//--            });
-//-- }   
+    //-- calculateFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag = 0) => {
+    //--     webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +"/saveFeatures",
+    //--           "name=" + filename + "&Dir=" + Directory + "&featuresDicData=" + featuresDic + "&lastChunkFlag=" + lastChunkFlag + "&mode=" + writeMode,
+    //--            function(response) {
+    //--               console.log(response)
+    //--            });
+    //-- }   
 
 
   /**
@@ -6878,330 +6880,498 @@ saveFeatures = (filename, Directory, featuresDic, writeMode = "w", lastChunkFlag
    * @memberof HistoJS
    * @since 1.0.0
    * @version 1.0.0
-   * @param {Object} obj
+   * @param {object | string} obj(1st example) or string(2nd example) e.g. "3073,3829 3077,3833 ... 3070,3829"
    * @param {string} flag
-   * @returns {string} box
+   * @returns {Array} box
+   * @example
+
+   * getSelectedTile()                          
+   * => object <polygon id="spx-59944" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" ...">  
+   *                        
+   * bbox = find_bbox(getSelectedTile())
+   * bbox.height
+   * =>  24 
+   * bbox.top
+   * => 6702
+   * bbox.width
+   * =>  26 
+   * bbox.left
+   * => 10807
+   *
+   * //////////////////Example-2////////////////
+   *  spxBoundaries= "3073,3829 3077,3833 3077,3839 3075,3841 3075,3843 3070,3847 3068,3846" +
+                          " 3065,3848 3062,3848 3060,3842 3062,3838 3062,3836 3064,3834 3065,3831 3070,3829"
+   * bbox = find_bbox(spxBoundaries, "boundaryString")
+   *
+   * bbox.height
+   * =>  19 
+   * bbox.top
+   * => 3829
+   * bbox.width
+   * =>  17 
+   * bbox.left
+   * => 3060
+   */   
+
+    find_bbox = (obj, flag = "SPX/Grid") => {
+           let xpx = [];
+           let ypx = [];
+           let box = [];
+
+          if(flag == "SPX/Grid") {
+             obj.attributes.points.nodeValue.split(" ").forEach(function(ptData, i) {
+               xpx.push(parseInt(ptData.split(",")[0]));
+               ypx.push(parseInt(ptData.split(",")[1]));
+             })
+          }
+
+          if(flag == "freeDrawing") {
+            obj.points.forEach(function(ptData, i) {
+              xpx.push(ptData[0]);
+              ypx.push(ptData[1]);
+            })
+          }
+
+          if(flag == "boundaryString") { // for the case of draw cells bounding box
+             obj.split(" ").forEach(function(ptData, i) {
+                 xpx.push(parseInt(ptData.split(",")[0]));
+                 ypx.push(parseInt(ptData.split(",")[1]));
+             }) 
+          }        
+       
+          xpx_sorted = xpx.sort();
+          if(xpx_sorted[0] > xpx_sorted[xpx.length-1]) {
+             xpx_sorted.reverse();
+          }
+
+          ypx_sorted = ypx.sort();
+          if(ypx_sorted[0] > ypx_sorted[ypx.length-1]) {
+             ypx_sorted.reverse();
+          }
+
+          xpx_min = xpx_sorted[0];
+          xpx_max = xpx_sorted[xpx.length-1];
+          ypx_min = ypx_sorted[0];
+          ypx_max = ypx_sorted[ypx.length-1];
+          xWidth = xpx_max-xpx_min;
+          yHeight = ypx_max-ypx_min;
+
+          box['left'] = xpx_min;
+          box['top'] = ypx_min;
+          box['width'] = xWidth;
+          box['height'] = yHeight;
+
+          return box
+    }
+
+ 
+  /**
+   * Return classification of each cell  as Tumor, Immune, Stromal or others
+   * CHNL PLOTS Tumor-Immune-Stromal selection
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Array} chnlNameType:[{"channel_name":"CD45","channel_type":"Immune"},{"channel_name":"KERATIN","channel_type":"Tumor"}, ... ] 
+   * @param {string} clusterMethod  e.g. "Threshold" or "K-Means"
+   * @param {string} othersTypeThreshold  e.g. "mean" or "max"
+   * @param {Array} 
+   * @example
+   *
+   * let chnlNameType = [{"channel_name": "CD45", "channel_type": "Immune"},
+                         {"channel_name": "KERATIN", "channel_type": "Tumor"}, 
+                         {"channel_name": "ASMA", "channel_type": "Stromal" }] 
+   *
+   * getCellsClassification(chnlNameType, "Threshold", "mean")
+   *
+   * => Array(105425) [ { id: "spx-1", KERATIN_norm: 1.75, CD45_norm: 10.92, ASMA_norm: 0, Max: "CD45_norm", Type: "Others", label: 1 }, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]           
+   */ 
+
+    getCellsClassification = (chnlNameType, clusterMethod, othersTypeThreshold) => {  
+           let groupData = []; 
+           // e.g. "Structural Components__markers_morphology.csv" 
+           let markersMorphFileName =  getGrpMarkersMorphFileName();
+           let grpFeaturesFolder = getGrpFeaturesLocalPath();
+
+           let allCellClassesResoponse = [];
+
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
+            "/classifyCellsWithMaxIntensity", "&chnl_name_type=" + JSON.stringify(chnlNameType) +
+            "&features_folder=" + grpFeaturesFolder + "&markers_morph_file=" + markersMorphFileName +
+            //-- "&cell_undefined_threshold_value=" + Opts.cellUndefinedThresholdValue + 
+            "&cell_undefined_threshold_value=" + othersTypeThreshold +         
+            //-- "&clusterMethod=" + clusterMethod +
+            "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize , function(response) {
+
+                 allCellClassesResoponse = JSON.parse(response);
+          });
+
+         return allCellClassesResoponse;
+    }
+
+    //-- getRandomSampleTSNE = (sample, chnlNameType, tsneDim) => {  // tsneDim is 2 dim or 3 dim 
+    //--       let sampleTSNE = [];
+    //--        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
+    //--         "/calculateRandomSampleTSNE", "&sample=" + JSON.stringify(sample) + 
+    //--         "&chnl_name_type=" + JSON.stringify(chnlNameType) + 
+    //--         "&tsne_dim=" + tsneDim , function(response) {
+    //--              sampleTSNE = JSON.parse(response);
+    //--       });
+    //--      return sampleTSNE;
+    //-- }
+
+
+  /**
+   * calculate Dim Reduction random sample
+   * CHNL PLOTS  
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} dimReducer : t-SNE, PCA, LDA or UMAP
+   * @param {Array} randomSample  e.g. Array(600) [{ Type: "Tumor", ASMA_norm: 2.58, CD45_norm: 6.93, KERATIN_norm: 81.24, label: 87224, id: "spx-87224", eccentricity: 0.92, … }, ..]
+   * @param {Array} chnlNames  e.g.   [{"channel_name": "CD45"}, {"channel_name": "KERATIN"},..]
+   * @param {number} plotDim  e.g. 2 for 2D, and 3 for 3D 
+   * @returns {Array} array of objects
    * @example
    *
    *
+   * calculateDimReductionRandomSample("t-SNE", randomSample, chnlNames, 2)
    *
-   * => 
-   */   
-
-find_bbox = (obj, flag = "SPX/Grid") => {
-       let xpx = [];
-       let ypx = [];
-       let box = [];
-
-      if(flag == "SPX/Grid") {
-         obj.attributes.points.nodeValue.split(" ").forEach(function(ptData, i) {
-           xpx.push(parseInt(ptData.split(",")[0]));
-           ypx.push(parseInt(ptData.split(",")[1]));
-         })
-      }
-
-      if(flag == "freeDrawing") {
-        obj.points.forEach(function(ptData, i) {
-          xpx.push(ptData[0]);
-          ypx.push(ptData[1]);
-        })
-      }
-
-      if(flag == "boundaryString") { // for the case of draw cells bounding box
-         obj.split(" ").forEach(function(ptData, i) {
-             xpx.push(parseInt(ptData.split(",")[0]));
-             ypx.push(parseInt(ptData.split(",")[1]));
-         }) 
-      }        
-   
-      xpx_sorted = xpx.sort();
-      if(xpx_sorted[0] > xpx_sorted[xpx.length-1]) {
-         xpx_sorted.reverse();
-      }
-
-      ypx_sorted = ypx.sort();
-      if(ypx_sorted[0] > ypx_sorted[ypx.length-1]) {
-         ypx_sorted.reverse();
-      }
-
-      xpx_min = xpx_sorted[0];
-      xpx_max = xpx_sorted[xpx.length-1];
-      ypx_min = ypx_sorted[0];
-      ypx_max = ypx_sorted[ypx.length-1];
-      xWidth = xpx_max-xpx_min;
-      yHeight = ypx_max-ypx_min;
-
-      box['left'] = xpx_min;
-      box['top'] = ypx_min;
-      box['width'] = xWidth;
-      box['height'] = yHeight;
-
-      return box
-}
-
-
-//chnlNameType = [{"channel_name": "CD45", "channel_type" : "Immune"}, {"channel_name": "KERATIN", "channel_type" : "Tumor"}, 
-//                {"channel_name": "ASMA", "channel_type" : "Stroma"}]
-getCellsClassification = (chnlNameType, clusterMethod, othersTypeThreshold) => {  
-       let groupData = []; 
-       // e.g. "Structural Components__markers_morphology.csv" 
-       let markersMorphFileName =  getGrpMarkersMorphFileName();
-       let grpFeaturesFolder = getGrpFeaturesLocalPath();
-
-       let allCellClassesResoponse = [];
-
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
-        "/classifyCellsWithMaxIntensity", "&chnl_name_type=" + JSON.stringify(chnlNameType) +
-        "&features_folder=" + grpFeaturesFolder + "&markers_morph_file=" + markersMorphFileName +
-        //-- "&cell_undefined_threshold_value=" + Opts.cellUndefinedThresholdValue + 
-        "&cell_undefined_threshold_value=" + othersTypeThreshold +         
-        //-- "&clusterMethod=" + clusterMethod +
-        "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize , function(response) {
-
-             allCellClassesResoponse = JSON.parse(response);
-      });
-
-     return allCellClassesResoponse;
-}
-
-
-
-
-// getRandomSampleTSNE = (sample, chnlNameType, tsneDim) => {  // tsneDim is 2 dim or 3 dim 
-
-//       let sampleTSNE = [];
-
-//        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
-//         "/calculateRandomSampleTSNE", "&sample=" + JSON.stringify(sample) + 
-//         "&chnl_name_type=" + JSON.stringify(chnlNameType) + 
-//         "&tsne_dim=" + tsneDim , function(response) {
-//              sampleTSNE = JSON.parse(response);
-//       });
-
-//      return sampleTSNE;
-// }
-
-
-
-
-// sample  = [{ id: "spx-1", KERATIN_norm: 1.91, CD45_norm: 9.20, ASMA_norm: 1.12, Max: "CD45_norm", Type: "Others", label: 1}, ..]
-// chnlNameType = [{"channel_name": "CD45"}, {"channel_name": "KERATIN"},..]
-// e.g. dimReducer : t-SNE, PCA, LDA or UMAP
-// plotDim e.g. 2D/3D
-calculateDimReductionRandomSample = (dimReducer, randomSample, chnlNames, plotDim) => {  // tsneDim is 2 dim or 3 dim 
-
-      let dimReducerResult = [];
-
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
-        "/calculateDimReductionRandomSample", "&dimReducer=" + dimReducer + 
-        "&sample=" + JSON.stringify(randomSample) + 
-        "&chnl_names=" + JSON.stringify(chnlNames) + 
-        "&plotDim=" + plotDim , function(response) {
-             dimReducerResult = JSON.parse(response);
-      });
-
-     return dimReducerResult;
-}
-
-// Get Dapi cells statistical morphological data e.g. area,  solidity,  extent etc..
-getDapiCellsMorphStatData = () => { 
-
-       let dapiMorphStatFileName = getDapiMorphStatFileName();
-       let itemFeaturesFolder = getItemFeaturesLocalPath();
-
-       let boundariesFileName = getItemBoundariesFileName();
-       let boundariesFolder = getBoundariesLocalPath();   
-
-       let morphFeatureNamesArr = cellMorphFeatureList.map(entry => {
-                            return entry.morphFeature
-                        })
-
-       let allMorphDataResoponse = [];
-     
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createDapiCellsMorphStatData",
-        "&dapi_morph_stats_file=" + dapiMorphStatFileName + "&item_features_folder=" + itemFeaturesFolder +
-        "&morph_feature_names_arr=" + JSON.stringify(morphFeatureNamesArr) +
-        "&boundaries_file=" + boundariesFileName+ "&boundaries_folder=" + boundariesFolder, function(response) {
-
-             allMorphDataResoponse = JSON.parse(response);
-      });
-
-     return allMorphDataResoponse;
-}
-
-// Check whether doing normalize(image, 1,99.8, axis=axis_norm) is feasible and will not return with memory issue
-//-- To avoid MemoryError: Unable to allocate 4.61 GiB for an array with shape (40320, 30720) and data type float32
-isChnlImgDataNormFeasible = () => {
-      //-- check for free memory first to avoid out or memory problem with image normalize function
-      let memoryData  = checkSysMemoryInGB();
-      //-- memoryData e.g.:  {'totalMemory': 15.540470123291016, 'availableMemory': 1.372650146484375}
-      //-- memoryData are in Gigabytes
-      let floatSize = 32; // normalize data needs 64 float
-      let totalImageFrameSizeInGB = currentItemInfo.width * currentItemInfo.height * floatSize/(1024*1024*1024);
-
-      let safetyFactor  = 1; // double needed free memory
- 
-      return  (safetyFactor * totalImageFrameSizeInGB) >  memoryData['availableMemory'] ? false : true;
-}
-
-//Check for system total and free memory in Giga bytes
-checkSysMemoryInGB = () => { 
-       let memoryData;
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/checkMemoryInGB", function(response) {
-             memoryData = JSON.parse(response);
-      });
-      return memoryData;
-}       
-
-
-// In case Image Normalization during getAllSpxTilesFeature failed, try bypass it
-bypassImageNormalization = () => {
-   Opts.isChannelNormalizeRequired = ""; //-- "" is equv to false
-   let metaKey = "settings";
-   let metaValue = {"imageNorm": false };
-   setItemMetadataKeyValue(metaKey, metaValue);
-   createLoadFeatures();
-}
-
-getAllSpxTilesFeature = () => { 
-
-       let groupData = []; 
-       let curGroup = getSelectedGroup();
-       let numOfFrames = curGroup.Channels.length;
-       let apiUrl = getHostApi();
-       let apiKey = getApiKey(); 
-       let itemId = getSelectedItemId();
- 
-       // e.g. "Structural Components__markers_morphology.csv" 
-       let markersMorphFileName =  getGrpMarkersMorphFileName();
-       let featuresFileName = getGrpFeaturesFileName();
-       let featuresFolder = getGrpFeaturesLocalPath();
-
-       // For boxplot data file and location
-       //-- let boxplotFileName = getGrpBoxplotFileName();
-       //-- let boxplotFolder = getGrpBoxplotLocalPath();
-
-       let boundariesFileName = getItemBoundariesFileName();
-       let boundariesFolder = getBoundariesLocalPath();       
-
-       let allFeaturesResoponse = [];
-
-       //-- if(Opts.isChannelNormalizeRequired) { 
-       //--    //-- if true check for free memory first to avoid out or memory problem with image normalize function
-       //--    Opts.isChannelNormalizeRequired = isChnlImgDataNormFeasible();
-       //--    if(!Opts.isChannelNormalizeRequired) {
-       //--        triggerHint(" Channels normalization Required flag is set to false due to insufficient free memory")
-       //--    } 
-       //-- }
-       
-
-       for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
-          groupData.push({ "OSDLayer": k, "frameName": curGroup.Channels[k], "frameNum": curGroup.Numbers[k]});
-       }
-     
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createAllSpxTilesFeature","baseUrl=" + apiUrl + 
-        "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) +
-        "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + "&markers_morph_file=" + markersMorphFileName +
-        "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize +  
-        "&isChannelNormalizeRequired=" + Opts.isChannelNormalizeRequired + 
-        //-- "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
-        "&boundaries_file=" + boundariesFileName+ "&boundaries_folder=" + boundariesFolder, function(response) {
-
-             allFeaturesResoponse = JSON.parse(response);
-      });
-
-     return allFeaturesResoponse;
-
-}
-
-getAllGridTilesFeature = () => { 
-       let groupData = []; 
-       let curGroup = getSelectedGroup();
-       let numOfFrames = curGroup.Channels.length;
-       let apiUrl = getHostApi();
-       let apiKey = getApiKey(); 
-       let itemId = getSelectedItemId();
-
-       let featuresFileName = getGrpFeaturesFileName();
-       let featuresFolder = getGrpFeaturesLocalPath();
-
-       // For boxplot data file and location
-       let boxplotFileName = getGrpBoxplotFileName();
-       let boxplotFolder = getGrpBoxplotLocalPath();
-  
-       let gridSize = getGridSize();
-
-
-       let allFeaturesResoponse = [];
-       
-
-       for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
-          groupData.push({ "OSDLayer": k, "frameName": curGroup.Channels[k], "frameNum": curGroup.Numbers[k]});
-       }
-     
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createAllGridTilesFeature","baseUrl=" + apiUrl + 
-        "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) +
-        "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + 
-        //-- "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
-        "&gridSize=" + gridSize, function(response) {
-
-             allFeaturesResoponse = JSON.parse(response);
-      });
-
-     return allFeaturesResoponse;
-
-}
-
-getTileProp = (left_value, top_value, width_value, height_value) => { // Need only the top tile to find the grids cover all stack
-     let tileProbData = []; 
-     let curGroup = getSelectedGroup();
-     let numOfFrames = curGroup.Channels.length;
-     let apiUrl = getHostApi();
-     let apiKey = getApiKey(); 
-     let itemId = getSelectedItemId();
-     
-
-     for(let k = 0; k < numOfFrames; k++) {  //>>>>>>>>>>>   Top frame has k = numOfFrames-1   <<<<<<<<<<<<<<
-          let frameNum = curGroup.Numbers[k];
-   
-           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + 
-            "/getTileProp","left=" + left_value + "&top=" + top_value + "&width=" + width_value + "&height=" + height_value +
-            "&baseUrl=" + apiUrl + "&apiKey=" + apiKey + "&itemId=" + itemId + "&frameNum=" + frameNum , function(response) {
-
-                 let hist = JSON.parse(response);
-                 // console.log(" hist :", hist)
-                 let temp = {};
-                 temp["OSDLayer"] = k;
-                 for(let n = 0; n < featureKeys.length; n++) {
-                   if ( hist.hasOwnProperty(featureKeys[n]) ) {
-                      // Alternatively:  
-                      //--  var keyIndex=  Object.keys(hist).indexOf( featureKeys[n] )   
-                      //--  var keyName =  Object.keys(hist)[  keyIndex ]  
-                      //--  var keyValue = hist[ keyName ][1] 
-
-                      //OR simply
-                       temp[featureKeys[n]] = hist[featureKeys[n]];
-                      }
-                   //-- temp[featureKeys[0]] = hist['mean'][1];
-                   //-- temp[featureKeys[1]] = hist['max'][1];
-                   //-- temp[featureKeys[2]] = hist['stdev'][1];
-                 }
-
-                 temp["Frame"] = curGroup.Channels[k];
-                 tileProbData.push(temp)
-             //--tileProbData.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
-                  
+   * => Array(...) [{id:"spx-25603", tsne_x: -28.05, tsne_y: -19.51,  KERATIN_norm: 157.28, CD45_norm: 3.74, ASMA_norm: 2.07, Max: "KERATIN_norm", Type: "Tumor", label: 25603 }, {…}, … ]           
+   */ 
+
+    calculateDimReductionRandomSample = (dimReducer, randomSample, chnlNames, plotDim) => {  // tsneDim is 2 dim or 3 dim 
+
+          let dimReducerResult = [];
+
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
+            "/calculateDimReductionRandomSample", "&dimReducer=" + dimReducer + 
+            "&sample=" + JSON.stringify(randomSample) + 
+            "&chnl_names=" + JSON.stringify(chnlNames) + 
+            "&plotDim=" + plotDim , function(response) {
+                 dimReducerResult = JSON.parse(response);
           });
-     }
-    return tileProbData;
-}
-    // helpful when click cancel buttons
+
+         return dimReducerResult;
+    }
+
+  /**
+   * Get Dapi cells statistical morphological data e.g. area,  solidity,  extent etc..
+   * CHNL PLOTS  
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {object}
+   * @example
+   *
+   * getDapiCellsMorphStatData()
+   *
+   * => Object { area: { mean: 389.66, std: 182.75, min: 132.5, … }, eccentricity: {…}, extent: {…}, orientation: {…}, solidity: {…}, major_axis_length: {…}, minor_axis_length: {…} }
+   */ 
+
+    getDapiCellsMorphStatData = () => { 
+
+           let dapiMorphStatFileName = getDapiMorphStatFileName();
+           let itemFeaturesFolder = getItemFeaturesLocalPath();
+
+           let boundariesFileName = getItemBoundariesFileName();
+           let boundariesFolder = getBoundariesLocalPath();   
+
+           let morphFeatureNamesArr = cellMorphFeatureList.map(entry => {
+                                return entry.morphFeature
+                            })
+
+           let allMorphDataResoponse = [];
+         
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createDapiCellsMorphStatData",
+            "&dapi_morph_stats_file=" + dapiMorphStatFileName + "&item_features_folder=" + itemFeaturesFolder +
+            "&morph_feature_names_arr=" + JSON.stringify(morphFeatureNamesArr) +
+            "&boundaries_file=" + boundariesFileName+ "&boundaries_folder=" + boundariesFolder, function(response) {
+
+                 allMorphDataResoponse = JSON.parse(response);
+          });
+
+         return allMorphDataResoponse;
+    }
+
+
+  /**
+   * Check whether doing normalize(image, 1,99.8, axis=axis_norm) is feasible and will not return with memory issue
+   * To avoid MemoryError: Unable to allocate 4.61 GiB for an array with shape (40320, 30720) and data type float32
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool}
+   * @example
+   *
+   * isChnlImgDataNormFeasible()
+   *
+   * => true
+   */ 
+
+    isChnlImgDataNormFeasible = () => {
+          //-- check for free memory first to avoid out or memory problem with image normalize function
+          let memoryData  = checkSysMemoryInGB();
+          //-- memoryData e.g.:  {'totalMemory': 15.540470123291016, 'availableMemory': 1.372650146484375}
+          //-- memoryData are in Gigabytes
+          let floatSize = 32; // normalize data needs 64 float
+          let totalImageFrameSizeInGB = currentItemInfo.width * currentItemInfo.height * floatSize/(1024*1024*1024);
+
+          let safetyFactor  = 1; // double needed free memory
+     
+          return  (safetyFactor * totalImageFrameSizeInGB) >  memoryData['availableMemory'] ? false : true;
+    }
+
+    
+  /**
+   * Check for system total and free memory in Giga bytes
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {Object}
+   * @example
+   *
+   * checkSysMemoryInGB()
+   *
+   * => Object {'totalMemory': 15.540470123291016, 'availableMemory': 1.372650146484375}
+   */  
+
+    checkSysMemoryInGB = () => { 
+           let memoryData;
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/checkMemoryInGB", function(response) {
+                 memoryData = JSON.parse(response);
+          });
+          return memoryData;
+    }       
+
+     
+  /**
+   * In case Image Normalization during getAllSpxTilesFeature failed, try bypass it
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */
+
+    bypassImageNormalization = () => {
+       Opts.isChannelNormalizeRequired = ""; //-- "" is equv to false
+       let metaKey = "settings";
+       let metaValue = {"imageNorm": false };
+       setItemMetadataKeyValue(metaKey, metaValue);
+       createLoadFeatures();
+    }
+
+  /**
+   * Get cell featurs
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {Array} array of objects
+   * @example
+   *
+   * allTilesFeatures = getAllSpxTilesFeature()
+   * allTilesFeatures
+   * => Array(105425) [ { label: 1, features: (5) […], area: 348.5, … }, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]
+   * 
+   * allTilesFeatures[0]
+   * => { label: 1, features: (5) […], area: 348.5, eccentricity: 0.51, orientation: 71.8, 
+          perimeter: 69.19, extent: 0.66, solidity: 0.98, major_axis_length: 23.03, minor_axis_length: 19.76, … }
+   *
+   * allTilesFeatures[0].features
+   * => Array(5) [{ Frame: "DAPI", OSDLayer: 0, max: 41, … }, { Frame: "KERATIN", OSDLayer: 1, max: 3, … }, ...]
+   */  
+
+    getAllSpxTilesFeature = () => { 
+
+           let groupData = []; 
+           let curGroup = getSelectedGroup();
+           let numOfFrames = curGroup.Channels.length;
+           let apiUrl = getHostApi();
+           let apiKey = getApiKey(); 
+           let itemId = getSelectedItemId();
+     
+           // e.g. "Structural Components__markers_morphology.csv" 
+           let markersMorphFileName =  getGrpMarkersMorphFileName();
+           let featuresFileName = getGrpFeaturesFileName();
+           let featuresFolder = getGrpFeaturesLocalPath();
+
+           // For boxplot data file and location
+           //-- let boxplotFileName = getGrpBoxplotFileName();
+           //-- let boxplotFolder = getGrpBoxplotLocalPath();
+
+           let boundariesFileName = getItemBoundariesFileName();
+           let boundariesFolder = getBoundariesLocalPath();       
+
+           let allFeaturesResoponse = [];
+
+           //-- if(Opts.isChannelNormalizeRequired) { 
+           //--    //-- if true check for free memory first to avoid out or memory problem with image normalize function
+           //--    Opts.isChannelNormalizeRequired = isChnlImgDataNormFeasible();
+           //--    if(!Opts.isChannelNormalizeRequired) {
+           //--        triggerHint(" Channels normalization Required flag is set to false due to insufficient free memory")
+           //--    } 
+           //-- }
+           
+
+           for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
+              groupData.push({ "OSDLayer": k, "frameName": curGroup.Channels[k], "frameNum": curGroup.Numbers[k]});
+           }
+         
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createAllSpxTilesFeature","baseUrl=" + apiUrl + 
+            "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) +
+            "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + "&markers_morph_file=" + markersMorphFileName +
+            "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize +  
+            "&isChannelNormalizeRequired=" + Opts.isChannelNormalizeRequired + 
+            //-- "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
+            "&boundaries_file=" + boundariesFileName+ "&boundaries_folder=" + boundariesFolder, function(response) {
+
+                 allFeaturesResoponse = JSON.parse(response);
+          });
+
+         return allFeaturesResoponse;
+
+    }
+
+   /**
+    * @deprecated since version 1.0.0
+    */   
+
+    getAllGridTilesFeature = () => { 
+           let groupData = []; 
+           let curGroup = getSelectedGroup();
+           let numOfFrames = curGroup.Channels.length;
+           let apiUrl = getHostApi();
+           let apiKey = getApiKey(); 
+           let itemId = getSelectedItemId();
+
+           let featuresFileName = getGrpFeaturesFileName();
+           let featuresFolder = getGrpFeaturesLocalPath();
+
+           // For boxplot data file and location
+           let boxplotFileName = getGrpBoxplotFileName();
+           let boxplotFolder = getGrpBoxplotLocalPath();
+      
+           let gridSize = getGridSize();
+
+           let allFeaturesResoponse = [];
+
+           for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
+              groupData.push({ "OSDLayer": k, "frameName": curGroup.Channels[k], "frameNum": curGroup.Numbers[k]});
+           }
+         
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createAllGridTilesFeature","baseUrl=" + apiUrl + 
+            "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) +
+            "&features_file=" + featuresFileName+ "&features_folder=" + featuresFolder + 
+            //-- "&boxplot_file=" + boxplotFileName+ "&boxplot_folder=" + boxplotFolder + "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + 
+            "&gridSize=" + gridSize, function(response) {
+
+                 allFeaturesResoponse = JSON.parse(response);
+          });
+
+         return allFeaturesResoponse;
+    }
+
+  /**
+   * Get cell tile properties
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {number} left_value
+   * @param {number} top_value
+   * @param {number} width_value
+   * @param {number} height_value        
+   * @returns {Array} array of objects
+   * @example
+   *
+   * bbox = find_bbox(getSelectedTile())
+   * getTileProp( bbox['left'], bbox['top'], bbox['width'], bbox['height'])
+   * 
+   * => Array(5) [ { OSDLayer: 0, Frame: "DAPI", mean: 193.5352564102564, max: 255, … }, {…}, {…}, {…}, {…} ]
+   */  
+
+    getTileProp = (left_value, top_value, width_value, height_value) => { // Need only the top tile to find the grids cover all stack
+         let tileProbData = []; 
+         let curGroup = getSelectedGroup();
+         let numOfFrames = curGroup.Channels.length;
+         let apiUrl = getHostApi();
+         let apiKey = getApiKey(); 
+         let itemId = getSelectedItemId();
+         
+
+         for(let k = 0; k < numOfFrames; k++) {  //>>>>>>>>>>>   Top frame has k = numOfFrames-1   <<<<<<<<<<<<<<
+              let frameNum = curGroup.Numbers[k];
+       
+               webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + 
+                "/getTileProp","left=" + left_value + "&top=" + top_value + "&width=" + width_value + "&height=" + height_value +
+                "&baseUrl=" + apiUrl + "&apiKey=" + apiKey + "&itemId=" + itemId + "&frameNum=" + frameNum , function(response) {
+
+                     let hist = JSON.parse(response);
+                     // console.log(" hist :", hist)
+                     let temp = {};
+                     temp["OSDLayer"] = k;
+                     for(let n = 0; n < featureKeys.length; n++) {
+                       if ( hist.hasOwnProperty(featureKeys[n]) ) {
+                          // Alternatively:  
+                          //--  var keyIndex=  Object.keys(hist).indexOf( featureKeys[n] )   
+                          //--  var keyName =  Object.keys(hist)[  keyIndex ]  
+                          //--  var keyValue = hist[ keyName ][1] 
+
+                          //OR simply
+                           temp[featureKeys[n]] = hist[featureKeys[n]];
+                          }
+                       //-- temp[featureKeys[0]] = hist['mean'][1];
+                       //-- temp[featureKeys[1]] = hist['max'][1];
+                       //-- temp[featureKeys[2]] = hist['stdev'][1];
+                     }
+
+                     temp["Frame"] = curGroup.Channels[k];
+                     tileProbData.push(temp)
+                 //--tileProbData.push({ "OSDLayer": k, "mean": hist['mean'], "max": hist['max'], "std": hist['stdev'], "Frame": curGroup.Channels[k] }) 
+                      
+              });
+         }
+        return tileProbData;
+    }
+
+  /**
+   * Helpful when click cancel buttons
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */      
+  
     restoreLastChartOperation = () => {
          document.getElementById("chartOperations").value = chartOptions.lastOperation;
          chartOptions.currentOperation = chartOptions.lastOperation;
          document.getElementById("chartContainer").innerHTML = chartOptions.lastContainerContent;
     }
     
+  /**
+   * Reset chart operation by restore histogram and reset other chart configs
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
     resetChartOperations = () => {
         // set chartOperations to histogram
         document.getElementById("chartOperations").value = "Histogram";
@@ -7225,6 +7395,21 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
     }
 
 
+  /**
+   * validate active operation on screen, which operation in use
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} curActiveOperation   e.g. "Phenotypes"
+   * @return {string}
+   * @example 
+   *
+   * validateActiveOperationOnScreen  (getActiveOperationOnScreen() )
+   *
+   * => "Phenotypes"
+   */  
      validateActiveOperationOnScreen = (curActiveOperation) => {
            switch ( curActiveOperation) {
 
@@ -7265,7 +7450,15 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
      }
 
 
-   // initiation of  isOperationActiveOnScreen obj such that { Phenotypes: false, "Tumor-Immune-Stromal": false, Cluster: false }
+  /**
+   * Initiation of  isOperationActiveOnScreen obj such that { Phenotypes: false, "Tumor-Immune-Stromal": false, Cluster: false }
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+
    initiatActiveOperationsListOnScreen = () => {
         chartOperationsList.forEach( operation => {
                     if(operation["isCellColorChanger"]) { 
@@ -7274,27 +7467,68 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
         })
    }
 
+  /**
+   * Reset active operations List on screen
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+
     resetActiveOperationsListOnScreen = () => {
        initiatActiveOperationsListOnScreen();
        initiatActiveSubOperationsListOnScreen();
        clearViewBar("grpFeaturesViewBar");
    }
 
-   // isOperationActiveOnScreen obj such that { Phenotypes: true, "Tumor-Immune-Stromal": false, Cluster: false }
+
+  /**
+   * Set active operations on screen
+   * isOperationActiveOnScreen obj such that { Phenotypes: true, "Tumor-Immune-Stromal": false, Cluster: false }
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+
    setActiveOperationOnScreen = (operationType) => {
         initiatActiveOperationsListOnScreen();
         initiatActiveSubOperationsListOnScreen();
         isOperationActiveOnScreen[operationType] = true;
    } 
 
-   // Check for current active operation e.g. Tumor-Immune-Stromal or Phenotypes
+   
+  /**
+   * Get active operations on screen
+   * Check for current active operation e.g. Tumor-Immune-Stromal or Phenotypes
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string} e.g. "Phenotypes"
+   */    
+
    getActiveOperationOnScreen = () => {
         let activeOperation = Object.keys(isOperationActiveOnScreen).filter( operation => isOperationActiveOnScreen[operation])[0];
         return activeOperation ? activeOperation : null;
    }
 
+   //------------------------------// 
    //-------SubOperation ----------//
-   // initiation of  isSubOperationActiveOnScreen obj such that { phenotypeNeighbors: false, "basicCellTypeNeighbors": false }
+   //------------------------------// 
+
+  /**
+   * Initiation of  isSubOperationActiveOnScreen obj such that { phenotypeNeighbors: false, "basicCellTypeNeighbors": false }
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */  
+
    initiatActiveSubOperationsListOnScreen = () => {
         subOperationsList.forEach( subOperation => {
                     if(subOperation["isCellColorChanger"]) { 
@@ -7303,8 +7537,16 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
         })
    }
 
+  /**
+   * isSubOperationActiveOnScreen obj such that { phenotypeNeighbors: true, "basicCellTypeNeighbors": false }
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} subOperationType  e.g. "phenotypeNeighbors"
+   */    
 
-   // isSubOperationActiveOnScreen obj such that { phenotypeNeighbors: true, "basicCellTypeNeighbors": false }
    setActiveSubOperationOnScreen = (subOperationType) => {
         initiatActiveSubOperationsListOnScreen();
         if(subOperationType) { // if the subOperationType is not null or simply its parent has subOperation
@@ -7312,21 +7554,51 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
         }
    } 
 
-   // return e.g "phenotypeNeighbors" or "basicCellTypeNeighbors"
+
+  /**
+   * Get active suboperation on screen
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string} e.g. "phenotypeNeighbors" or "basicCellTypeNeighbors"
+   */   
+
    getActiveSubOperationOnScreen = () => {
         let activeSubOperation = Object.keys(isSubOperationActiveOnScreen).filter( operation => isSubOperationActiveOnScreen[operation])[0];
         return activeSubOperation ? activeSubOperation : null;
    }
 
 
-   // return e.g "phenotype" or "Tumor-Immune-Stromal"
+  /**
+   * Get parent of the active suboperation  on screen
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} subOperation  e.g. "phenotypeNeighbors" or "basicCellTypeNeighbors"
+   * @returns {string} e.g. "phenotype" or "Tumor-Immune-Stromal"
+   */    
+
    getActiveSubOperationParent = (subOperation) => {
 
       return  subOperationsList.filter( subOperationEntry => subOperationEntry["type"] == subOperation)
                                .map(entry => entry["parent"])[0]; 
    }
 
-   // return e.g "phenotypeNeighbors" or "basicCellTypeNeighbors"
+  /**
+   * Get parent of the active suboperation  on screen
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} parentOperation  e.g. "phenotype" or "Tumor-Immune-Stromal"   
+   * @returns {string} e.g. "phenotypeNeighbors" or "basicCellTypeNeighbors"
+   */   
+
    getActiveSubOperationFromParent = (parentOperation) => {
         
         let subOptype = subOperationsList.filter( subOperationEntry => subOperationEntry["parent"] == parentOperation )
@@ -7334,7 +7606,17 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
 
         return subOptype ? subOptype : null ; // if the parent has no subOperation or filter with undefined, return null
    }   
+
  //---------------------------------//
+
+  /**
+   * Get info for chart operation
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
 
   requestChartOperationInfo = () => {
       let curOperationValue = document.getElementById("chartOperations").value;
@@ -7342,9 +7624,29 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
       triggerHint(operationEntry[0].description, "info", 7000);
   }
 
+  /**
+   * Get selected chart operation
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string} e.g. ""Phenotypes" "  
+   */ 
+
    getSelectedChartOperation = () => {
        return chartOptions.currentOperation;
    }
+
+  /**
+   * reset chart operation dependency
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string} e.g. ""Phenotypes" "  
+   */ 
 
    resetChangeChartOperationDependency = () => {
        showSpecialBar("chPlotsPanel", false); 
@@ -7352,6 +7654,15 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
        showPanel("cellNavigator", false);    
        filteredNeighbors = {}; 
    }
+
+  /**
+   * Event fires when chart operation changes
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
    onChangeChartOperation = () => {
        resetChangeChartOperationDependency();
@@ -7374,7 +7685,7 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
              case 'Boxplot':
                             {
                               plotMarkersBoxPlots();
-                              //triggerHint("To be Coded ..");
+                              //--triggerHint("To be Coded ..");
                               break;                
                             }
              case 'Phenotypes':
@@ -7386,9 +7697,9 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                                             enforcedTriggerHint("Please wait while finding phenotypes ...").then( result => { 
                                                     showLoadingIcon().then( result => {
 
-                                                              // if (! isGrpChannelsStatisticalDataAvailable() ) {
-                                                              //     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
-                                                              // }
+                                                              //-- if (! isGrpChannelsStatisticalDataAvailable() ) {
+                                                              //--     setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
+                                                              //-- }
                                                              if (! isGrpChannelsStatisticalDataAvailable() ) {
                                                                 if(Opts.isBoxplotChannelBased) {
                                                                    setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
@@ -7424,11 +7735,11 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                                                                        // init neighbors analysis and etc
                                                                        initChartOperationSideSpecialBar(curChartOperation);
 
-                                                                      // drawCellPhenotypes3dCylinder(allValidPhenotypes); 
+                                                                      //-- drawCellPhenotypes3dCylinder(allValidPhenotypes); 
                                                                        drawCellPhenotypes3dColumnChart(chartData);  
-                                                                     //  drawCellPhenotypesColumnChart(allValidPhenotypes);                                                            
-                                                                     //drawCellPhenotypes3dPieChart(allValidPhenotypes);
-                                                                     // drawCellPhenotypesPieGradientChart(allValidPhenotypes);
+                                                                     //--  drawCellPhenotypesColumnChart(allValidPhenotypes);                                                            
+                                                                     //--  drawCellPhenotypes3dPieChart(allValidPhenotypes);
+                                                                     //--  drawCellPhenotypesPieGradientChart(allValidPhenotypes);
                                                                 } 
                                                               })
                                                     
@@ -7436,21 +7747,17 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                                                     
                                                     }); 
 
-                                                      
-
                                             });         
                                                                                               
 
+                                   //-- }
 
- 
-                                   // }
-
-                                   // if ( isGrpChannelsStatisticalDataAvailable() ) { // read it before with ploting Boxplot for example
-                                   //      cellPhenotypes();
-                                   // } else if(isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() )) { 
-                                   //             // load the data       
-                                   //             setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
-                                   //             cellPhenotypes();
+                                   //-- if ( isGrpChannelsStatisticalDataAvailable() ) { // read it before with ploting Boxplot for example
+                                   //--      cellPhenotypes();
+                                   //-- } else if(isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() )) { 
+                                   //--             // load the data       
+                                   //--             setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
+                                   //--             cellPhenotypes();
                                    } else {
 
                                     triggerHint("Cell phenotypes need calculating markers boxplot data first, do you want to calculate them?  " + 
@@ -7469,8 +7776,8 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
                                   // if cell classes exists due to previous run. 
                                   plotCellClassifications(cellBasicClassification); 
 
-                               // } else if( isGrpChannelsNameTypeExist( getSelectedGrpIndex() ) ) {
-                               //     confirmCellClassifySettings();
+                               //-- } else if( isGrpChannelsNameTypeExist( getSelectedGrpIndex() ) ) {
+                               //--     confirmCellClassifySettings();
                                } else {
                                    initChartClassifyCellsForm();
                                }
@@ -7480,25 +7787,33 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
         case 'Proteomic-Analysis':
                             {
                               triggerHint("To be Coded ..");
-                              //resetChangeChartOperationDependency();   <<<<<<<<<<--------- Ok
-                              //setActiveOperationOnScreen(curChartOperation); <<<<<<<<<<--------- Ok
+                              //--resetChangeChartOperationDependency();   <<<<<<<<<<--------- Ok
+                              //--setActiveOperationOnScreen(curChartOperation); <<<<<<<<<<--------- Ok
                               break;             
                             }                                                         
               case 'Cluster':
                             {
                               triggerHint("To be Coded ..");
-                              //resetChangeChartOperationDependency();   <<<<<<<<<<--------- Ok
-                              //setActiveOperationOnScreen(curChartOperation); <<<<<<<<<<--------- Ok
+                              //--resetChangeChartOperationDependency();   <<<<<<<<<<--------- Ok
+                              //--setActiveOperationOnScreen(curChartOperation); <<<<<<<<<<--------- Ok
                               break;             
                             }                                    
         }  
    }
 
 
-  //  chart operations e.g. Histogram, boxplot
+  /**
+   * init chart operations list  e.g. Histogram, boxplot
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
   initChartOperationsList = () => { 
       let nodes =        '<select name="chartOperations" style="width:70%;" id="chartOperations" onchange="onChangeChartOperation()" disabled>';
-      // nodes +=           '<optgroup style="font-size:0.32vw"">';
+      //-- nodes +=           '<optgroup style="font-size:0.32vw"">';
 
       chartOperationsList.forEach((operation, idx) => {
 
@@ -7509,14 +7824,14 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
           }
       });
 
-      // nodes +=         '</optgroup>'; 
+      //-- nodes +=         '</optgroup>'; 
       nodes +=         '</select>'; 
       nodes +=         '&nbsp&nbsp<a  href="javascript:void(0)" onclick="requestChartOperationInfo()"><i style="font-size:1vw;"    class="fa fa-info-circle"></i></a>'
 
       document.getElementById("chartOperationsTableSpace").innerHTML = nodes;
 
-      // initiation of  isOperationActiveOnScreen obj such that { Phenotypes: false, "Tumor-Immune-Stromal": false, Cluster: false }
-      // initiatActiveOperationsListOnScreen();
+      //-- initiation of  isOperationActiveOnScreen obj such that { Phenotypes: false, "Tumor-Immune-Stromal": false, Cluster: false }
+      //-- initiatActiveOperationsListOnScreen();
 
       if( isFeaturesLoaded() ) { 
          freezeInput("chartOperations", false);
@@ -7524,90 +7839,185 @@ getTileProp = (left_value, top_value, width_value, height_value) => { // Need on
   } 
 
 
+  /**
+   * Request cell classify info
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} elem  e.g. "markerInfo.Tumor"
+   * @example
+   *
+   * requestCellClassifyInfo({id: "markerInfo.Tumor", ...})
+   *
+   *=> "Cells type have high level of Keratin marker."
+   */  
 
-  requestCellClassifyInfo = (elem) => {
-     let cellType = elem.id.split('.')[1];
-     let cellTypeEntry = mainCellTypesList.filter( entry => entry.cellType === cellType);
-     triggerHint(cellTypeEntry[0].description, "info", 7000);       
-  }
-
- getCurClusterMethod = () => {
-    return document.getElementById("clusterMethodsList").value;
- }
-
- getOthersTypeThresholdVal = () => {
-    return document.getElementById("thresholdBasedMethodsList").value;
- } 
- 
-  requestClusterMethodInfo = () => {
-     let clusterMethod = getCurClusterMethod();
-     let clusterMethodEntry = mainClusterMethods.filter( entry => entry.method === clusterMethod);
-     triggerHint(clusterMethodEntry[0].description, "info", 7000);       
-  }
-
-
-  onChangeClusterMethod = () => {
-     if(getCurClusterMethod() == "Threshold") {
-         showOthersTypeThresholdList();
-     } else {
-         hideOthersTypeThresholdList();
+     requestCellClassifyInfo = (elem) => {
+         let cellType = elem.id.split('.')[1];
+         let cellTypeEntry = mainCellTypesList.filter( entry => entry.cellType === cellType);
+         triggerHint(cellTypeEntry[0].description, "info", 7000);       
      }
 
-  }
+  /**
+   * Get current clustering method for Tumor-Immune-Stromal operation
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string}  
+   * @example
+   *
+   * getCurClusterMethod()
+   *
+   *=> "Threshold"
+   */  
 
-  requestThresholdBasedMethodInfo = () => {
-        triggerHint(" Select a threshold value used for the (Others) type, default value is 'mean'", "info", 7000);  
-  }
+     getCurClusterMethod = () => {
+        return document.getElementById("clusterMethodsList").value;
+     }
+
+      /**
+       * Get others type threshold value for Tumor-Immune-Stromal operation
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       * @returns {string}  e.g. "mean", "max", "q1" etc
+       * @example
+       *
+       * getOthersTypeThresholdVal()
+       *
+       *=>  "mean" 
+       */  
+
+     getOthersTypeThresholdVal = () => {
+        return document.getElementById("thresholdBasedMethodsList").value;
+     } 
+ 
+      /**
+       * Request cluster method info
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */
+
+     requestClusterMethodInfo = () => {
+         let clusterMethod = getCurClusterMethod();
+         let clusterMethodEntry = mainClusterMethods.filter( entry => entry.method === clusterMethod);
+         triggerHint(clusterMethodEntry[0].description, "info", 7000);       
+     }
+
+      /**
+       * Event fires with cluster method changing
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */
+
+     onChangeClusterMethod = () => {
+        if(getCurClusterMethod() == "Threshold") {
+            showOthersTypeThresholdList();
+        } else {
+            hideOthersTypeThresholdList();
+        }
+     }
+
+      /**
+       * Request threshold based method info
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */
+
+      requestThresholdBasedMethodInfo = () => {
+            triggerHint(" Select a threshold value used for the (Others) type, default value is 'mean'", "info", 7000);  
+      }
 
 
-  // Show list of values for "Others" type threshold possible values to select from
-  showOthersTypeThresholdList = () => {
-        document.getElementById("OthersTypeThresholdTableEntry").style.visibility = "visible";
-  }
+      /**
+       * Show list of values for "Others" type threshold possible values to select from
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */     
 
-  hideOthersTypeThresholdList = () => {
-        document.getElementById("OthersTypeThresholdTableEntry").style.visibility = "collapse";
-  }
+      showOthersTypeThresholdList = () => {
+            document.getElementById("OthersTypeThresholdTableEntry").style.visibility = "visible";
+      }
 
-  // Plot the ColumnChart, the cell colors and viewbar
-  // cellBasicClassification is array of  Objects such that:
-  //[{id: "spx-1", KERATIN_norm: 1.4, CD45_norm: 6.5, ASMA_norm: 0.56, Max: "CD45_norm", Type: "Others", label:1},...]  
-  plotCellClassifications = (cellsWithTypes, xTitle = 'Cell Classes') => {
-       showLoadingIcon().then( result => {
-          cellClassifications(cellsWithTypes, () => {
-                hideLoadingIcon();  
-                if(cellsWithTypes.length) {
-                      
-                      let numOfcellsPerClass = {};
-                      let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
+      /**
+       * Hide list of values for "Others" type threshold possible values  
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */  
 
-                      chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
-                           let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
-                           numOfcellsPerClass[cellType] = cellsWithTypes.filter(cell => cell.Type == cellType).length;
-                      });
+      hideOthersTypeThresholdList = () => {
+            document.getElementById("OthersTypeThresholdTableEntry").style.visibility = "collapse";
+      }
 
-                      numOfcellsPerClass["Others"] = cellsWithTypes.filter(cell => cell.Type == "Others").length;
-                      // NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
+  
+      /**
+       * Plot the ColumnChart, the cell colors and viewbar  
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       * @param {Array} cellsWithTypes, array of objects e.g. [{id: "spx-1", KERATIN_norm: 1.4, CD45_norm: 6.5, ASMA_norm: 0.56, Max: "CD45_norm", Type: "Others", label:1},...] 
+       */  
 
-                      let curChartOperation = document.getElementById("chartOperations").value;
-                      setActiveOperationOnScreen(curChartOperation);
-                      // init edit settings and reassign markers to Tumor-Immune-Stromal operation
-                      initChartOperationSideSpecialBar(curChartOperation);
-                      
-                      let cellTypeColors = getCellTypeColorObj(chnlNameType);
-                      // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+      plotCellClassifications = (cellsWithTypes, xTitle = 'Cell Classes') => {
+           showLoadingIcon().then( result => {
+              cellClassifications(cellsWithTypes, () => {
+                    hideLoadingIcon();  
+                    if(cellsWithTypes.length) {
+                          
+                          let numOfcellsPerClass = {};
+                          let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
 
-                      drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  xTitle); // second param is for x axis Title                                                            
-                      // drawCellTypes3dPieChart(numOfcellsPerClass);
-                     // drawCellTypesPieGradientChart(cellsWithTypes);
-                } 
-          }); 
-       });   
-  }
+                          chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
+                               let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
+                               numOfcellsPerClass[cellType] = cellsWithTypes.filter(cell => cell.Type == cellType).length;
+                          });
 
-  cancelCellClassifySettings = () => {
-     restoreLastChartOperation();
-  }  
+                          numOfcellsPerClass["Others"] = cellsWithTypes.filter(cell => cell.Type == "Others").length;
+                          // NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
+
+                          let curChartOperation = document.getElementById("chartOperations").value;
+                          setActiveOperationOnScreen(curChartOperation);
+                          // init edit settings and reassign markers to Tumor-Immune-Stromal operation
+                          initChartOperationSideSpecialBar(curChartOperation);
+                          
+                          let cellTypeColors = getCellTypeColorObj(chnlNameType);
+                          // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+
+                          drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  xTitle); // second param is for x axis Title                                                            
+                          //-- drawCellTypes3dPieChart(numOfcellsPerClass);
+                          //-- drawCellTypesPieGradientChart(cellsWithTypes);
+                    } 
+              }); 
+           });   
+      }
+
+
+      cancelCellClassifySettings = () => {
+         restoreLastChartOperation();
+      }  
 
 
 
@@ -9120,7 +9530,7 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
 
                                     let featToPlot =  "norm";
 
-                                    // Extract needed columns and propse two new columns
+                                    // Extract needed columns and propose two new columns
                                     filterByType[type].forEach( (cellEntry, idx) => {
                                                                cellEntry.features.forEach(featEntry => {
                                                                       filterByType[type][idx][featEntry.Frame + "_" + featToPlot] = featEntry[featToPlot];
@@ -12123,7 +12533,7 @@ function onSelectedTile (d, i) { // Add interactivity
     //-- if( !isSuperPixel() ){
           let prevTileId = getLastSelectedTileId();
           let prevTile = d3.select("#" + prevTileId);
-          // let strokeWidth = 10;
+          //-- let strokeWidth = 10;
           if( (prevTileId != null) && (prevTileId != getSelectedTileId() )) {
                   let origTileColor = prevTile.attr('origColor');
                   prevTile.style('fill', origTileColor)
@@ -12131,7 +12541,7 @@ function onSelectedTile (d, i) { // Add interactivity
                   prevTile.style('stroke', 'blue');
                   prevTile.style('stroke-width', Opts.selectedTileStrokeWidth);
                   prevTile.style('stroke-opacity', 1);
-                  // prevTileId= d3.select(this).attr('id');
+                  //-- prevTileId= d3.select(this).attr('id');
          } else if((prevTileId == null) && (! isFeaturesLoaded()) ){
                   triggerHint(" No features found for selected tile, create features from Features menu", "info", 5000);
          }
@@ -12211,68 +12621,56 @@ function handleMouseLeave  (d, i) { // Add interactivity
 //On cell mouse over event - show histogram of each cell
 function handleMouseOver (d, i) { // Add interactivity
 
-  let tileType  = getTileType();
+      let tileType  = getTileType();
 
-  let index = findObjectByKeyValue(eval(tileType + "TilesLabel"), 'id', this.attributes.id.nodeValue, 'INDEX' ); // to check whether the entry exists or no..
+      let index = findObjectByKeyValue(eval(tileType + "TilesLabel"), 'id', this.attributes.id.nodeValue, 'INDEX' ); // to check whether the entry exists or no..
 
-  if(index == null) {
-    if( isSuperPixel() ) {
-        document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue;
-    }
-    else {
-        document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue;
-    }    
-  }else{
-    if( isSuperPixel() ) {
-        document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue  + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
-    }
-    else {
-        document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
-    }
-  }
+      if(index == null) {
+        if( isSuperPixel() ) {
+            document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue;
+        }
+        else {
+            document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue;
+        }    
+      } else {
+        if( isSuperPixel() ) {
+            document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue  + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
+        }
+        else {
+            document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
+        }
+      }
 
-
-    // if( isSuperPixel() ){
-    //      Opts.StrokeWidthOnHover = 10;
-    // } else { 
-    //      Opts.StrokeWidthOnHover = 10;
-    // } 
-
-
-
-
-    
-    d3.select(this).style('stroke', Opts.StrokeColorOnHover);
-    d3.select(this).style('stroke-width',   Opts.StrokeWidthOnHover);
-    d3.select(this).style('stroke-opacity', Opts.StrokeOpacityOnHover);
-    
-    if( getSelectedChartOperation() == "Histogram"){    
-          let bbox = find_bbox(this);    // drawing is the shape flag 
-          plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this); 
-     } else if(getSelectedChartOperation() == "Histogram-log1p(y)"){
-          let bbox = find_bbox(this);    // drawing is the shape flag 
-          plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this, true); 
-
-     }
-
+        
+      d3.select(this).style('stroke', Opts.StrokeColorOnHover);
+      d3.select(this).style('stroke-width',   Opts.StrokeWidthOnHover);
+      d3.select(this).style('stroke-opacity', Opts.StrokeOpacityOnHover);
+        
+      if( getSelectedChartOperation() == "Histogram"){    
+            let bbox = find_bbox(this);    // drawing is the shape flag 
+            plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this); 
+       } else if(getSelectedChartOperation() == "Histogram-log1p(y)"){
+            let bbox = find_bbox(this);    // drawing is the shape flag 
+            plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this, true); 
+       }
 }
 
 ///////////////////////////////////////////////////
 function handleTileMouseLeave (d, i){
 
      if( isSimilarRegionBtnEnabled() ){      
-         // d3.select(this).style('stroke', getStrokeColor());
-         // d3.select(this).style('stroke-width', getStrokeWidth());
-         // d3.select(this).style('stroke-opacity', getStrokeOpacity()); 
+         //-- d3.select(this).style('stroke', getStrokeColor());
+         //-- d3.select(this).style('stroke-width', getStrokeWidth());
+         //-- d3.select(this).style('stroke-opacity', getStrokeOpacity()); 
          if(d3.select(this).style('fill') == "rgb(255, 255, 255)") {
             d3.select(this).style('stroke', 'none');  
          } else {
             d3.select(this).style('stroke', Opts.similarTileStrokeColor);
          }
 
-              // d3.selectAll(tileClass).style('fill', 'white');
+              //-- d3.selectAll(tileClass).style('fill', 'white');
               
-              // d3.selectAll(tileClass).style('fill-opacity', 0.1); 
+              //-- d3.selectAll(tileClass).style('fill-opacity', 0.1); 
 
      } else {
          d3.select(this).style('stroke', getStrokeColor());
@@ -12281,7 +12679,7 @@ function handleTileMouseLeave (d, i){
 
      }   
 
-       /*  $$("propChart2").clearAll();            <--------------------------------*/
+       /*  $$("propChart2").clearAll();            <--------------------------------*/ //<<<<<<<<<<<
 
 }
 
@@ -12334,6 +12732,7 @@ function  handleMouseRightClick(){
 //         }
 //    }
 // }
+
 function mark(elem, marker){
   
  let tileType = getTileType();
@@ -12515,8 +12914,8 @@ findTile = () => {
            if(existFlag) {
               let foundTile = document.getElementById(tileId);
               zoomToTile(foundTile);
-             // locateTile(tileClass, tileId);
-             // existFlag = 0;
+             //-- locateTile(tileClass, tileId);
+             //-- existFlag = 0;
            } else {
              triggerHint("Not a valid entry");
            }
@@ -12535,7 +12934,7 @@ initBoundariesFeatures = () => {
       if( isLocalFileExist( getGrpFeaturesFileName(), getGrpFeaturesLocalPath()) ) {     
            // load the features       
            createLoadFeatures();       
-         // document.getElementById("createLoadFeaturesBtn").disabled = true;
+          //-- document.getElementById("createLoadFeaturesBtn").disabled = true;
            if( isFeaturesLoaded() ) {
                freezeInput("createLoadFeaturesBtn", true); 
                featuresLoadedFlag = true;
@@ -12615,7 +13014,7 @@ initBoundariesFeatures = () => {
 
                 }
              } else {
-               //    saveFeatures(StorageItemName,jsonString_tilesFeatures)
+                   //-- saveFeatures(StorageItemName,jsonString_tilesFeatures)
                    saveFeatures(fileName, dirLocalPath, jsonString_tilesFeatures);   // default writeMode = "w"
                    triggerHint("Saving Features locally in progress... ");  
              }
@@ -12634,36 +13033,36 @@ initBoundariesFeatures = () => {
 
 
   createLoadFeatures = () => {
-        //let fetchedFeatures = getFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );  <<<<<<<<<<--------
+        //--let fetchedFeatures = getFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );  <<<<<<<<<<--------
         allTilesFeatures = readJsonFile( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
 
         
-        // let currentTileId = getSelectedTileId();
+        //-- let currentTileId = getSelectedTileId();
 
-        // resetTileFeatures();        <<<<<<<<<<<<<<<< ------------
+        //-- resetTileFeatures();        <<<<<<<<<<<<<<<< ------------
         
-        // if((fetchedFeatures == null) || ( fetchedFeatures == "notExist")) { 
+        //-- if((fetchedFeatures == null) || ( fetchedFeatures == "notExist")) { 
         if(! allTilesFeatures.length ) {           
-            //zoomSlideOut();
+            //--zoomSlideOut();
             viewerZoomHome();                //  <<<<<<<<<<< ------------ enforce sync 
             webix.message("Creating features in progress...");
                                           
 
-            // let isIncompleteFileExist = false;
-            // let fetchedIncompletedFeatures = getFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );
+            //-- let isIncompleteFileExist = false;
+            //-- let fetchedIncompletedFeatures = getFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );
             allTilesFeatures = readJsonFile( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );            
           
-            // if((fetchedIncompletedFeatures != null) && ( fetchedIncompletedFeatures != "notExist")) { 
-            //     allTilesFeatures = JSON.parse(fetchedIncompletedFeatures);
-            //     isIncompleteFileExist = true;
-            // }
+            //-- if((fetchedIncompletedFeatures != null) && ( fetchedIncompletedFeatures != "notExist")) { 
+            //--     allTilesFeatures = JSON.parse(fetchedIncompletedFeatures);
+            //--     isIncompleteFileExist = true;
+            //-- }
 
             // backup plan in case it txt_allTilesFeatures failed to be created by json.strinify()
             triggerHint("Wait while creating channels mean, max, std, norm features file","info", 5000);
             let creationSuccessFlag = true;
             let fileChunksToSaveTemp = [];
             let maxFileSize = Opts.maxFileSize;
-            // let safeMargin = 2000;
+            //-- let safeMargin = 2000;
             
             try {
 
@@ -12694,14 +13093,14 @@ initBoundariesFeatures = () => {
 
 
                                                      console.log("Image normalization Failed due to insufficient Memory, there is a need to bypass normalization or to reduce/crop image size or free more memory, or increase memory size " );                   
-                                                     // Opts.isChannelNormalizeRequired = false;
-                                                     //setItemMetadataKeyValue(metaKey, metaValue) 
+                                                     //-- Opts.isChannelNormalizeRequired = false;
+                                                     //--setItemMetadataKeyValue(metaKey, metaValue) 
                                                      return 0;
                                                 }
 
-                                           // let metaKey = "settings";
-                                               // let metaValue = Opts.isChannelNormalizeRequired == true ? {"imageNorm": true } : {"imageNorm": false };
-                                               // setItemMetadataKeyValue(metaKey, metaValue);                                                
+                                               //-- let metaKey = "settings";
+                                               //-- let metaValue = Opts.isChannelNormalizeRequired == true ? {"imageNorm": true } : {"imageNorm": false };
+                                               //-- setItemMetadataKeyValue(metaKey, metaValue);                                                
 
 
                   } else { // create features tile by tile, time consuming and high time complexity
@@ -12717,7 +13116,7 @@ initBoundariesFeatures = () => {
                                   // need to have function to convert to DSA format
                                    allTilesFeatures.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
                                    fileChunksToSaveTemp.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
-                               //  allTilesFeatures.push({id:this.id , Frames: numOfFrames, features:curTileFeatures})
+                                   //--  allTilesFeatures.push({id:this.id , Frames: numOfFrames, features:curTileFeatures})
                                 } else {
                                    allTilesFeatures.push({id: this.id, coordinates: bbox, features: curTileFeatures});
                                    fileChunksToSaveTemp.push({id: this.id, coordinates: bbox, features: curTileFeatures});
@@ -12733,22 +13132,21 @@ initBoundariesFeatures = () => {
 
        
 
-                              // if(isIncompleteFileExist) {
-                              //   saveFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() , fileChunks[k], "a", 0); 
+                              //-- if(isIncompleteFileExist) {
+                              //--   saveFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() , fileChunks[k], "a", 0); 
 
-                              // } else if( allTilesFeatures.length == getTotalTilesNum() ){
+                              //-- } else if( allTilesFeatures.length == getTotalTilesNum() ){
                                   
+                              //-- } else {
+                              //--   saveFeatures( fileName, dirLocalPath, fileChunks[k], "a", -1); 
 
-                              // } else {
-                              //   saveFeatures( fileName, dirLocalPath, fileChunks[k], "a", -1); 
-
-                              // }
+                              //-- }
                           }
 
-                       // if(this.id != currentTileId) {
+                      //-- if(this.id != currentTileId) {
                           d3.select(this).style('fill', Opts.defaultScanningFillColor);
                           d3.select(this).style('fill-opacity', Opts.defaultScanningFillOpacity);
-                       // }
+                       //-- }
 
                       }) // end of d3.selectAll loop
                   
@@ -12781,7 +13179,7 @@ initBoundariesFeatures = () => {
               }              
 
           } else {
-              // saveFeatureDataLocally(allTilesFeatures, getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() ); 
+              //-- saveFeatureDataLocally(allTilesFeatures, getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() ); 
               if( isRestApiAvailable() ){
                   console.log("Try to resume features creation by clicking Create/Resume button again, ");
                   alert("Network error, check console (F12)."); 
@@ -12838,21 +13236,21 @@ initBoundariesFeatures = () => {
 
 
             
-        //    freezeInput("createLoadFeaturesBtn", true);          <<<<<<<<<<<<----------
+        //--    freezeInput("createLoadFeaturesBtn", true);          <<<<<<<<<<<<----------
 
         } else { // end of if(fetchedFeatures==null)
               // if features exists locally 
-              // allTilesFeatures = JSON.parse(fetchedFeatures);           <<<<<<<<<<< -------
+              //-- allTilesFeatures = JSON.parse(fetchedFeatures);           <<<<<<<<<<< -------
 
               if(isValidFeaturesData(allTilesFeatures)) {
                   // webix.message(" local saved features loaded.. ");            <<<<<<<<<<<<<<<< ----------
                   triggerHint(" local saved features loaded.. ", "info");
-         //         freezeInput("createLoadFeaturesBtn", true);  // disable create button         <<<<<<<<<<<<----------
+         //--         freezeInput("createLoadFeaturesBtn", true);  // disable create button         <<<<<<<<<<<<----------
                   
-                //  $$("featuresCheckBoxes").enable();                               <<<<<<<<<<<<<<<<<----------------------------
-                 // $$("similarityOptions").enable();                                   
-               //  disableSimilarTilesBtn(false);
-                  // freezeFeaturesControls(false);
+                 //--  $$("featuresCheckBoxes").enable();                               <<<<<<<<<<<<<<<<<----------------------------
+                 //--  $$("similarityOptions").enable();                                   
+                  //-- disableSimilarTilesBtn(false);
+                  //-- freezeFeaturesControls(false);
               } 
         }  
 
@@ -12906,54 +13304,199 @@ hideLoadingIcon = () => {
 
   
 
-  // Tile is a grid or SPX cell
+  /**
+   * Check if tile selected
+   * Tile is a  SPX cell
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {bool} 
+   */ 
+
   isTileSelected = () => {
       return currentGrpFeaturesSelectionStates.tile != null ? true : false;
   } 
+
+  /**
+   * Get selected tile 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {object}  
+   * @example
+   *
+   * getSelectedTile()
+   *
+   * => <polygon id="spx-59944" class="spx" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" style="fill: rgb(189, 86, 86); …5px; stroke-opacity: 1;" fill-opacity="0.25" index="59944" origStrokeColor="white" origStroke-width="3" origColor="#bd5656">
+   */ 
+
   getSelectedTile = () => {
       return isTileSelected() ? currentGrpFeaturesSelectionStates.tile : null;
   } 
+
+  /**
+   * Get selected tile id
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string}  
+   * @example
+   *
+   * getSelectedTileId()
+   *
+   * => "spx-59944" 
+   */   
 
   getSelectedTileId = () => {
       return isTileSelected() ? currentGrpFeaturesSelectionStates.tile.id : null;
   } 
 
+  /**
+   * Set selected tileid
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} tileObj e.g. <polygon id="spx-59944" class="spx" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" ..">
+   */ 
+
   setSelectedTile = (tileObj) => {
       currentGrpFeaturesSelectionStates.tile = tileObj;
   }  
+
+  /**
+   * Reset selected tileid
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
 
   resetSelectedTile = () => {
       currentGrpFeaturesSelectionStates.tile = null;
   }  
 
+  /**
+   * Get last selected tile id
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string}  
+   * @example
+   *
+   * getLastSelectedTileId()
+   *
+   * => "spx-49267" 
+   */  
 
   getLastSelectedTileId = () => {
       return lastGrpFeaturesSelectionStates.tileId;  
   } 
 
+  /**
+   * Set last selected tileid
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} tileId e.g. "spx-59944"
+   */ 
+
   setLastSelectedTileId = (tileId) => {
       lastGrpFeaturesSelectionStates.tileId = tileId;  
   } 
+
+  /**
+   * Reset last selected tile id
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
 
   resetLastSelectedTileId = () => {
       lastGrpFeaturesSelectionStates.tileId = null;  
   }  
 
-  getRightClickedTile= () => {
+  /**
+   * Get right clicked tile object
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {object}  
+   * @example
+   *
+   * getRightClickedTile()
+   *
+   * => <polygon id="spx-59944" class="spx" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" ...">
+   */ 
+
+  getRightClickedTile = () => {
       return currentGrpFeaturesSelectionStates.rightClickedTile;  
   } 
+
+  /**
+   * Set right clicked tile object
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} tile object e.g. <polygon id="spx-59944" class="spx" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" ...">
+   */ 
 
   setRightClickedTile = (tile) => {
       currentGrpFeaturesSelectionStates.rightClickedTile = tile;  
   } 
 
+  /**
+   * Reset right clicked tile object
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+
   resetRightClickedTile = () => {
       currentGrpFeaturesSelectionStates.rightClickedTile = null;  
   } 
    
+  /**
+   * Reset tile values dependency, where the value of tile shows on right panel besides Roi: 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+
    resetTileValuesDependency = () => {
        document.getElementById("curRoiFont").innerHTML = "";
    }
+
+  /**
+   * Reset tile values and all variables
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
 
    resetTileValues = () => {
         resetChartOperations();

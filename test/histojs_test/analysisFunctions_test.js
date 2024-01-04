@@ -1,15 +1,20 @@
 /*
 =========================================================
-* HistoJS - v1.0.0 - ((------Testing-------))
+*             ((------Testing-------))
 =========================================================
-* Description:  A user interface for whole slide image channel design and analysis. 
-*               It is based on DSA as backbone server 
-*                                                
+* HistoJS  
+=========================================================
+* @see {@link  https://github.com/Mmasoud1/HistoJS}
+* @description   A user interface for multiplexed image channels design and analysis.
+*                It is based on DSA as backbone server.
 *
-* Authors:  Mohamed Masoud - 2023
+* @version 1.0.0
+* @license MIT  
+*
+* @author Mohamed Masoud <mmasoud2@outlook.com>
 =========================================================
 =========================================================
-         Main Analysis Phase Functions Unit Test (Mocha)
+    Main Analysis Phase Functions Unit Test (Mocha)
 =========================================================*/ 
 
 
@@ -117,6 +122,20 @@ describe("Main Analysis Functions", function () {
        dist2.Distance = 4;
        expect( compare(dist1, dist2) ).to.eql(1);
     });
-  });    
+  }); 
+
+  describe('#find_bbox()', function () {
+    it('return bounding box around cell boundary', function () {
+       let spxBoundaries= "3073,3829 3077,3833 3077,3839 3075,3841 3075,3843 3070,3847 3068,3846" +
+                          " 3065,3848 3062,3848 3060,3842 3062,3838 3062,3836 3064,3834 3065,3831 3070,3829"
+       expect( find_bbox(spxBoundaries, "boundaryString").left ).to.eql(3060);
+    });
+  });   
+
+  describe('#validateActiveOperationOnScreen()', function () {
+    it('return active operation', function () {
+       expect( validateActiveOperationOnScreen("Phenotypes") ).to.eql(null);
+    });
+  });     
 
 });  

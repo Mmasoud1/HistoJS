@@ -1,3 +1,27 @@
+/*!
+=========================================================
+* HistoJS Demo 
+=========================================================
+
+* @see {@link  https://github.com/Mmasoud1/HistoJS}
+* @description   A user interface for multiplexed image channels design and analysis.
+*                It is based on DSA as backbone server.
+*
+* @version 1.0.0
+* @license MIT  
+*
+* @author Mohamed Masoud <mmasoud2@outlook.com>
+
+=========================================================
+
+
+
+=========================================================
+           Context-Menu for Analysis Mode
+=========================================================*/
+
+
+
  function contextMenu(menu, openCallback) {
     // Menu will only appear when Similar Tiles is on	
 	// create the div element that will hold the context menu

@@ -1,12 +1,14 @@
 /*!
 =========================================================
-* HistJS Demo - v1.0.0
+* HistoJS Demo 
 =========================================================
 
-* Github:  https://github.com/Mmasoud1
-* Description:  A user interface for whole slide image channel design and analysis. 
-*               It is based on DSA as backbone server.
-* 
+* @see {@link  https://github.com/Mmasoud1/HistoJS}
+* @description   A user interface for multiplexed image channels design and analysis.
+*                It is based on DSA as backbone server.
+*
+* @version 1.0.0
+* @license MIT  
 *
 * @author Mohamed Masoud <mmasoud2@outlook.com>
 

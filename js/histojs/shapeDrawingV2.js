@@ -1,3 +1,27 @@
+/*!
+=========================================================
+* HistoJS Demo 
+=========================================================
+
+* @see {@link  https://github.com/Mmasoud1/HistoJS}
+* @description   A user interface for multiplexed image channels design and analysis.
+*                It is based on DSA as backbone server.
+*
+* @version 1.0.0
+* @license MIT  
+*
+* @author Mohamed Masoud <mmasoud2@outlook.com>
+
+=========================================================
+
+
+
+=========================================================
+              Helpers for Analysis Mode
+=========================================================*/
+
+
+
   function savePointsData(pData,currentShape){
       if(currentShape=="rect"){
        allShapes.push({id: currentShapeId.toString(), shape:currentShape,points:pData})
