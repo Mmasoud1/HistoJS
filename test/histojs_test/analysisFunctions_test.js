@@ -142,6 +142,24 @@ describe("Main Analysis Functions", function () {
     it('return cells distance in pixels ', function () {
        expect( computeCellsDistance({x_cent: 2126, y_cent:313},{x_cent: 2175, y_cent: 310}).toFixed(3) ).to.eql('49.092');
     });
-  });        
+  });  
+
+  describe('#isFeaturesLoaded()', function () {
+    it('return if features loaded ', function () {
+       expect( isFeaturesLoaded() ).to.be.false;
+    });
+  });  
+
+  describe('#isBoundariesLoaded()', function () {
+    it('return if cell boundaries loaded ', function () {
+       expect( isFeaturesLoaded() ).to.be.false;
+    });
+  });  
+
+  // describe('#isValidFeaturesData()', function () {
+  //   it('return if features data size is equal total cell num', function () {
+  //      expect( isValidFeaturesData([]) ).to.be.false;
+  //   });
+  // });         
 
 });  

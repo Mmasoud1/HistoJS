@@ -12570,11 +12570,11 @@ drawMarkersBoxPlotChart = (chartData) => {
      * @param {number} width_value
      * @param {number} height_value
      * @param {object} obj                    
-     * @param {bool} logFlag 
+     * @param {bool} logFlag -> yAxis data log1p
      *
      */ 
 
-    plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, obj, logFlag = false) => { // logFlag -> yAxis data log1p
+    plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, obj, logFlag = false) => { 
          let features = [];
      
          if( isFeaturesLoaded() ) {
@@ -12612,39 +12612,6 @@ drawMarkersBoxPlotChart = (chartData) => {
                  }          
          }         
     }
-
-
-// plotTileMarkersHistogram_V0 = (left_value, top_value, width_value, height_value, obj) => {
- 
-//      if( allTilesFeatures.length == 0) 
-//       {
-//           let featureDataToPlot = getTileProp(left_value, top_value, width_value, height_value);
-//           featureDataToPlot.push(temp)
-//       } else {
-//                let tile = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(obj).attr('id'));
-//                let chartData = {channelNames: []}; // channelNames will have frame names
-
-//                for(let i = 0; i < featureKeys.length; i++){
-//                    chartData[featureKeys[i]] = [];
-//                 }
-
-//                //--  chartData = { labels: [], mean: [], max: [], std: []};
-//                for(let n = 0; n < tile.features.length; n++){
-
-//                     chartData.channelNames.push(tile.features[n].Frame);
-
-//                     for(let i = 0; i < featureKeys.length; i++){
-//                        chartData[featureKeys[i]].push(tile.features[n][featureKeys[i]]);
-//                     }
-                    
-//                     //-- chartData.meanData.push(tile.features[n].mean);
-//                     //-- chartData.maxData.push(tile.features[n].max);
-//                     //-- chartData.stdData.push(tile.features[n].std);
-//                }
-
-//                drawMarkersHistogramChart(chartData);
-//       }
-// }
 
 
 
@@ -12704,7 +12671,7 @@ drawMarkersBoxPlotChart = (chartData) => {
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0                
-     * @param {} data 
+     * @param {Array} data : array of objects: [{Frame: "DAPI", channelNum: 0, OSDLayer: 0, min:1, ...}, {}]
      *
      */ 
 
@@ -12720,7 +12687,7 @@ drawMarkersBoxPlotChart = (chartData) => {
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0                
-     * @returns {} 
+     * @returns {Array} array of objects e.g.  [{Frame: "DAPI", channelNum: 0, OSDLayer: 0, min:1, ...}, {}]
      *
      */
 
@@ -12730,46 +12697,57 @@ drawMarkersBoxPlotChart = (chartData) => {
 
    
     /**
-     *  This function can be used for channel based statisticals and cell based statistical
+     *  This function to check if channel statistics data available
      *
      * @function
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0                
-     * @returns {} 
+     * @returns {bool} 
      *
      */    
 
     isGrpChannelsStatisticalDataAvailable =() => {
          return  grpChannelsStatisticalData.length ? true : false;
-
-             
     }
 
-    // Can be used for channel based statisticals and cell based statistical
     /**
-     *  This function can be used with Boxplot option (plotFlag = true ) and Phenotypes option (plotFlag = false)
+     *  This function used to reset variable 
      *
      * @function
      * @memberof HistoJS
      * @since 1.0.0
      * @version 1.0.0                
-     * @param {bool} plotFlag 
      *
-     */     
+     */  
+
     resetGrpChannelsStatisticalData = () => {
            grpChannelsStatisticalData = [];
     }
 
-    // TEST = () => {                 <<<<<<<<<<<<<<<<<<<<<<-----------
-    //       let test = []
-    //        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/TEST", function(response) {
-    //              test = JSON.parse(response);
-    //       });
-    //      return test != "notExist" ? test : [] ;
-    // }
 
-    //  calculate channel mean, max, min, std, median, q1, q3 
+
+    //-- TEST = () => {                 <<<<<<<<<<<<<<<<<<<<<<-----------
+    //--       let test = []
+    //--        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/TEST", function(response) {
+    //--              test = JSON.parse(response);
+    //--       });
+    //--      return test != "notExist" ? test : [] ;
+    //-- }
+
+
+   /**
+     *  This function used to calculate channel mean, max, min, std, median, q1, q3  
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {Array}   e.g. [ {Frame: 'CD45',   OSDLayer: 0,   channelNum: 22,   max: 255.0,   mean: 5.174311939678205, 
+     *                          median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}, ... ]        
+     *
+     */   
+
     createChannelsStatisticalData = () => {
            let groupData = []; 
            let curGroup = getSelectedGroup();
@@ -12825,357 +12803,400 @@ drawMarkersBoxPlotChart = (chartData) => {
         //                           median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}
 
          return boxplotData;
-
     }
 
 
+    /**
+     *  This function calculate marker cells mean, max, min, std, median, q1, q3.
+     *  instead of create them based on marker channel intensity, marker cells are used to find mean of all marker cells etc.
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {Array}  e.g. [{Frame: 'CD45',    max: 255.0,   mean: 5.174311939678205, 
+     *                                            median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}, ...]
+     *
+     */  
 
-//  calculate marker cells mean, max, min, std, median, q1, q3, 
-// instead of create them based on marker channel intensity, marker cells are used to find mean of all marker cells etc.
-createMarkerCellsStatisticalData = () => {
+    createMarkerCellsStatisticalData = () => {
 
-       // e.g. "Structural Components__markers_morphology.csv" 
-       // csv file has markers intensities for each cell in addition to cells morphological features
-       // it has each cell marker intensity e.g. CD45_max CD45_mean CD45_nonzero_mean
-       // Opts.cellFeatureToSelect :  "_mean", // select from [ _mean, _max, _std, _nonzero_mean]
-       let markersMorphFileName =  getGrpMarkersMorphFileName(); 
-       let grpFeaturesFolder = getGrpFeaturesLocalPath();
+           // e.g. "Structural Components__markers_morphology.csv" 
+           // csv file has markers intensities for each cell in addition to cells morphological features
+           // it has each cell marker intensity e.g. CD45_max CD45_mean CD45_nonzero_mean
+           // e.g. Opts.cellFeatureToSelect :  "_mean", // select from [ _mean, _max, _std, _nonzero_mean]
+           let markersMorphFileName =  getGrpMarkersMorphFileName(); 
+           let grpFeaturesFolder = getGrpFeaturesLocalPath();
 
+           // For boxplot data file and location e.g. Structural Components_MarkerCells_Boxplot_Data.json
+           let boxplotFileName = getGrpMarkerCellsBoxplotFileName(); 
+           let boxplotFolder = getGrpBoxplotLocalPath();
 
-       // For boxplot data file and location e.g. Structural Components_MarkerCells_Boxplot_Data.json
-       let boxplotFileName = getGrpMarkerCellsBoxplotFileName(); 
-       let boxplotFolder = getGrpBoxplotLocalPath();
+           //-- groupMarkers e.g. Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
+           let groupMarkers = getCurGrpChannelsName();
 
-       // groupMarkers e.g. Array(5) [ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
-       let groupMarkers = getCurGrpChannelsName();
+           let boxplotData = [];
 
-       let boxplotData = [];
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
+            "/createMarkerCellsStatisticalData", "&features_folder=" + grpFeaturesFolder + "&markers_morph_file=" + markersMorphFileName +
+            "&boxplot_file=" + boxplotFileName + "&boxplot_folder=" + boxplotFolder + "&grp_markers=" + JSON.stringify(groupMarkers) + 
+            //-- "&neglect_zero=" + Opts.boxplotForAboveZeroCells + 
+            "&isMarkerFeatureNormalizeRequired=" + Opts.isMarkerFeatureNormalizeRequired + 
+            "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize , function(response) {
 
+                 boxplotData = JSON.parse(response);
+          });
 
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  
-        "/createMarkerCellsStatisticalData", "&features_folder=" + grpFeaturesFolder + "&markers_morph_file=" + markersMorphFileName +
-        "&boxplot_file=" + boxplotFileName + "&boxplot_folder=" + boxplotFolder + "&grp_markers=" + JSON.stringify(groupMarkers) + 
-        // "&neglect_zero=" + Opts.boxplotForAboveZeroCells + 
-        "&isMarkerFeatureNormalizeRequired=" + Opts.isMarkerFeatureNormalizeRequired + 
-        "&cellFeatureToNormalize=" + Opts.cellFeatureToNormalize , function(response) {
+        //-- boxplot sample data e.g. {Frame: 'CD45',    max: 255.0,   mean: 5.174311939678205, 
+        //--                           median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}
 
-             boxplotData = JSON.parse(response);
-      });
-
-    // boxplot sample data e.g. {Frame: 'CD45',    max: 255.0,   mean: 5.174311939678205, 
-    //                           median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}
-
-     return boxplotData;
-}
-
-
-
-
-//For each channel, plot the marker of this channel low, q1, median, q3 and high values
-plotMarkersBoxPlots = () => {
-        let isFileExistFlat = false;
-
-        if(Opts.isBoxplotChannelBased) {
-             isFileExistFlat = isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() );
-
-        } else { // if it is cell based
-             isFileExistFlat = isLocalFileExist( getGrpMarkerCellsBoxplotFileName(), getGrpBoxplotLocalPath() );
-        }
+         return boxplotData;
+    }
 
 
+    /**
+     *  For each channel, plot the marker of this channel low, q1, median, q3 and high values
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */   
+
+    plotMarkersBoxPlots = () => {
+            let isFileExistFlat = false;
+
+            if(Opts.isBoxplotChannelBased) {
+                 isFileExistFlat = isLocalFileExist( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() );
+
+            } else { // if it is cell based
+                 isFileExistFlat = isLocalFileExist( getGrpMarkerCellsBoxplotFileName(), getGrpBoxplotLocalPath() );
+            }
 
 
-      if( isFileExistFlat ) {     
-           if (! isGrpChannelsStatisticalDataAvailable() ) {
+           if( isFileExistFlat ) {     
+               if (! isGrpChannelsStatisticalDataAvailable() ) {
 
-                if(Opts.isBoxplotChannelBased) {
-                      // load the data       
-                      grpChannelsStatisticalData = readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ); 
+                    if(Opts.isBoxplotChannelBased) {
+                          // load the data       
+                          grpChannelsStatisticalData = readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ); 
 
-                } else { // if it is cell based
-                      grpChannelsStatisticalData = readJsonFile(getGrpMarkerCellsBoxplotFileName(), getGrpBoxplotLocalPath() ); 
-                }
- 
-           }
+                    } else { // if it is cell based
+                          grpChannelsStatisticalData = readJsonFile(getGrpMarkerCellsBoxplotFileName(), getGrpBoxplotLocalPath() ); 
+                    }
+     
+               }
+               
+               let chartData = {channelNames: [], boxplots:[]}; // channelNames will have frame names
+
+               chartData.boxplots = grpChannelsStatisticalData.map(chnlData => {
+                        return [ chnlData.min, chnlData.q1, chnlData.median, chnlData.q3, chnlData.max]
+               })
+
+               //  e.g. chartData.channelNames = [ "CD45", "IBA1", "KERATIN", "ASMA", "DNA 1" ]
+               chartData.channelNames = grpChannelsStatisticalData.map(chnlData => chnlData.Frame)                 
+
+
+               drawMarkersBoxPlotChart(chartData);
+
+
+          } else {
+              // In case using createTilesFeature.allTilesAtOnce = false, to create tileByTile features
+              triggerHint("No markers boxplot data found, do you want to calculate them?  " + 
+                  '<a href="javascript:void(0)" onclick="calculateMarkerBoxplots()">[<b><font color="green">Yes</font></b>]</a>' + 
+                  '<a href="javascript:void(0)" onclick="closeHint()">[<b><font color="red">No</font></b>]</a>', "error", 10000);
+          }
+    }
+
+//----------------------------------------------------------------------------------//
+//------------------------- Tile Mouse events  -------------------------------------//
+//----------------------------------------------------------------------------------//
+
+    /**
+     *  Event on make tile/cell selection
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */     
+
+     function onSelectedTile(d, i) { // Add interactivity
+
+        //-- setSelectedTile( d3.select(this).attr('id') );
+        setSelectedTile(this);
+        let curTile = d3.select(this);
+      
+
+        if(d3.select(this).attr('class') == "spx"){
+             allSelection.push(this.id);  // to be used for undo ..
+         }
+
+        //-- if( !isSuperPixel() ){
+
+              let prevTileId = getLastSelectedTileId();
+              let prevTile = d3.select("#" + prevTileId);
+              //-- let strokeWidth = 10;
+              if( (prevTileId != null) && (prevTileId != getSelectedTileId() )) {
+                      let origTileColor = prevTile.attr('origColor');
+                      prevTile.style('fill', origTileColor)
+                      prevTile.style("fill-opacity", getBoundaryFillOpacity())
+                      prevTile.style('stroke', 'blue');
+                      prevTile.style('stroke-width', Opts.selectedTileStrokeWidth);
+                      prevTile.style('stroke-opacity', 1);
+                      //-- prevTileId= d3.select(this).attr('id');
+             } else if((prevTileId == null) && (! isFeaturesLoaded()) ){
+                      triggerHint(" No features found for selected tile, create features from Features menu", "info", 5000);
+             }
+
+             setLastSelectedTileId( curTile.attr('id') );
+             
+        //-- }   
            
-           let chartData = {channelNames: [], boxplots:[]}; // channelNames will have frame names
+        
+        curTile.style("fill-opacity", Opts.selectedTileFillOpacity);
+        curTile.style("fill", Opts.selectedTileFillColor);
+        //-- d3.select("#" + this.id).style("fill-opacity", 'none')
+        //-- d3.select("#" + this.id).style('stroke-width', Opts.selectedTileStrokeWidth)
+        //-- d3.select("#" + this.id).style('stroke', 'yellow')
+        //-- d3.select("#" + this.id).style('stroke', 'yellow')
 
-           chartData.boxplots = grpChannelsStatisticalData.map(chnlData => {
-                    return [ chnlData.min, chnlData.q1, chnlData.median, chnlData.q3, chnlData.max]
-           })
+        let bbox = find_bbox(this);
+        let entry = findObjectByKeyValue( Boundary_box, 'id', getSelectedTileId() ); // to check whether the entry exists or no..
 
-           //  e.g. chartData.channelNames = [ "CD45", "IBA1", "KERATIN", "ASMA", "DNA 1" ]
-           chartData.channelNames = grpChannelsStatisticalData.map(chnlData => chnlData.Frame)                 
+        if (entry == null) { 
+           Boundary_box.push({id: this.attributes.id.nodeValue, index: this.attributes.index.nodeValue,
+                             // xcent: this.attributes.Xcentroid.nodeValue, ycent:this.attributes.Ycentroid.nodeValue,
+                             left: bbox['left'], top: bbox['top'], width: bbox['width'], height:bbox['height']});
+        }
+
+        if( isFeaturesLoaded() ){ 
+           freezeInput("findSimilarTileBtn", false);
+           document.getElementById("curRoiFont").innerHTML = getSelectedTileId();
+        } 
+
+        //-- currentIndex = this.attributes.index.nodeValue;
+        //-- loadCanvas(bbox['left'],bbox['top'],bbox['width'],bbox['height'],currentIndex.toString());
+
+              
+        // --if ($$("Features").getValue()=="RGB")
+        // --      {
+        // --          PlotRGB(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
+
+        // --                  sortedDeEnDistances=[];
+        // --                  HistFeatures1D=[];
+        // --                  var currentTileFeatures = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(this).attr('id')); 
+        // --                  HistFeatures1D=getHistFeatures(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
+                  
+        // --           if($$("findSimilarTiles").getValue()==1)
+        // --          {
+        // --                  lookupSimilars(HistFeatures1D);
+                          
+        // --          } 
+
+        // --      }
+              
+
+      /*-----------------------------------------------------------------------
+        $$("findSimilarTiles").enable();                          <-------------------------------------------------
+      ------------------------------------------------------------------------*/
+
+    } // end of onSelectedTile
 
 
-           drawMarkersBoxPlotChart(chartData);
+    /**
+     *  When mouse leave OSD overlay
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */ 
 
+     function handleMouseLeave(d, i) { // Add interactivity
 
-      } else {
-          // In case using createTilesFeature.allTilesAtOnce = false, to create tileByTile features
-          triggerHint("No markers boxplot data found, do you want to calculate them?  " + 
-              '<a href="javascript:void(0)" onclick="calculateMarkerBoxplots()">[<b><font color="green">Yes</font></b>]</a>' + 
-              '<a href="javascript:void(0)" onclick="closeHint()">[<b><font color="red">No</font></b>]</a>', "error", 10000);
-      }
-}
+        if( isBoundariesLoaded() ){
+           document.getElementById("currentTile").innerHTML = "Total Tiles : " + getTotalTilesNum();
+        } else {
+           document.getElementById("currentTile").innerHTML = "";
+        } 
+        
 
-/////////////////////////// Tile Mouse events  ///////////////////////////////////////
+        if( isFeaturesLoaded() ){ 
+             if( (getSelectedChartOperation() == "Histogram") || (getSelectedChartOperation() == "Histogram-log1p(y)" )) {    
+                  resetChartPlottingData();
+             } 
+        }         
 
-function onSelectedTile (d, i) { // Add interactivity
-
-    //-- setSelectedTile( d3.select(this).attr('id') );
-    setSelectedTile(this);
-    let curTile = d3.select(this);
-  
-
-    if(d3.select(this).attr('class') == "spx"){
-         allSelection.push(this.id);  // to be used for undo ..
-     }
-
-  
-    //-- if( !isSuperPixel() ){
-          let prevTileId = getLastSelectedTileId();
-          let prevTile = d3.select("#" + prevTileId);
-          //-- let strokeWidth = 10;
-          if( (prevTileId != null) && (prevTileId != getSelectedTileId() )) {
-                  let origTileColor = prevTile.attr('origColor');
-                  prevTile.style('fill', origTileColor)
-                  prevTile.style("fill-opacity", getBoundaryFillOpacity())
-                  prevTile.style('stroke', 'blue');
-                  prevTile.style('stroke-width', Opts.selectedTileStrokeWidth);
-                  prevTile.style('stroke-opacity', 1);
-                  //-- prevTileId= d3.select(this).attr('id');
-         } else if((prevTileId == null) && (! isFeaturesLoaded()) ){
-                  triggerHint(" No features found for selected tile, create features from Features menu", "info", 5000);
-         }
-
-         setLastSelectedTileId( curTile.attr('id') );
-         
-    //-- }   
-       
-    
-    curTile.style("fill-opacity", Opts.selectedTileFillOpacity);
-    curTile.style("fill", Opts.selectedTileFillColor);
-    //-- d3.select("#" + this.id).style("fill-opacity", 'none')
-    //-- d3.select("#" + this.id).style('stroke-width', Opts.selectedTileStrokeWidth)
-    //-- d3.select("#" + this.id).style('stroke', 'yellow')
-    //-- d3.select("#" + this.id).style('stroke', 'yellow')
-
-    let bbox = find_bbox(this);
-    let entry = findObjectByKeyValue( Boundary_box, 'id', getSelectedTileId() ); // to check whether the entry exists or no..
-
-    if (entry == null) { 
-       Boundary_box.push({id: this.attributes.id.nodeValue, index: this.attributes.index.nodeValue,
-                         // xcent: this.attributes.Xcentroid.nodeValue, ycent:this.attributes.Ycentroid.nodeValue,
-                         left: bbox['left'], top: bbox['top'], width: bbox['width'], height:bbox['height']});
     }
 
-    if( isFeaturesLoaded() ){ 
-       freezeInput("findSimilarTileBtn", false);
-       document.getElementById("curRoiFont").innerHTML = getSelectedTileId();
-    } 
 
-    //-- currentIndex = this.attributes.index.nodeValue;
-    //-- loadCanvas(bbox['left'],bbox['top'],bbox['width'],bbox['height'],currentIndex.toString());
+    /**
+     *  On cell mouse over event - show histogram of each cell
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */ 
 
-          
-    // --if ($$("Features").getValue()=="RGB")
-    // --      {
-    // --          PlotRGB(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
+     function handleMouseOver(d, i) { // Add interactivity
 
-    // --                  sortedDeEnDistances=[];
-    // --                  HistFeatures1D=[];
-    // --                  var currentTileFeatures = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(this).attr('id')); 
-    // --                  HistFeatures1D=getHistFeatures(bbox['left'],bbox['top'],bbox['width'],bbox['height'],$$("NumOfBins").getValue());
-              
-    // --           if($$("findSimilarTiles").getValue()==1)
-    // --          {
-    // --                  lookupSimilars(HistFeatures1D);
-                      
-    // --          } 
+          let tileType  = getTileType();
 
-    // --      }
-          
+          let index = findObjectByKeyValue(eval(tileType + "TilesLabel"), 'id', this.attributes.id.nodeValue, 'INDEX' ); // to check whether the entry exists or no..
 
-  /*-----------------------------------------------------------------------
-    $$("findSimilarTiles").enable();                          <-------------------------------------------------
-  ------------------------------------------------------------------------*/
+          if(index == null) {
+            if( isSuperPixel() ) {
+                document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue;
+            }
+            else {
+                document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue;
+            }    
+          } else {
+            if( isSuperPixel() ) {
+                document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue  + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
+            }
+            else {
+                document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
+            }
+          }
 
-} // end of onSelectedTile
+            
+          d3.select(this).style('stroke', Opts.StrokeColorOnHover);
+          d3.select(this).style('stroke-width',   Opts.StrokeWidthOnHover);
+          d3.select(this).style('stroke-opacity', Opts.StrokeOpacityOnHover);
+            
+          if( getSelectedChartOperation() == "Histogram"){    
+                let bbox = find_bbox(this);    // drawing is the shape flag 
+                plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this); 
+           } else if(getSelectedChartOperation() == "Histogram-log1p(y)"){
+                let bbox = find_bbox(this);    // drawing is the shape flag 
+                plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this, true); 
+           }
+    }
 
-/////////////////////////////////////////////////////
-// when mouse leave OSD overlay
-function handleMouseLeave  (d, i) { // Add interactivity
-    if( isBoundariesLoaded() ){
-       document.getElementById("currentTile").innerHTML = "Total Tiles : " + getTotalTilesNum();
-    } else {
-       document.getElementById("currentTile").innerHTML = "";
-    } 
-    
 
-    if( isFeaturesLoaded() ){ 
-         if( (getSelectedChartOperation() == "Histogram") || (getSelectedChartOperation() == "Histogram-log1p(y)" )) {    
-              resetChartPlottingData();
-         } 
-    }         
+    /**
+     *  On cell mouse over leave  
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */ 
 
-}
-///////////////////////////////////////////////////
-//On cell mouse over event - show histogram of each cell
-function handleMouseOver (d, i) { // Add interactivity
+     function handleTileMouseLeave(d, i) {
 
-      let tileType  = getTileType();
+         if( isSimilarRegionBtnEnabled() ){      
+             //-- d3.select(this).style('stroke', getStrokeColor());
+             //-- d3.select(this).style('stroke-width', getStrokeWidth());
+             //-- d3.select(this).style('stroke-opacity', getStrokeOpacity()); 
+             if(d3.select(this).style('fill') == "rgb(255, 255, 255)") {
+                d3.select(this).style('stroke', 'none');  
+             } else {
+                d3.select(this).style('stroke', Opts.similarTileStrokeColor);
+             }
 
-      let index = findObjectByKeyValue(eval(tileType + "TilesLabel"), 'id', this.attributes.id.nodeValue, 'INDEX' ); // to check whether the entry exists or no..
+                  //-- d3.selectAll(tileClass).style('fill', 'white');
+                  //-- d3.selectAll(tileClass).style('fill-opacity', 0.1); 
 
-      if(index == null) {
-        if( isSuperPixel() ) {
-            document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue;
-        }
-        else {
-            document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue;
-        }    
-      } else {
-        if( isSuperPixel() ) {
-            document.getElementById("currentTile").innerHTML = "SPX ID : " + this.attributes.index.nodeValue  + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
-        }
-        else {
-            document.getElementById("currentTile").innerHTML = "Grid ID : " + this.attributes.index.nodeValue + ",      Label : " + eval(tileType+"TilesLabel")[index].tilelabel;
-        }
-      }
-
-        
-      d3.select(this).style('stroke', Opts.StrokeColorOnHover);
-      d3.select(this).style('stroke-width',   Opts.StrokeWidthOnHover);
-      d3.select(this).style('stroke-opacity', Opts.StrokeOpacityOnHover);
-        
-      if( getSelectedChartOperation() == "Histogram"){    
-            let bbox = find_bbox(this);    // drawing is the shape flag 
-            plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this); 
-       } else if(getSelectedChartOperation() == "Histogram-log1p(y)"){
-            let bbox = find_bbox(this);    // drawing is the shape flag 
-            plotTileMarkersHistogram(bbox['left'], bbox['top'], bbox['width'], bbox['height'], this, true); 
-       }
-}
-
-///////////////////////////////////////////////////
-function handleTileMouseLeave (d, i){
-
-     if( isSimilarRegionBtnEnabled() ){      
-         //-- d3.select(this).style('stroke', getStrokeColor());
-         //-- d3.select(this).style('stroke-width', getStrokeWidth());
-         //-- d3.select(this).style('stroke-opacity', getStrokeOpacity()); 
-         if(d3.select(this).style('fill') == "rgb(255, 255, 255)") {
-            d3.select(this).style('stroke', 'none');  
          } else {
-            d3.select(this).style('stroke', Opts.similarTileStrokeColor);
-         }
+             d3.select(this).style('stroke', getStrokeColor());
+             d3.select(this).style('stroke-width', getStrokeWidth());
+             d3.select(this).style('stroke-opacity', getStrokeOpacity());      
 
-              //-- d3.selectAll(tileClass).style('fill', 'white');
-              
-              //-- d3.selectAll(tileClass).style('fill-opacity', 0.1); 
+         }   
 
-     } else {
-         d3.select(this).style('stroke', getStrokeColor());
-         d3.select(this).style('stroke-width', getStrokeWidth());
-         d3.select(this).style('stroke-opacity', getStrokeOpacity());      
-
-     }   
-
-       /*  $$("propChart2").clearAll();            <--------------------------------*/ //<<<<<<<<<<<
-
-}
-
-/////////////////////////////////////
-
-function  handleMouseRightClick(){
-    let currentRightClickedTile = this;
-    setRightClickedTile(this);
-
-    if( isSuperPixel() ) {
-       menu1[0].title = "SPX " + currentRightClickedTile.attributes.index.nodeValue;
-       menu2[0].title = "SPX " + currentRightClickedTile.attributes.index.nodeValue;
-       menu3[0].title = "SPX " + currentRightClickedTile.attributes.index.nodeValue;
-     } else {
-       menu1[0].title = "Grid " + currentRightClickedTile.attributes.index.nodeValue;
-       menu2[0].title = "Grid " + currentRightClickedTile.attributes.index.nodeValue;
-       menu3[0].title = "Grid " + currentRightClickedTile.attributes.index.nodeValue;
+           /*  $$("propChart2").clearAll();            <--------------------------------*/ //<<<<<<<<<<<
     }
-   
-}
 
 
-/////////////////////////////////////////////////////////////////////////////
-// For future use
-// function mark(elem, marker){
+    /**
+     *  On mouse right click and shows cell index
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */ 
 
-//  var tileType = "SPX";
-//  var tileSize = 64 ;
+     function handleMouseRightClick() {
+        let currentRightClickedTile = this;
+        setRightClickedTile(this);
 
-//  var index = findObjectByKey(eval(tileType + "TilesLabel"), 'id', elem.id, 'INDEX' ); // to check whether the entry exists or no..
-
-
-//  if(marker != "None") {
-
-//     if(index == null) {
-//        eval(tileType + "TilesLabel").push({id: element.id, index: element.attributes.index.nodeValue, size: tileSize, tileLabel: marker})
-
-//      } else {
-//          if(eval(tileType + "TilesLabel")[index].tilelabel != marker) {
-//                 eval(tileType + "TilesLabel")[index].tilelabel = marker;
-//          }
-//      }
-//   } else {
-//        eval(tileType + "TilesLabel").splice(index, 1);
-//        if(eval(tileType + "TilesLabel").length == 0) {
-//           $$("saveLabels").disable();
-//           $$("heatmap").disable();
-//           $$("PrevAnnotated").disable();
-//           $$("NextAnnotated").disable();
-//         }
-//    }
-// }
-
-function mark(elem, marker){
-  
- let tileType = getTileType();
- let tileSize;
- if( isSuperPixel()){
-     tileSize = null ;
- } else {
-     tileSize = getGridSize();
- }
-
- var index = findObjectByKeyValue(eval(tileType + "TilesLabel"), 'id', elem.id, 'INDEX' ); // to check whether the entry exists or no..
-
-
- if(marker != "None") {
-
-    if(index == null) {
-       eval(tileType + "TilesLabel").push({id: element.id, index: element.attributes.index.nodeValue, size: tileSize, tileLabel: marker})
-
-     } else {
-         if(eval(tileType + "TilesLabel")[index].tilelabel != marker) {
-                eval(tileType + "TilesLabel")[index].tilelabel = marker;
-         }
-     }
-  } else {
-       eval(tileType + "TilesLabel").splice(index, 1);
-       if(eval(tileType + "TilesLabel").length == 0) {
-          $$("saveLabels").disable();
-          $$("heatmap").disable();
-          $$("PrevAnnotated").disable();
-          $$("NextAnnotated").disable();
+        if( isSuperPixel() ) {
+           menu1[0].title = "SPX " + currentRightClickedTile.attributes.index.nodeValue;
+           menu2[0].title = "SPX " + currentRightClickedTile.attributes.index.nodeValue;
+           menu3[0].title = "SPX " + currentRightClickedTile.attributes.index.nodeValue;
+         } else {
+           menu1[0].title = "Grid " + currentRightClickedTile.attributes.index.nodeValue;
+           menu2[0].title = "Grid " + currentRightClickedTile.attributes.index.nodeValue;
+           menu3[0].title = "Grid " + currentRightClickedTile.attributes.index.nodeValue;
         }
-   }
-}
-//////////////////////////////////////////
+    }
+
+
+
+    /**
+     *  Mark the cell if it is postive cell or negative cell to use for classification 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */     
+
+     function mark(elem, marker) {
+      
+         let tileType = getTileType();
+         let tileSize;
+
+         if( isSuperPixel()){
+             tileSize = null ;
+
+         } else {
+             tileSize = getGridSize();
+         }
+
+         // To check whether the entry exists or no.. 
+         let index = findObjectByKeyValue(eval(tileType + "TilesLabel"), 'id', elem.id, 'INDEX' ); 
+
+         if(marker != "None") {
+
+            if(index == null) {
+               eval(tileType + "TilesLabel").push({id: element.id, index: element.attributes.index.nodeValue, size: tileSize, tileLabel: marker})
+
+             } else {
+
+                 if(eval(tileType + "TilesLabel")[index].tilelabel != marker) {
+                        eval(tileType + "TilesLabel")[index].tilelabel = marker;
+                 }
+             }
+          } else {
+               eval(tileType + "TilesLabel").splice(index, 1);
+               if(eval(tileType + "TilesLabel").length == 0) {
+                  $$("saveLabels").disable();
+                  $$("heatmap").disable();
+                  $$("PrevAnnotated").disable();
+                  $$("NextAnnotated").disable();
+                }
+           }
+    }
+
+ ///////////////////--- Right click menus ---///////////////////////
+
  menu1 = [{
             title: '',
             action: function(elm, d, i) {
-
             }
-         
          }]  
 
 
@@ -13197,193 +13218,299 @@ function mark(elem, marker){
          }] 
 
 
-
-
 menu3 = [{
 
-      title: '',
-      action: function(elm, d, i) {
+              title: '',
+              action: function(elm, d, i) {
 
-      }
+             }
    
-    },{
+            },{
 
-      title: 'Mark Positive',
-      action: function(elm, d, i) {
-        element =  getRightClickedTile();
-        d3.selectAll("#" + element.id).style("fill", "green")
-        d3.selectAll("#" + element.id).style("fill-opacity", "1")
-        d3.selectAll("#" + element.id).style("stroke", "green")
-        d3.selectAll("#" + element.id).style("stroke-opacity", "1")
-        mark(element,"P");
-      }
-    },{
+              title: 'Mark Positive',
+              action: function(elm, d, i) {
+                element =  getRightClickedTile();
+                d3.selectAll("#" + element.id).style("fill", "green")
+                d3.selectAll("#" + element.id).style("fill-opacity", "1")
+                d3.selectAll("#" + element.id).style("stroke", "green")
+                d3.selectAll("#" + element.id).style("stroke-opacity", "1")
+                mark(element,"P");
+              }
+            },{
 
-      title: 'Mark Negative',
-      action: function(elm, d, i) {
-        element =  getRightClickedTile();
-        d3.selectAll("#" + element.id).style("fill", "red")
-        d3.selectAll("#" + element.id).style("fill-opacity", "1")
-        d3.selectAll("#" + element.id).style("stroke", "red")
-        d3.selectAll("#" + element.id).style("stroke-opacity", "1")
-        mark(element,"N");
-      }
+              title: 'Mark Negative',
+              action: function(elm, d, i) {
+                element =  getRightClickedTile();
+                d3.selectAll("#" + element.id).style("fill", "red")
+                d3.selectAll("#" + element.id).style("fill-opacity", "1")
+                d3.selectAll("#" + element.id).style("stroke", "red")
+                d3.selectAll("#" + element.id).style("stroke-opacity", "1")
+                mark(element,"N");
+              }
 
-    }, {
-      title: 'Remove Selection',
-      action: function(elm, d, i) {
-        element =  getRightClickedTile();
-        OrigColor = d3.select("#" + element.id).attr('origColor')
+            }, {
 
-        d3.selectAll("#" + element.id).style("fill", OrigColor)
-        d3.selectAll("#" + element.id).style("fill-opacity", $$("SpxOpacity").getValue())
-        d3.selectAll("#" + element.id).style("stroke", 'none')
-        mark(element,"None");
-     
-      }
-    }, {
-      title: 'Show Tile',
-      action: function(elm, d, i) {
-        currentRightClickedTile = getRightClickedTile();
-        rightClickedbbox = find_bbox(currentRightClickedTile);
-        currentRightClickedIndex = currentRightClickedTile.attributes.index.nodeValue;
-        loadCanvas(rightClickedbbox['left'],rightClickedbbox['top'],rightClickedbbox['width'],rightClickedbbox['height'],currentRightClickedIndex.toString());
-       
-      }
-    }]
+              title: 'Remove Selection',
+              action: function(elm, d, i) {
+                element =  getRightClickedTile();
+                OrigColor = d3.select("#" + element.id).attr('origColor')
 
-////////////////////////////////////////////////////////////////// 
-//////////////////---------- Features ----------//////////////////
-//////////////////////////////////////////////////////////////////
+                d3.selectAll("#" + element.id).style("fill", OrigColor)
+                d3.selectAll("#" + element.id).style("fill-opacity", $$("SpxOpacity").getValue())
+                d3.selectAll("#" + element.id).style("stroke", 'none')
+                mark(element,"None");
+             
+              }
+            }, {
 
-isFeaturesLoaded = () => {
-   return allTilesFeatures.length ? true : false;
-}
+              title: 'Show Tile',
+              action: function(elm, d, i) {
+                currentRightClickedTile = getRightClickedTile();
+                rightClickedbbox = find_bbox(currentRightClickedTile);
+                currentRightClickedIndex = currentRightClickedTile.attributes.index.nodeValue;
+                loadCanvas(rightClickedbbox['left'],rightClickedbbox['top'],rightClickedbbox['width'],rightClickedbbox['height'],currentRightClickedIndex.toString());
+               
+              }
+        }]
 
-resetTileFeatures = () => {
-    allTilesFeatures = [];
-    grpChannelsStatisticalData = [];
-    dapiMorphStatisticalData = {};    
-    cellBasicClassification = [];
-    allTilesFeaturesAndClassification =[];   
-    filteredNeighbors = {};  
-}
+//--------------------------------------------------------------// 
+//----------------------- Features -----------------------------//
+//--------------------------------------------------------------//
 
-getGrpFeaturesData = () => {
- // to be coded    
-}
+    /**
+     *  Check if features loaded.
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {bool}
+     *
+     */ 
 
-isBoundariesLoaded = () => {
-    return d3.selectAll( getClassType() )._groups[0].length ? true : false; 
-}
+    isFeaturesLoaded = () => {
+       return allTilesFeatures.length ? true : false;
+    }
 
-getTotalTilesNum = () => {
-    return  d3.selectAll( getClassType() )._groups[0].length; 
-}
+    /**
+     *  Reset tile features
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */ 
 
-zoomToTile = (obj) => {
-    // console.log(obj)
-    var obj_bbox = find_bbox(obj);
-    let topFrame = viewer.world.getItemAt(0);
-    //-- var zoomArea = viewer.viewport.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);
-    var zoomArea = topFrame.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);    
-    viewer.viewport.fitBounds(zoomArea);
-}
-
-///////////////////////////////////////////////
-// function locateTile(spx_Class, bound_ID){   // locat SPX on WSI by its id
-//     d3.selectAll(spx_Class).each(function(d) {   
-//       if(d3.select(this).attr('id') == bound_ID) {
-//            zoomToTile(this);
-//       }
-//     });
-// }
+    resetTileFeatures = () => {
+        allTilesFeatures = [];
+        grpChannelsStatisticalData = [];
+        dapiMorphStatisticalData = {};    
+        cellBasicClassification = [];
+        allTilesFeaturesAndClassification =[];   
+        filteredNeighbors = {};  
+    }
 
 
+  /**
+   * For future use..
+   * 
+   * @function
+   * @todo Write the doc.
+   * @todo Implement this function.
+   */ 
+    getGrpFeaturesData = () => {
+     // to be coded    
+    }
 
-findTile = () => {
-     let tileToFind = document.getElementById("tileSearchBox").value;
-     let tileId = isSuperPixel() ? 'spx-' + tileToFind : 'grid-' + tileToFind;
-     let tileClass = getClassType();
 
-     if( isBoundariesLoaded() ) {
-            let existFlag = 0;  
-            d3.selectAll(tileClass).each(function(d) {
-              if (d3.select(this).attr('id') == tileId){
-                  existFlag = 1;
-              }                 
-            })
+    /**
+     *  Check if boundaries loaded.
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {bool}
+     *
+     */ 
+    isBoundariesLoaded = () => {
+        return d3.selectAll( getClassType() )._groups[0].length ? true : false; 
+    }
 
-           if(existFlag) {
-              let foundTile = document.getElementById(tileId);
-              zoomToTile(foundTile);
-             //-- locateTile(tileClass, tileId);
-             //-- existFlag = 0;
-           } else {
-             triggerHint("Not a valid entry");
+
+    /**
+     *  Get total cell number
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {number}
+     *
+     */ 
+    getTotalTilesNum = () => {
+        return  d3.selectAll( getClassType() )._groups[0].length; 
+    }
+
+    /**
+     *  Zoom to specific cell
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @param {object} obj : object <polygon id="spx-59944" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" ..."> 
+     *
+     */ 
+    zoomToTile = (obj) => {
+        // console.log(obj)
+        var obj_bbox = find_bbox(obj);
+        let topFrame = viewer.world.getItemAt(0);
+        //-- var zoomArea = viewer.viewport.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);
+        var zoomArea = topFrame.imageToViewportRectangle(obj_bbox['left'], obj_bbox['top'], obj_bbox['width'], obj_bbox['height']);    
+        viewer.viewport.fitBounds(zoomArea);
+    }
+
+
+    /**
+     * @deprecated since version 1.0.0
+     */ 
+     function locateTile(spx_Class, bound_ID){   // locat SPX on WSI by its id
+         d3.selectAll(spx_Class).each(function(d) {   
+           if(d3.select(this).attr('id') == bound_ID) {
+                zoomToTile(this);
            }
-
-     } else {
-           triggerHint("No loaded tiles")
+         });
      }
 
-  
-}
+
+    /**
+     *  Using search box to find cell by id and zoom to
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */ 
+
+    findTile = () => {
+         let tileToFind = document.getElementById("tileSearchBox").value;
+         let tileId = isSuperPixel() ? 'spx-' + tileToFind : 'grid-' + tileToFind;
+         let tileClass = getClassType();
+
+         if( isBoundariesLoaded() ) {
+                let existFlag = 0;  
+                d3.selectAll(tileClass).each(function(d) {
+                  if (d3.select(this).attr('id') == tileId){
+                      existFlag = 1;
+                  }                 
+                })
+
+               if(existFlag) {
+                  let foundTile = document.getElementById(tileId);
+                  zoomToTile(foundTile);
+                 //-- locateTile(tileClass, tileId);
+                 //-- existFlag = 0;
+               } else {
+                 triggerHint("Not a valid entry");
+               }
+
+         } else {
+               triggerHint("No loaded tiles")
+         }
+    }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-initBoundariesFeatures = () => {
-      let featuresLoadedFlag = false;
 
-      if( isLocalFileExist( getGrpFeaturesFileName(), getGrpFeaturesLocalPath()) ) {     
-           // load the features       
-           createLoadFeatures();       
-          //-- document.getElementById("createLoadFeaturesBtn").disabled = true;
-           if( isFeaturesLoaded() ) {
-               freezeInput("createLoadFeaturesBtn", true); 
-               featuresLoadedFlag = true;
-           } else {
-               freezeInput("createLoadFeaturesBtn", false);  
-           }             
+    /**
+     *  init cell features by loading after loading boundaries 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     *
+     */     
 
-      } else { 
-          if( isLocalFileExist( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath()) ) { 
-               document.getElementById("createLoadFeaturesBtn").innerHTML = "Resume";
-               triggerHint("Incomplete features found, click Resume from Features menu", "info", 7000); // was 7000
-          } else {           
-              document.getElementById("createLoadFeaturesBtn").innerHTML = "Create";
-              triggerHint("No features found, click Create features from Features menu", "info", 7000); // was 7000
+    initBoundariesFeatures = () => {
+          let featuresLoadedFlag = false;
+
+          if( isLocalFileExist( getGrpFeaturesFileName(), getGrpFeaturesLocalPath()) ) {     
+               // load the features       
+               createLoadFeatures();       
+              //-- document.getElementById("createLoadFeaturesBtn").disabled = true;
+               if( isFeaturesLoaded() ) {
+                   freezeInput("createLoadFeaturesBtn", true); 
+                   featuresLoadedFlag = true;
+               } else {
+                   freezeInput("createLoadFeaturesBtn", false);  
+               }             
+
+          } else { 
+              if( isLocalFileExist( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath()) ) { 
+                   document.getElementById("createLoadFeaturesBtn").innerHTML = "Resume";
+                   triggerHint("Incomplete features found, click Resume from Features menu", "info", 7000); // was 7000
+              } else {           
+                  document.getElementById("createLoadFeaturesBtn").innerHTML = "Create";
+                  triggerHint("No features found, click Create features from Features menu", "info", 7000); // was 7000
+              }
+              
+              // Enable features Create/Resume switch 
+              if( !isFeaturesCreateBtnEnabled() ) {
+                 freezeInput("createLoadFeaturesBtn", false);
+              }
+
           }
-          
-          // Enable features Create/Resume switch 
-          if( !isFeaturesCreateBtnEnabled() ) {
-             freezeInput("createLoadFeaturesBtn", false);
-          }
 
-      }
-
-      return featuresLoadedFlag;
-}
+          return featuresLoadedFlag;
+    }
 
 
+    /**
+     *  Get the class of selected boundary type
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {string} e.g. ".spx"
+     */      
 
-  // Get the class of selected boundary type
-  getClassType = () => {
-      return isSuperPixel() ? ".spx" : ".grid";
-  }
+    getClassType = () => {
+          return isSuperPixel() ? ".spx" : ".grid";
+    }
 
-  // Get tile type 
-  getTileType = () => {
-      return isSuperPixel() ? "SPX" : "Grid";
-  }
+   /**
+     *  Get tile type 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {string} e.g. "SPX"
+     */  
 
-  getTileIdPrefix = () => {
-    return isSuperPixel() ? "spx-" : "grid-";
-  }
+    getTileType = () => {
+          return isSuperPixel() ? "SPX" : "Grid";
+    }
 
- splitString = (string, size) => {     // https://gist.github.com/hendriklammers/5231994
-        let re = new RegExp('.{1,' + size + '}', 'g');
-        return string.match(re);
-  }  
+
+   /**
+     *  Get tile id prefix 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {string} e.g. "spx-"
+     */ 
+
+    getTileIdPrefix = () => {
+        return isSuperPixel() ? "spx-" : "grid-";
+    }
+
 
   /**
    * For future use..
@@ -13396,6 +13523,20 @@ initBoundariesFeatures = () => {
   estimateFeaturesCreationTime = () => {
     // For future use
   }
+
+
+   /**
+     *  Save feature data locally to local file
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @param {Array} featuresData : array of objects [ { label: 1, features: (5) […], area: 348.5, … }, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]
+     * @param {string} fileName
+     * @param {string} dirLocalPath         
+     * @returns {bool}  saveSuccessFlag
+     */ 
 
   saveFeatureDataLocally = (featuresData, fileName, dirLocalPath ) => {
        let saveSuccessFlag = true;   
@@ -13438,316 +13579,333 @@ initBoundariesFeatures = () => {
         return saveSuccessFlag;
   }
 
-  isValidFeaturesData = (featuresData) =>{
-      return (featuresData.length == getTotalTilesNum()) && featuresData.length ? true : false; 
-  }
+
+   /**
+     *  Check if features data is valid and its length equal total cell number
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @param {Array} featuresData : array of objects [ { label: 1, features: (5) […], area: 348.5, … }, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]       
+     * @returns {bool}  saveSuccessFlag
+     */ 
+
+      isValidFeaturesData = (featuresData) =>{
+          return (featuresData.length == getTotalTilesNum()) && featuresData.length ? true : false; 
+      }
 
 
-  createLoadFeatures = () => {
-        //--let fetchedFeatures = getFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );  <<<<<<<<<<--------
-        allTilesFeatures = readJsonFile( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
+    /**
+     *  Create or load features if exists
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @param {Array} featuresData : array of objects [ { label: 1, features: (5) […], area: 348.5, … }, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]       
+     * @returns {bool}  saveSuccessFlag
+     */  
 
-        
-        //-- let currentTileId = getSelectedTileId();
-
-        //-- resetTileFeatures();        <<<<<<<<<<<<<<<< ------------
-        
-        //-- if((fetchedFeatures == null) || ( fetchedFeatures == "notExist")) { 
-        if(! allTilesFeatures.length ) {           
-            //--zoomSlideOut();
-            viewerZoomHome();                //  <<<<<<<<<<< ------------ enforce sync 
-            webix.message("Creating features in progress...");
-                                          
-
-            //-- let isIncompleteFileExist = false;
-            //-- let fetchedIncompletedFeatures = getFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );
-            allTilesFeatures = readJsonFile( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );            
-          
-            //-- if((fetchedIncompletedFeatures != null) && ( fetchedIncompletedFeatures != "notExist")) { 
-            //--     allTilesFeatures = JSON.parse(fetchedIncompletedFeatures);
-            //--     isIncompleteFileExist = true;
-            //-- }
-
-            // backup plan in case it txt_allTilesFeatures failed to be created by json.strinify()
-            triggerHint("Wait while creating channels mean, max, std, norm features file","info", 5000);
-            let creationSuccessFlag = true;
-            let fileChunksToSaveTemp = [];
-            let maxFileSize = Opts.maxFileSize;
-            //-- let safeMargin = 2000;
+      createLoadFeatures = () => {
+            //--let fetchedFeatures = getFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );  <<<<<<<<<<--------
+            allTilesFeatures = readJsonFile( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
             
-            try {
+            //-- let currentTileId = getSelectedTileId();
 
-                  if(Opts.createTilesFeature.allTilesAtOnce) {
-                             
-                                                // let bbox = find_bbox(this);
-                                                // let curTileFeatures = getTileProp( bbox['left'], bbox['top'], bbox['width'], bbox['height']);
+            //-- resetTileFeatures();        <<<<<<<<<<<<<<<< ------------
+            
+            //-- if((fetchedFeatures == null) || ( fetchedFeatures == "notExist")) { 
+            if(! allTilesFeatures.length ) {           
+                //--zoomSlideOut();
+                viewerZoomHome();                //  <<<<<<<<<<< ------------ enforce sync 
+                webix.message("Creating features in progress...");
 
-                                                if( isSuperPixel() ) {
-                                                   allTilesFeatures = getAllSpxTilesFeature();
-                                                } else {
-                                                   allTilesFeatures = getAllGridTilesFeature();
-                                                }
+                //-- let isIncompleteFileExist = false;
+                //-- let fetchedIncompletedFeatures = getFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );
+                allTilesFeatures = readJsonFile( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );            
+              
+                //-- if((fetchedIncompletedFeatures != null) && ( fetchedIncompletedFeatures != "notExist")) { 
+                //--     allTilesFeatures = JSON.parse(fetchedIncompletedFeatures);
+                //--     isIncompleteFileExist = true;
+                //-- }
 
-                                                if(allTilesFeatures == "Failed") {
-                                                     allTilesFeatures = [];
-                                                     triggerHint("Can not  convert image channels to gray image.. ", "error", 5000);
-                                                     return 0;
-                                                }
+                // backup plan in case it txt_allTilesFeatures failed to be created by json.strinify()
+                triggerHint("Wait while creating channels mean, max, std, norm features file","info", 5000);
+                let creationSuccessFlag = true;
+                let fileChunksToSaveTemp = [];
+                let maxFileSize = Opts.maxFileSize;
+                //-- let safeMargin = 2000;
+                
+                try {
 
+                      if(Opts.createTilesFeature.allTilesAtOnce) {
+                                 
+                                                    //-- let bbox = find_bbox(this);
+                                                    //-- let curTileFeatures = getTileProp( bbox['left'], bbox['top'], bbox['width'], bbox['height']);
 
-                                                if(allTilesFeatures == "chNormFailed") {
-                                                     allTilesFeatures = [];
-                                                     triggerHint("Image normalization " + "<b><font color='red'>Failed</font></b>" + 
-                                                                 " due to insufficient Memory, Would you like to bypass normalize step " +
-                                                                '<a href="javascript:void(0)" onclick="bypassImageNormalization()">[<b><font color="green">Yes</font></b>]</a>' + 
-                                                                '<a href="javascript:void(0)" onclick="closeHint()">[<b><font color="red">No</font></b>]</a>', "error", 60000);
+                                                    if( isSuperPixel() ) {
+                                                       allTilesFeatures = getAllSpxTilesFeature();
+                                                    } else {
+                                                       allTilesFeatures = getAllGridTilesFeature();
+                                                    }
 
+                                                    if(allTilesFeatures == "Failed") {
+                                                         allTilesFeatures = [];
+                                                         triggerHint("Can not  convert image channels to gray image.. ", "error", 5000);
+                                                         return 0;
+                                                    }
 
-                                                     console.log("Image normalization Failed due to insufficient Memory, there is a need to bypass normalization or to reduce/crop image size or free more memory, or increase memory size " );                   
-                                                     //-- Opts.isChannelNormalizeRequired = false;
-                                                     //--setItemMetadataKeyValue(metaKey, metaValue) 
-                                                     return 0;
-                                                }
-
-                                               //-- let metaKey = "settings";
-                                               //-- let metaValue = Opts.isChannelNormalizeRequired == true ? {"imageNorm": true } : {"imageNorm": false };
-                                               //-- setItemMetadataKeyValue(metaKey, metaValue);                                                
-
-
-                  } else { // create features tile by tile, time consuming and high time complexity
-           
-                      d3.selectAll(getClassType()).each(function(d) {
-
-                          if( ! findObjectByKeyValue(allTilesFeatures, 'id', this.id) ) {  // check in case of resume features creation interrupted before
-                                let bbox = find_bbox(this);
-                                let curTileFeatures = getTileProp( bbox['left'], bbox['top'], bbox['width'], bbox['height']);
-
-
-                                if( isSuperPixel() ) {
-                                  // need to have function to convert to DSA format
-                                   allTilesFeatures.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
-                                   fileChunksToSaveTemp.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
-                                   //--  allTilesFeatures.push({id:this.id , Frames: numOfFrames, features:curTileFeatures})
-                                } else {
-                                   allTilesFeatures.push({id: this.id, coordinates: bbox, features: curTileFeatures});
-                                   fileChunksToSaveTemp.push({id: this.id, coordinates: bbox, features: curTileFeatures});
-                                }
-
-                                // to save temp features file in case of interruption  
-                                if(JSON.stringify(fileChunksToSaveTemp).length >= (maxFileSize - (JSON.stringify(fileChunksToSaveTemp[0]).length) * 2 ) ) {
-                                   saveFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() , JSON.stringify(fileChunksToSaveTemp), "a", 0); 
-                                   fileChunksToSaveTemp = [];
-                                }
+                                                    if(allTilesFeatures == "chNormFailed") {
+                                                         allTilesFeatures = [];
+                                                         triggerHint("Image normalization " + "<b><font color='red'>Failed</font></b>" + 
+                                                                     " due to insufficient Memory, Would you like to bypass normalize step " +
+                                                                    '<a href="javascript:void(0)" onclick="bypassImageNormalization()">[<b><font color="green">Yes</font></b>]</a>' + 
+                                                                    '<a href="javascript:void(0)" onclick="closeHint()">[<b><font color="red">No</font></b>]</a>', "error", 60000);
 
 
+                                                         console.log("Image normalization Failed due to insufficient Memory, there is a need to bypass normalization or to reduce/crop image size or free more memory, or increase memory size " );                   
+                                                         //-- Opts.isChannelNormalizeRequired = false;
+                                                         //--setItemMetadataKeyValue(metaKey, metaValue) 
+                                                         return 0;
+                                                    }
 
-       
+                                                   //-- let metaKey = "settings";
+                                                   //-- let metaValue = Opts.isChannelNormalizeRequired == true ? {"imageNorm": true } : {"imageNorm": false };
+                                                   //-- setItemMetadataKeyValue(metaKey, metaValue);                                                
 
-                              //-- if(isIncompleteFileExist) {
-                              //--   saveFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() , fileChunks[k], "a", 0); 
+                      } else { // create features tile by tile, time consuming and high time complexity
+               
+                          d3.selectAll(getClassType()).each(function(d) {
 
-                              //-- } else if( allTilesFeatures.length == getTotalTilesNum() ){
-                                  
-                              //-- } else {
-                              //--   saveFeatures( fileName, dirLocalPath, fileChunks[k], "a", -1); 
+                              if( ! findObjectByKeyValue(allTilesFeatures, 'id', this.id) ) {  // check in case of resume features creation interrupted before
+                                    let bbox = find_bbox(this);
+                                    let curTileFeatures = getTileProp( bbox['left'], bbox['top'], bbox['width'], bbox['height']);
 
-                              //-- }
-                          }
 
-                      //-- if(this.id != currentTileId) {
-                          d3.select(this).style('fill', Opts.defaultScanningFillColor);
-                          d3.select(this).style('fill-opacity', Opts.defaultScanningFillOpacity);
-                       //-- }
+                                    if( isSuperPixel() ) {
+                                      // need to have function to convert to DSA format
+                                       allTilesFeatures.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
+                                       fileChunksToSaveTemp.push({id: this.id , coordinates: this.attributes.points, features: curTileFeatures});
+                                       //--  allTilesFeatures.push({id:this.id , Frames: numOfFrames, features:curTileFeatures})
+                                    } else {
+                                       allTilesFeatures.push({id: this.id, coordinates: bbox, features: curTileFeatures});
+                                       fileChunksToSaveTemp.push({id: this.id, coordinates: bbox, features: curTileFeatures});
+                                    }
 
-                      }) // end of d3.selectAll loop
-                  
-                    // Get All tiles at once //
-              } 
-          
-          } catch(err) {
-            creationSuccessFlag = false;
-            console.error("Error during features creation:  ", err);
-          }   
+                                    // to save temp features file in case of interruption  
+                                    if(JSON.stringify(fileChunksToSaveTemp).length >= (maxFileSize - (JSON.stringify(fileChunksToSaveTemp[0]).length) * 2 ) ) {
+                                       saveFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() , JSON.stringify(fileChunksToSaveTemp), "a", 0); 
+                                       fileChunksToSaveTemp = [];
+                                    }
 
-          // let isSavedLocally = false; 
 
-          if(creationSuccessFlag) {
-              let isSavedLocally = saveFeatureDataLocally(allTilesFeatures, getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
-              alert("Features creation is completed");              
+                                  //-- if(isIncompleteFileExist) {
+                                  //--   saveFeatures( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() , fileChunks[k], "a", 0); 
 
-              if(isSavedLocally) {  
+                                  //-- } else if( allTilesFeatures.length == getTotalTilesNum() ){
+                                      
+                                  //-- } else {
+                                  //--   saveFeatures( fileName, dirLocalPath, fileChunks[k], "a", -1); 
 
-                  triggerHint("Successfully saved Features locally", "info", 5000); 
-                  if( isLocalFileExist( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath()) ) { 
-                      removeLocalFile( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );
+                                  //-- }
+                              }
+
+                           //-- if(this.id != currentTileId) {
+                              d3.select(this).style('fill', Opts.defaultScanningFillColor);
+                              d3.select(this).style('fill-opacity', Opts.defaultScanningFillOpacity);
+                           //-- }
+
+                          }) // end of d3.selectAll loop
+                      
+                        // Get All tiles at once //
+                  } 
+              
+              } catch(err) {
+                creationSuccessFlag = false;
+                console.error("Error during features creation:  ", err);
+              }   
+
+              //-- let isSavedLocally = false; 
+
+              if(creationSuccessFlag) {
+                  let isSavedLocally = saveFeatureDataLocally(allTilesFeatures, getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
+                  alert("Features creation is completed");              
+
+                  if(isSavedLocally) {  
+
+                      triggerHint("Successfully saved Features locally", "info", 5000); 
+                      if( isLocalFileExist( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath()) ) { 
+                          removeLocalFile( getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() );
+                      }
+
+                  } else { 
+                     triggerHint("Some or all features could not be saved, repeat create features ", "error", 10000); 
+                     console.log("Some or all features could not be saved, repeat create features ");
+                     // rmove corrupted file
+                     removeLocalFile( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
+                  }              
+
+              } else {
+                  //-- saveFeatureDataLocally(allTilesFeatures, getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() ); 
+                  if( isRestApiAvailable() ){
+                      console.log("Try to resume features creation by clicking Create/Resume button again, ");
+                      alert("Network error, check console (F12)."); 
+                      triggerHint("Try to resume features creation by clicking Create/Resume button again","info", 5000); 
+                  } else {
+                      console.log("RestApi flask is down, Try to restart it and resume features creation by clicking Create/Resume button again");
+                      alert("Network error, check console (F12)."); 
+                      triggerHint("RestApi flask is down, Try to restart it and resume features creation by clicking Create/Resume button again","info", 5000);
                   }
 
-              } else { 
-                 triggerHint("Some or all features could not be saved, repeat create features ", "error", 10000); 
-                 console.log("Some or all features could not be saved, repeat create features ");
-                 // rmove corrupted file
-                 removeLocalFile( getGrpFeaturesFileName(), getGrpFeaturesLocalPath() );
-              }              
-
-          } else {
-              //-- saveFeatureDataLocally(allTilesFeatures, getGrpFeaturesTemporaryFileName(), getGrpFeaturesLocalPath() ); 
-              if( isRestApiAvailable() ){
-                  console.log("Try to resume features creation by clicking Create/Resume button again, ");
-                  alert("Network error, check console (F12)."); 
-                  triggerHint("Try to resume features creation by clicking Create/Resume button again","info", 5000); 
-              } else {
-                  console.log("RestApi flask is down, Try to restart it and resume features creation by clicking Create/Resume button again");
-                  alert("Network error, check console (F12)."); 
-                  triggerHint("RestApi flask is down, Try to restart it and resume features creation by clicking Create/Resume button again","info", 5000);
-              }
-
-              return 0; 
-          } 
-
-
-
-
-            // let errorFlag = false;   
-
-            // try {
-            //     txt_allTilesFeatures = JSON.stringify(allTilesFeatures);
-            //     let maxFileSize = Opts.maxFileSize;;  // to send it to flask and avoid javascript syntaxerror "the url is malformed "
-
-            //     if(txt_allTilesFeatures.length > maxFileSize)
-            //     {
-            //         let fileChunks = splitString(txt_allTilesFeatures, maxFileSize);  // true means newline included
-
-            //         for(let k = 0; k < fileChunks.length; k++) {
-            //             console.log("Save file part " + (k + 1) + "/" + fileChunks.length);
-                         
-            //             if(k == 0) {
-            //                 saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), fileChunks[k], "a", -1); // First chunk                   
-            //               }
-
-            //             if( ((k + 1) < fileChunks.length) && (k > 0) ) {
-            //                 saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), fileChunks[k], "a");
-                          
-            //               }
-
-            //             if( (k + 1) == fileChunks.length ) { 
-            //                 saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), fileChunks[k], "a", 1);  // Set lastChunkFlag to 1, this is last chunk
-            //               }
-
-            //         }
-            //      } else {
-            //        //    saveFeatures(StorageItemName,txt_allTilesFeatures)
-            //            saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), txt_allTilesFeatures);
-            //            triggerHint("Saving Features locally in progress... ");  
-            //      }
-
-            // } catch(err) {
-            //     errorFlag = true;
-            //     triggerHint("JSON.stringify can not convert big features file to string","error");
-            // }
-
-
-            
-        //--    freezeInput("createLoadFeaturesBtn", true);          <<<<<<<<<<<<----------
-
-        } else { // end of if(fetchedFeatures==null)
-              // if features exists locally 
-              //-- allTilesFeatures = JSON.parse(fetchedFeatures);           <<<<<<<<<<< -------
-
-              if(isValidFeaturesData(allTilesFeatures)) {
-                  // webix.message(" local saved features loaded.. ");            <<<<<<<<<<<<<<<< ----------
-                  triggerHint(" local saved features loaded.. ", "info");
-         //--         freezeInput("createLoadFeaturesBtn", true);  // disable create button         <<<<<<<<<<<<----------
-                  
-                 //--  $$("featuresCheckBoxes").enable();                               <<<<<<<<<<<<<<<<<----------------------------
-                 //--  $$("similarityOptions").enable();                                   
-                  //-- disableSimilarTilesBtn(false);
-                  //-- freezeFeaturesControls(false);
+                  return 0; 
               } 
-        }  
-
-        //check for dapi cells morphological statistical data e.g. area: min, max, "25%", "50%", "75%"
-        dapiMorphStatisticalData = readJsonFile( getDapiMorphStatFileName(), getItemFeaturesLocalPath() );
-        // dapiMorphStatisticalData is Object { area: {…}, eccentricity: {…}, extent: {…}, ..}
-        //If dapi cells morphological statistical data file not exist, create them
-
-        if(! Object.keys(dapiMorphStatisticalData).length) { 
-             dapiMorphStatisticalData = getDapiCellsMorphStatData()
-        } 
-
-        // if loaded or created succesfully ...
-        if(Object.keys(dapiMorphStatisticalData).length) {
-             activateDapiCellsMorphOptionsList(dapiMorphStatisticalData);   
-        }
-
-} // end of function
 
 
+                //-- let errorFlag = false;   
 
-showLoadingIcon = () => {
-    var defer = $.Deferred();
-    document.getElementById("loadingIcon").style.display = 'block'; 
-    setTimeout(function() {
-        defer.resolve(); // When this fires, the code in a().then(/..../); is executed.
-    }, 100);
+                //-- try {
+                //--     txt_allTilesFeatures = JSON.stringify(allTilesFeatures);
+                //--     let maxFileSize = Opts.maxFileSize;;  // to send it to flask and avoid javascript syntaxerror "the url is malformed "
 
-    return defer;     
-} 
+                //--     if(txt_allTilesFeatures.length > maxFileSize)
+                //--     {
+                //--         let fileChunks = splitString(txt_allTilesFeatures, maxFileSize);  // true means newline included
 
-hideLoadingIcon = () => {
-     document.getElementById("loadingIcon").style.display = "none";
-}
+                //--         for(let k = 0; k < fileChunks.length; k++) {
+                //--             console.log("Save file part " + (k + 1) + "/" + fileChunks.length);
+                             
+                //--             if(k == 0) {
+                //--                 saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), fileChunks[k], "a", -1); // First chunk                   
+                //--               }
+
+                //--             if( ((k + 1) < fileChunks.length) && (k > 0) ) {
+                //--                 saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), fileChunks[k], "a");
+                              
+                //--               }
+
+                //--             if( (k + 1) == fileChunks.length ) { 
+                //--                 saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), fileChunks[k], "a", 1);  // Set lastChunkFlag to 1, this is last chunk
+                //--               }
+
+                //--         }
+                //--      } else {
+                //--        //    saveFeatures(StorageItemName,txt_allTilesFeatures)
+                //--            saveFeatures( getGrpFeaturesFileName(), getGrpFeaturesLocalPath(), txt_allTilesFeatures);
+                //--            triggerHint("Saving Features locally in progress... ");  
+                //--      }
+
+                //-- } catch(err) {
+                //--     errorFlag = true;
+                //--     triggerHint("JSON.stringify can not convert big features file to string","error");
+                //-- }
 
 
-// getSelectedTileObj = () => {
-//     return currentTileObj;
-// } 
+                
+            //--    freezeInput("createLoadFeaturesBtn", true);          <<<<<<<<<<<<----------
 
-// setSelectedTileObj = (obj) => {
-//      currentTileObj = obj;
-// } 
-// getSelectedTileId = () => {
-//     return currentTileId;
-// } 
+            } else { // end of if(fetchedFeatures==null)
+                  // if features exists locally 
+                  //-- allTilesFeatures = JSON.parse(fetchedFeatures);           <<<<<<<<<<< -------
 
-// setSelectedTile = (id) => {
-//      currentTileId = id;
-// } 
+                  if(isValidFeaturesData(allTilesFeatures)) {
+                     // webix.message(" local saved features loaded.. ");            <<<<<<<<<<<<<<<< ----------
+                      triggerHint(" local saved features loaded.. ", "info");
+                     //-- freezeInput("createLoadFeaturesBtn", true);  // disable create button         <<<<<<<<<<<<----------
+                      
+                     //--  $$("featuresCheckBoxes").enable();                               <<<<<<<<<<<<<<<<<----------------------------
+                     //--  $$("similarityOptions").enable();                                   
+                     //-- disableSimilarTilesBtn(false);
+                     //-- freezeFeaturesControls(false);
+                  } 
+            }  
 
-  
+            // check for dapi cells morphological statistical data e.g. area: min, max, "25%", "50%", "75%"
+            dapiMorphStatisticalData = readJsonFile( getDapiMorphStatFileName(), getItemFeaturesLocalPath() );
+            // dapiMorphStatisticalData is Object { area: {…}, eccentricity: {…}, extent: {…}, ..}
+            // If dapi cells morphological statistical data file not exist, create them
 
-  /**
-   * Check if tile selected
-   * Tile is a  SPX cell
-   * 
-   * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
-   * @returns {bool} 
-   */ 
+            if(! Object.keys(dapiMorphStatisticalData).length) { 
+                 dapiMorphStatisticalData = getDapiCellsMorphStatData()
+            } 
 
-  isTileSelected = () => {
-      return currentGrpFeaturesSelectionStates.tile != null ? true : false;
-  } 
+            // if loaded or created succesfully ...
+            if(Object.keys(dapiMorphStatisticalData).length) {
+                 activateDapiCellsMorphOptionsList(dapiMorphStatisticalData);   
+            }
 
-  /**
-   * Get selected tile 
-   * 
-   * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
-   * @returns {object}  
-   * @example
-   *
-   * getSelectedTile()
-   *
-   * => <polygon id="spx-59944" class="spx" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" style="fill: rgb(189, 86, 86); …5px; stroke-opacity: 1;" fill-opacity="0.25" index="59944" origStrokeColor="white" origStroke-width="3" origColor="#bd5656">
-   */ 
+    } // end of function
 
-  getSelectedTile = () => {
-      return isTileSelected() ? currentGrpFeaturesSelectionStates.tile : null;
-  } 
+
+    /**
+     *  Show the loading icon in the middle of screen
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     * @returns {promise}  
+     */  
+
+    showLoadingIcon = () => {
+        var defer = $.Deferred();
+        document.getElementById("loadingIcon").style.display = 'block'; 
+        setTimeout(function() {
+            defer.resolve(); // When this fires, the code in a().then(/..../); is executed.
+        }, 100);
+
+        return defer;     
+    } 
+
+
+    /**
+     *  Hide the loading icon 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0  
+     */  
+
+    hideLoadingIcon = () => {
+         document.getElementById("loadingIcon").style.display = "none";
+    }
+
+
+
+      /**
+       * Check if tile selected
+       * Tile is a  SPX cell
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       * @returns {bool} 
+       */ 
+
+      isTileSelected = () => {
+          return currentGrpFeaturesSelectionStates.tile != null ? true : false;
+      } 
+
+      /**
+       * Get selected tile 
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       * @returns {object}  
+       * @example
+       *
+       * getSelectedTile()
+       *
+       * => <polygon id="spx-59944" class="spx" points="10562,6352 10560,6357 10…1 10554,6342 10561,6346" style="fill: rgb(189, 86, 86); …5px; stroke-opacity: 1;" fill-opacity="0.25" index="59944" origStrokeColor="white" origStroke-width="3" origColor="#bd5656">
+       */ 
+
+      getSelectedTile = () => {
+          return isTileSelected() ? currentGrpFeaturesSelectionStates.tile : null;
+      } 
 
   /**
    * Get selected tile id
