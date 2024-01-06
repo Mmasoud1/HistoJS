@@ -14,7 +14,7 @@
 * @author Mohamed Masoud <mmasoud2@outlook.com>
 =========================================================
 =========================================================
-    Main Analysis Phase Functions Unit Test (Mocha)
+* @file Main Analysis Phase Functions Unit Test (Mocha)
 =========================================================*/ 
 
 
@@ -136,6 +136,12 @@ describe("Main Analysis Functions", function () {
     it('return active operation', function () {
        expect( validateActiveOperationOnScreen("Phenotypes") ).to.eql(null);
     });
-  });     
+  }); 
+
+  describe('#computeCellsDistance()', function () {
+    it('return cells distance in pixels ', function () {
+       expect( computeCellsDistance({x_cent: 2126, y_cent:313},{x_cent: 2175, y_cent: 310}).toFixed(3) ).to.eql('49.092');
+    });
+  });        
 
 });  

@@ -10,14 +10,14 @@
 * @version 1.0.0
 * @license MIT  
 *
-* @author Mohamed Masoud <mmasoud2@outlook.com>
+* @author Mohamed Masoud <mmasoud2@outlook.com> 
 
 =========================================================
 
 
 
 =========================================================
-                      Design Mode
+* @file              Design Mode
 =========================================================*/
 
 

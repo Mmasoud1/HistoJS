@@ -17,7 +17,7 @@
 
 
 =========================================================
-                      Analysis Mode
+* @file                Analysis Mode
 =========================================================*/
 
 (function(){
@@ -3576,10 +3576,10 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
                 if (! isGrpChannelsStatisticalDataAvailable() ) {
                     if(Opts.isBoxplotChannelBased) {
-                       setGrpChannelsStatisticalData( readJsonFile(getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
+                       setGrpChannelsStatisticalData( readJsonFile( getGrpBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
 
                     } else { // if it is cell based
-                        setGrpChannelsStatisticalData( readJsonFile(getGrpMarkerCellsBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
+                        setGrpChannelsStatisticalData( readJsonFile( getGrpMarkerCellsBoxplotFileName(), getGrpBoxplotLocalPath() ) ); 
                     }
                 }                   
 
@@ -3836,9 +3836,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * Event fire when marker postive threshold changed
    * 
    * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
+   * @todo Write the doc.
+   * @todo Implement this function.
    */  
 
    onChangeMarkerPositiveThreshold = (elem) => {
@@ -3857,9 +3856,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * For future use
    * 
    * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
+   * @todo Write the doc.
+   * @todo Implement this function.
    */  
 
   onChangeMarkerNegativeThreshold = () => {
@@ -6328,9 +6326,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * For future use..
    * 
    * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
+   * @todo Write the doc.
+   * @todo Implement this function.
    */  
 
   goToStartRoi = () => {
@@ -6341,9 +6338,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * For future use..
    * 
    * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
+   * @todo Write the doc.
+   * @todo Implement this function.
    */  
 
   prevRoi = () => {
@@ -6354,9 +6350,8 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * For future use..
    * 
    * @function
-   * @memberof HistoJS
-   * @since 1.0.0
-   * @version 1.0.0
+   * @todo Write the doc.
+   * @todo Implement this function.
    */  
 
   nextRoi = () => {
@@ -7981,361 +7976,345 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
        * @param {Array} cellsWithTypes, array of objects e.g. [{id: "spx-1", KERATIN_norm: 1.4, CD45_norm: 6.5, ASMA_norm: 0.56, Max: "CD45_norm", Type: "Others", label:1},...] 
        */  
 
-      plotCellClassifications = (cellsWithTypes, xTitle = 'Cell Classes') => {
-           showLoadingIcon().then( result => {
-              cellClassifications(cellsWithTypes, () => {
-                    hideLoadingIcon();  
-                    if(cellsWithTypes.length) {
-                          
-                          let numOfcellsPerClass = {};
-                          let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
+         plotCellClassifications = (cellsWithTypes, xTitle = 'Cell Classes') => {
+               showLoadingIcon().then( result => {
+                  cellClassifications(cellsWithTypes, () => {
+                        hideLoadingIcon();  
+                        if(cellsWithTypes.length) {
+                              
+                              let numOfcellsPerClass = {};
+                              let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
 
-                          chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
-                               let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
-                               numOfcellsPerClass[cellType] = cellsWithTypes.filter(cell => cell.Type == cellType).length;
-                          });
+                              chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
+                                   let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
+                                   numOfcellsPerClass[cellType] = cellsWithTypes.filter(cell => cell.Type == cellType).length;
+                              });
 
-                          numOfcellsPerClass["Others"] = cellsWithTypes.filter(cell => cell.Type == "Others").length;
-                          // NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
+                              numOfcellsPerClass["Others"] = cellsWithTypes.filter(cell => cell.Type == "Others").length;
+                              // NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
 
-                          let curChartOperation = document.getElementById("chartOperations").value;
-                          setActiveOperationOnScreen(curChartOperation);
-                          // init edit settings and reassign markers to Tumor-Immune-Stromal operation
-                          initChartOperationSideSpecialBar(curChartOperation);
-                          
-                          let cellTypeColors = getCellTypeColorObj(chnlNameType);
-                          // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+                              let curChartOperation = document.getElementById("chartOperations").value;
+                              setActiveOperationOnScreen(curChartOperation);
+                              // init edit settings and reassign markers to Tumor-Immune-Stromal operation
+                              initChartOperationSideSpecialBar(curChartOperation);
+                              
+                              let cellTypeColors = getCellTypeColorObj(chnlNameType);
+                              // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
 
-                          drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  xTitle); // second param is for x axis Title                                                            
-                          //-- drawCellTypes3dPieChart(numOfcellsPerClass);
-                          //-- drawCellTypesPieGradientChart(cellsWithTypes);
-                    } 
-              }); 
-           });   
-      }
-
-
-      cancelCellClassifySettings = () => {
-         restoreLastChartOperation();
-      }  
+                              drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  xTitle); // second param is for x axis Title                                                            
+                              //-- drawCellTypes3dPieChart(numOfcellsPerClass);
+                              //-- drawCellTypesPieGradientChart(cellsWithTypes);
+                        } 
+                  }); 
+               });   
+         }
 
 
+      /**
+       * Cancel cell classification. 
+       * Cancel button
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */ 
 
-  confirmCellClassifySettings = () => {
-     triggerHint("Please wait while classify cells... ");
-     let chnlNameType = []; // chnlNameType : [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
-
-      mainCellTypesList.forEach((cellTypeEntry, idx) => {   
-              let cellType = cellTypeEntry.cellType; // e.g. Tumor 
-              //-- let clr  = cellTypeEntry.cellTypeColor;          
-              if(cellType !== "Others") { 
-
-                  let marker = document.getElementById("markerList."+ cellType).value;  // return e.g. KERATIN or ""
-                  if ( marker !== "" ) {
-                     chnlNameType.push({channel_name: marker, channel_type: cellType})
-                  }
-              }
-
-     });   
-       
-
-     if(chnlNameType.length) {
-          
-           switch ( getCurClusterMethod()) {
-                   
-                    case 'Threshold':  { 
-                                          // Find the "Others" type selected threshold value
-                                          let othersTypeThreshold = getOthersTypeThresholdVal();
-                                          //  cellBasicClassification has each cell classification as Tumor, Immune, Stromal or others
-                                          cellBasicClassification = getCellsClassification (chnlNameType, getCurClusterMethod(), othersTypeThreshold);
-                                          break;             
-                                        }
-                      case 'K-Means':
-                                        {
-                                          triggerHint("K-Means to be Coded ..");
-                                          return 0;
-                                          break;             
-                                        }                                                                    
-          }  
-
-          //cellBasicClassification is array of  Objects such that:
-          //[{id: "spx-1", KERATIN_norm: 1.4, CD45_norm: 6.5, ASMA_norm: 0.56, Max: "CD45_norm", Type: "Others", label:1},...]
-
-          allTilesFeaturesAndClassification = mergeArrayOfObjByKey('id', cellBasicClassification, allTilesFeatures);
-
-          // upload channel types to server 
-          setGrpChannelsNameType(getSelectedGrpIndex(), chnlNameType);
-          // Eqv: currentItemInfo.omeDataset.Groups[getSelectedGrpIndex()].Channel_Types = chnlNameType;
-          
-          if(Opts.analysisModeAutoUpload) {
-                uploadGrpChanges();
-          }
-
-          plotCellClassifications(cellBasicClassification);
-
-      } else {
-         triggerHint("Select related markers from lists e.g. CD45 for Immune.. ");
-      }
-  }
-
-  editChartOperationSettings = () => {
-
-        let curChartOperation = document.getElementById("chartOperations").value;
-        chartOptions.lastOperation = chartOptions.currentOperation;
-
-        switch ( curChartOperation) {
-               case 'Tumor-Immune-Stromal':
-                                    { 
-                                      initChartClassifyCellsForm();
-                                      break;             
-                                    }
-                  case 'Proteomic-Analysis':
-                                    {
-                                      triggerHint("To be Coded ..");
-                                      break;             
-                                    }                                                                    
-                      case 'Cluster':
-                                    {
-                                      triggerHint("To be Coded ..");
-                                      break;             
-                                    }
-                             default:
-                                    {
-                                      triggerHint("No edit option for this operation ..");
-                                      break;             
-                                    }                                        
+        cancelCellClassifySettings = () => {
+           restoreLastChartOperation();
         }  
 
-      //  document.getElementById("chartOperationSettings").innerHTML = "";
- 
-  } 
 
-  removeChartBottomLists = () => {
-      document.getElementById("chartOperationSettings").innerHTML  = "";
-  }
+      /**
+       * Confirm cell classification. 
+       * Confirm button
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */ 
 
-   cancelAnalysisSelection = () => {
-      removeChartBottomLists();
-  }
+      confirmCellClassifySettings = () => {
+         triggerHint("Please wait while classify cells... ");
+         let chnlNameType = []; // chnlNameType : [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
 
-  // enableBasicAnalysisLists = () => {
-  //       let allAnalysisLists = document.querySelectorAll('select.basicAnalysisList ');
+          mainCellTypesList.forEach((cellTypeEntry, idx) => {   
+                  let cellType = cellTypeEntry.cellType; // e.g. Tumor 
+                  //-- let clr  = cellTypeEntry.cellTypeColor;          
+                  if(cellType !== "Others") { 
 
-  //       allAnalysisLists.forEach( list => {
+                      let marker = document.getElementById("markerList."+ cellType).value;  // return e.g. KERATIN or ""
+                      if ( marker !== "" ) {
+                         chnlNameType.push({channel_name: marker, channel_type: cellType})
+                      }
+                  }
 
-  //            if(list.id !== "analysisMethodList") { 
-  //               list.disabled = false;
-  //            }
-  //        })    
-  // }
+         });   
+           
 
-  disableBasicAnalysisLists = ( disableFlag = true ) => {
-        let allAnalysisLists = document.querySelectorAll('select.basicAnalysisList ');
-
-        allAnalysisLists.forEach( list => {
-
-             if(list.id !== "analysisMethodList") { 
-                list.disabled = disableFlag;
-             }
-         })  
-  }
-  
-  resetBasicAnalysisLists = () => {
-        let allAnalysisLists = document.querySelectorAll('select.basicAnalysisList ');
-
-        allAnalysisLists.forEach( list => {
-
-               if(list.id !== "analysisMethodList") {
-                  list.value = "";
-               }
-         }) 
-  }
-
-  // disableBasicAnalysisLists = (arrOfLists, disableFlag) => {
-  //       arrOfLists.forEach (listId => document.getElementById(listId).disabled = disableFlag); 
-
-  // }
-
-  analysisMethodListChanged = () => {
-        let curSelection = document.getElementById("analysisMethodList").value;
-
-        if(curSelection == "" || curSelection == "Correlation") {
-               resetBasicAnalysisLists();
-               disableBasicAnalysisLists();
-               // document.getElementById("analysisCellTypeList").disabled = true;
-        } else {
-               disableBasicAnalysisLists(false);
-               // document.getElementById("analysisCellTypeList").disabled = false;
-        }
-  }
-
-  analysisCellTypeListChanged = () => {
-        let curSelection = document.getElementById("analysisCellTypeList").value;
-
-        if(curSelection == "") {
-               resetBasicAnalysisLists();
-               document.getElementById("analysisMorphFeatureList").disabled = true;
-               document.getElementById("analysisMarkerList").disabled = true;
-        } else {
-               document.getElementById("analysisMorphFeatureList").disabled = false; 
-               document.getElementById("analysisMarkerList").disabled = false;
-        }
-  }
-
-  analysisMorphFeatureListChanged = () => {
-        let curSelection = document.getElementById("analysisMorphFeatureList").value;
-
-        if(curSelection == "") {
-               document.getElementById("analysisMarkerList").disabled = false;
-        } else {
-               document.getElementById("analysisMarkerList").disabled = true;
-        }
-  }
-
-  // marker list with no selection enable feature list
-  analysisMarkerListChanged = () => {
-        let curSelection = document.getElementById("analysisMarkerList").value;
-
-        if(curSelection == "") {
-               document.getElementById("analysisMorphFeatureList").disabled = false;
-        } else {
-               document.getElementById("analysisMorphFeatureList").disabled = true;
-        }
-  }
-
-
-   //   // Plot t-SNE for random samples 
-   //   processBasicAnalysisTSNE = (analysisSelections, is3D = false) => {
-   //      // let curCellTypes = analysisSelections["analysisCellTypeListValue"]; // e.g. [ "Tumor", "Immune", "Stromal" , "Others"]
-
-   //      let filteredData = {};
-
-        
-   //      let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
-   //      // chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]    
-
-   //      let selectedMarkers =  chnlNameType.map(entry => entry["channel_name"])
-   //      //e.g. selectedChType: [ "KERATIN", "CD45", "ASMA" ]
-
-   //      let selectedChTypes =  chnlNameType.map(entry => entry["channel_type"])
-   //      selectedChTypes.push("Others");        
-   //      //e.g. selectedChTypes: [ "Tumor", "Immune", "Stromal", "Others" ] or   [ "Tumor", "Others" ]     
-
-   //      let cellTypeColors = getCellTypeColorObj(chnlNameType);
-   //      // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
-
-
-   //      let filterByType = {};
-   //      //e.g  filterByType { Tumor: [..], Immune: [..], ... }
-   //      // where the array represent the seleted features values e.g. KERATIN_norm,  CD45_norm , ASMA_norm   
-
-   //      selectedChTypes.forEach(type => {
-   //          filterByType[type] = cellBasicClassification.filter(entry => entry.Type == type)
-   //      })
-
-   //      //-- e.g  filterByType { Tumor: [..], Immune: [..], ... }
-   //      // Where the array represent the seleted features values e.g. KERATIN_norm,  CD45_norm , ASMA_norm         
-       
-
-   //      //-- e.g. numSamplesPerType : 1000
-   //      let numSamplesPerType = Opts.numSamplePerType;
-
-   //      let typeSamples = {};
-   //      //-- filteredTypeSamples: { Tumor: (150) [[ 26.8, 9.6, 12.4 ], [..], ..], Immune: (150) […], Stromal: (150) […] }        
-
-   //      selectedChTypes.forEach(type => {
-   //              if(numSamplesPerType < filterByType[type].length) {
-   //                 typeSamples[type] =  _.sample(filterByType[type], numSamplesPerType);  
-   //              } else {
-   //                  if(filterByType[type].length) { // if there is cells with this type
-   //                      typeSamples[type] =  filterByType[type];
-   //                  } else {
-   //                      typeSamples[type] =  [];
-   //                  }
-   //              }
-   //      });
-   //      //-- typeSamples: { Tumor: (1000) [..], Immune: (1000) […], Stromal: (1000) […], .. }
-
-   //      allTypeSamples = [];
-
-   //      selectedChTypes.forEach(type => {
-   //               allTypeSamples = fastArraysConcat(allTypeSamples, typeSamples[type]) 
-   //      });   
-
-   //      //--allTypeSamples: Array(600) [ {…}, {…}, {…}, {…} ]
-   //      //--allTypeSamples[0] : { Type: "Tumor", ASMA_norm: 2.58, CD45_norm: 6.93, KERATIN_norm: 81.24, label: 87224, id: "spx-87224", eccentricity: 0.92, … }
-
-
-   //      let jsonString_allTypeSamples = JSON.stringify(allTypeSamples); // convet object to JSON string e.g. {id: 1} -> {"id": 1}
-   //      let maxFileSize = Opts.maxFileSize;  // default 500000 size to send it to flask and avoid javascript syntaxerror "the url is malformed "
-
-   //      if(jsonString_allTypeSamples.length < maxFileSize) {
-
-   //          try {
-   //          // Calculate t-SNE for the sample
-   //          triggerHint("Please wait while calculating TSNE for sample ");
-   //          if(is3D) {
-   //             allTypeSamples =  getRandomSampleTSNE(allTypeSamples, chnlNameType, 3);
-   //          } else {
-   //             // 2D t-SNE 
-   //             allTypeSamples =  getRandomSampleTSNE(allTypeSamples, chnlNameType, 2);
-   //          }
- 
-   //          //--{ id: "spx-25603", KERATIN_norm: 157.28, CD45_norm: 3.74, ASMA_norm: 2.07, Max: "KERATIN_norm", Type: "Tumor", label: 25603, tsne_x: -28.05, tsne_y: -19.51 }
-
-
-   //          } catch(err) {
-   //                let rowSize = JSON.stringify(allTypeSamples[0]).length;
-   //                let RecommendNumRows = Math.round(500000/rowSize);
-   //                triggerHint("Sample size is too large for passing to RestApi "  + 
-   //                            ",try to minimize total sample size to : " + RecommendNumRows, "info", 7000);  
-                  
-   //                return 0;
-   //          }
-
-   //          // File scatterData and plot
-   //          let scatterData = [];
-   //          //-- scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}]  
- 
-   //          selectedChTypes.forEach(type => {
-   //             let filterSampleByTypeAndTSNE; 
-
-   //             if(is3D) {
-   //                  filterSampleByTypeAndTSNE = allTypeSamples.filter(entry => entry.Type == type)
-   //                                                               .map(entry => [entry["tsne_x"], entry["tsne_y"], entry["tsne_z"]]);
-   //             } else {
-   //               // is 2D
-   //                  filterSampleByTypeAndTSNE = allTypeSamples.filter(entry => entry.Type == type)
-   //                                                               .map(entry => [entry["tsne_x"], entry["tsne_y"]]);                 
-   //             }                                            
-
-   //             scatterData.push({name: type, color: cellTypeColors[type], data: filterSampleByTypeAndTSNE });
-   //          });
-
-   //          if(is3D) {
-   //              //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
-   //              drawScatterChart3D(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , "t-SNE-x", "t-SNE-y", "t-SNE-z"); 
-
-   //          } else {
-   //              //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
-   //              drawScatterChart(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , "t-SNE-x" + "( Sample #" + allTypeSamples.length+")", "t-SNE-y"); 
-   //          }    
-
-
-   //      } else {
-   //            let rowSize = JSON.stringify(allTypeSamples[0]).length;
-   //            let RecommendNumRows = Math.round(500000/rowSize);
-   //            triggerHint("Sample size is too large for passing to RestApi "  + 
-   //                        ",try to minimize total sample size to : " + RecommendNumRows, "info", 7000);  
+         if(chnlNameType.length) {
               
-   //            return 0;         
-   //      }
+               switch ( getCurClusterMethod()) {
+                       
+                        case 'Threshold':  { 
+                                              // Find the "Others" type selected threshold value
+                                              let othersTypeThreshold = getOthersTypeThresholdVal();
+                                              //  cellBasicClassification has each cell classification as Tumor, Immune, Stromal or others
+                                              cellBasicClassification = getCellsClassification (chnlNameType, getCurClusterMethod(), othersTypeThreshold);
+                                              break;             
+                                            }
+                          case 'K-Means':
+                                            {
+                                              triggerHint("K-Means to be Coded ..");
+                                              return 0;
+                                              break;             
+                                            }                                                                    
+              }  
 
-   // }
+              // cellBasicClassification is array of  Objects such that:
+              // [{id: "spx-1", KERATIN_norm: 1.4, CD45_norm: 6.5, ASMA_norm: 0.56, Max: "CD45_norm", Type: "Others", label:1},...]
+
+              allTilesFeaturesAndClassification = mergeArrayOfObjByKey('id', cellBasicClassification, allTilesFeatures);
+
+              // upload channel types to server 
+              setGrpChannelsNameType(getSelectedGrpIndex(), chnlNameType);
+              // Eqv: currentItemInfo.omeDataset.Groups[getSelectedGrpIndex()].Channel_Types = chnlNameType;
+              
+              if(Opts.analysisModeAutoUpload) {
+                    uploadGrpChanges();
+              }
+
+              plotCellClassifications(cellBasicClassification);
+
+          } else {
+             triggerHint("Select related markers from lists e.g. CD45 for Immune.. ");
+          }
+      }
 
 
-    //-- curCellType  e.g. [ "Tumor", "Immune", "Stromal" ] or [ "Tumor", "Immune", "Stromal" , "Others"]
-    // e.g.  jStat.spearmancoeff([1, 2, 3, 4], [5, 6, 9, 7]) == 0.8;
+
+      /**
+       * Edit chart operation settings
+       * Edit button
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */ 
+
+      editChartOperationSettings = () => {
+
+            let curChartOperation = document.getElementById("chartOperations").value;
+            chartOptions.lastOperation = chartOptions.currentOperation;
+
+            switch ( curChartOperation) {
+                   case 'Tumor-Immune-Stromal':
+                                        { 
+                                          initChartClassifyCellsForm();
+                                          break;             
+                                        }
+                      case 'Proteomic-Analysis':
+                                        {
+                                          triggerHint("To be Coded ..");
+                                          break;             
+                                        }                                                                    
+                          case 'Cluster':
+                                        {
+                                          triggerHint("To be Coded ..");
+                                          break;             
+                                        }
+                                 default:
+                                        {
+                                          triggerHint("No edit option for this operation ..");
+                                          break;             
+                                        }                                        
+            }  
+           //--  document.getElementById("chartOperationSettings").innerHTML = "";
+      } 
+
+
+      /**
+       * Remove chart bottom lists
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */ 
+
+      removeChartBottomLists = () => {
+          document.getElementById("chartOperationSettings").innerHTML  = "";
+      }
+
+
+      /**
+       * Cancel Analysis selection
+       * Cancel button
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */ 
+
+       cancelAnalysisSelection = () => {
+          removeChartBottomLists();
+      }
+
+      //-- enableBasicAnalysisLists = () => {
+      //--       let allAnalysisLists = document.querySelectorAll('select.basicAnalysisList ');
+      //--       allAnalysisLists.forEach( list => {
+      //--            if(list.id !== "analysisMethodList") { 
+      //--               list.disabled = false;
+      //--            }
+      //--        })    
+      //-- }
+
+
+      /**
+       * Disable basic analysis lists
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       * @param {bool} disableFlag
+       */       
+
+      disableBasicAnalysisLists = ( disableFlag = true ) => {
+            let allAnalysisLists = document.querySelectorAll('select.basicAnalysisList ');
+
+            allAnalysisLists.forEach( list => {
+                 if(list.id !== "analysisMethodList") { 
+                    list.disabled = disableFlag;
+                 }
+             })  
+      }
+      
+      /**
+       * Reset basic analysis lists
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */    
+
+      resetBasicAnalysisLists = () => {
+            let allAnalysisLists = document.querySelectorAll('select.basicAnalysisList ');
+
+            allAnalysisLists.forEach( list => {
+                   if(list.id !== "analysisMethodList") {
+                      list.value = "";
+                   }
+             }) 
+      }
+
+      //-- disableBasicAnalysisLists = (arrOfLists, disableFlag) => {
+      //--       arrOfLists.forEach (listId => document.getElementById(listId).disabled = disableFlag); 
+      //-- }
+
+
+      /**
+       * Event fires with changing the analysis method list
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */  
+
+      analysisMethodListChanged = () => {
+            let curSelection = document.getElementById("analysisMethodList").value;
+
+            if(curSelection == "" || curSelection == "Correlation") {
+                   resetBasicAnalysisLists();
+                   disableBasicAnalysisLists();
+                   //-- document.getElementById("analysisCellTypeList").disabled = true;
+            } else {
+                   disableBasicAnalysisLists(false);
+                   //-- document.getElementById("analysisCellTypeList").disabled = false;
+            }
+      }
+
+
+      /**
+       * Event fires with changing the cell type list
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */  
+
+      analysisCellTypeListChanged = () => {
+            let curSelection = document.getElementById("analysisCellTypeList").value;
+
+            if(curSelection == "") {
+                   resetBasicAnalysisLists();
+                   document.getElementById("analysisMorphFeatureList").disabled = true;
+                   document.getElementById("analysisMarkerList").disabled = true;
+            } else {
+                   document.getElementById("analysisMorphFeatureList").disabled = false; 
+                   document.getElementById("analysisMarkerList").disabled = false;
+            }
+      }
+
+
+      /**
+       * Event fires with changing the morphology feature list 
+       * 
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */  
+
+      analysisMorphFeatureListChanged = () => {
+            let curSelection = document.getElementById("analysisMorphFeatureList").value;
+
+            if(curSelection == "") {
+                   document.getElementById("analysisMarkerList").disabled = false;
+            } else {
+                   document.getElementById("analysisMarkerList").disabled = true;
+            }
+      }
+
+      
+      /**
+       * Event fires with changing the marker list 
+       * marker list with no selection enable feature list
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       */        
+
+      analysisMarkerListChanged = () => {
+            let curSelection = document.getElementById("analysisMarkerList").value;
+
+            if(curSelection == "") {
+                   document.getElementById("analysisMorphFeatureList").disabled = false;
+            } else {
+                   document.getElementById("analysisMorphFeatureList").disabled = true;
+            }
+      }
+
+
+      /**
+       * Process basic analysis correlation
+       * e.g.  jStat.spearmancoeff([1, 2, 3, 4], [5, 6, 9, 7]) == 0.8;
+       *
+       * @function
+       * @memberof HistoJS
+       * @since 1.0.0
+       * @version 1.0.0
+       * @param {Array} curCellType  e.g. [ "Tumor", "Immune", "Stromal" ] or [ "Tumor", "Immune", "Stromal" , "Others"]
+       * 
+       */   
+
     processBasicAnalysisCorrelation = (curCellType) => {
         let allMorphFeatures = cellMorphFeatureList.map(entry => {
                                         return entry.morphFeature
@@ -8430,35 +8409,46 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         }
 
 
-        // if(curCellType.length) {
-        //     featureToPlot = curMorphFeature;
+        //-- if(curCellType.length) {
+        //--     featureToPlot = curMorphFeature;
 
-        //     curCellType.forEach(type => { // e.g. type : [ "Tumor", "Immune", "Stromal" ]
-        //        filteredData[type] = allTilesFeaturesAndClassification.filter(entry => entry.Type == type)
-        //                             .map(entry => entry[curMorphFeature]);
-        //     })
+        //--     curCellType.forEach(type => { // e.g. type : [ "Tumor", "Immune", "Stromal" ]
+        //--        filteredData[type] = allTilesFeaturesAndClassification.filter(entry => entry.Type == type)
+        //--                             .map(entry => entry[curMorphFeature]);
+        //--     })
 
-        //     //** filteredData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
-        // }
+        //--     //** filteredData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
+        //-- }
 
-        // if(curMarker) {
-        //     featureToPlot = curMarker;
-        //     // Remove first char "_" from feature name
-        //     let markerValue = Opts.cellFeatureToNormalize.substring(1); // select from  _mean, _max, _std, _nonzero_mean
+        //-- if(curMarker) {
+        //--     featureToPlot = curMarker;
+        //--     // Remove first char "_" from feature name
+        //--     let markerValue = Opts.cellFeatureToNormalize.substring(1); // select from  _mean, _max, _std, _nonzero_mean
 
-        //     curCellType.forEach(type => { // e.g. type : [ "Tumor", "Immune", "Stromal" ]
-        //        filteredData[type] = allTilesFeaturesAndClassification.filter(entry => entry.Type == type)
-        //                             .map(entry => entry.features.filter(entry => entry.Frame == curMarker))
-        //                             .map(entry => entry[0][markerValue]);
-        //     })
-        // }        
+        //--     curCellType.forEach(type => { // e.g. type : [ "Tumor", "Immune", "Stromal" ]
+        //--        filteredData[type] = allTilesFeaturesAndClassification.filter(entry => entry.Type == type)
+        //--                            .map(entry => entry.features.filter(entry => entry.Frame == curMarker))
+        //--                             .map(entry => entry[0][markerValue]);
+        //--     })
+        //-- }        
 
-        // // testCellTypeHistogramDraw();
-
+        //-- // testCellTypeHistogramDraw();
 
     }
 
 
+  /**
+   * Process basic analysis Histogram
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} analysisSelections  e.g.  { analysisMethodListValue: null,  analysisCellTypeListValue: null, 
+   *                                             analysisMorphFeatureListValue: [ "Tumor", "Immune", "Stromal" ], 
+   *                                             analysisMarkerListValue: null};
+   * 
+   */  
 
    processBasicAnalysisHistogram = (analysisSelections) => {
         let curMethod  = analysisSelections["analysisMethodListValue"];
@@ -8477,7 +8467,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
                                     .map(entry => entry[curMorphFeature]);
             })
 
-            //** filteredData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
+            //-- filteredData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
         }
 
         if(curMarker) {
@@ -8492,12 +8482,21 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
             })
         }        
 
-        // testCellTypeHistogramDraw();
+        //-- testCellTypeHistogramDraw();
         drawCellTypesHistogramChart(filteredData, featureToPlot);
-
    }
 
-   // Confirm basic cell classification analysis selection
+
+  /**
+   * Confirm basic cell classification analysis selection
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * 
+   */   
+
    confirmBasicAnalysisSelection = () => {
 
          if(allTilesFeaturesAndClassification.length) {
@@ -8541,20 +8540,19 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
                                           triggerHint("To be Coded ..");
                                           break;             
                                         }                                     
-                          // case 't-SNE':
-                          //               {
-                          //                 curAnalysisSelections["analysisCellTypeListValue"]= mainCellTypesList.map(entry => entry.cellType);                                            
-
-                          //                 processBasicAnalysisTSNE(curAnalysisSelections); 
-                          //                 break;             
-                          //               }  
-                          // case 't-SNE-3D':
-                          //               {
-                          //                 curAnalysisSelections["analysisCellTypeListValue"]= mainCellTypesList.map(entry => entry.cellType);                                            
-                          //                 let enable3D = true; 
-                          //                 processBasicAnalysisTSNE(curAnalysisSelections, enable3D); 
-                          //                 break;             
-                          //               }                                         
+                          //-- case 't-SNE':
+                          //--               {
+                          //--                 curAnalysisSelections["analysisCellTypeListValue"]= mainCellTypesList.map(entry => entry.cellType);                                            
+                          //--                 processBasicAnalysisTSNE(curAnalysisSelections); 
+                          //--                 break;             
+                          //--               }  
+                          //-- case 't-SNE-3D':
+                          //--               {
+                          //--                 curAnalysisSelections["analysisCellTypeListValue"]= mainCellTypesList.map(entry => entry.cellType);                                            
+                          //--                 let enable3D = true; 
+                          //--                 processBasicAnalysisTSNE(curAnalysisSelections, enable3D); 
+                          //--                 break;             
+                          //--               }                                         
                           case 'Histogram':
                                         { 
                                           if( (curAnalysisSelections["analysisMethodListValue"] != null) && (curAnalysisSelections["analysisCellTypeListValue"] != null) &&
@@ -8588,8 +8586,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   }
 
 
-  // For Tumor-Immune-Stroml analysis mode
-  initBasicCellClassificationAnalysisMode = (operationType) => {
+  /**
+   * For Tumor-Immune-Stroml analysis mode
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * 
+   */    
+
+  initBasicCellClassificationAnalysisMode = () => {
 
       chartOptions.lastContainerContent = document.getElementById("chartContainer").innerHTML;
 
@@ -8660,7 +8667,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
             nodes +=    `<option value=${morphFeature}>${morphFeature}</option>`; 
       })
       
-      // nodes +=    `<option value=All>All</option>`; // used for correlation
+      //-- nodes +=    `<option value=All>All</option>`; // used for correlation
       nodes +=         '</select>'; 
       nodes +=      '</th>';  
 
@@ -8680,7 +8687,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
             }
       });
       
-      // nodes +=    `<option value=All>All</option>`; 
+      //-- nodes +=    `<option value=All>All</option>`; 
       nodes +=         '</select>'; 
       nodes +=      '</th>';   
       nodes +=  '</tr>';                       
@@ -8697,9 +8704,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
       nodes +=    '</tr>';  
       nodes +=  '</table>';  
 
-           
       document.getElementById("chartOperationSettings").innerHTML  = nodes;
-
   }
 
 //----------------------------------------------------------------------------//
@@ -8709,7 +8714,10 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
   /**
    * Calculate Cells Distance in pixels or image coordinates
    *
+   * @function
+   * @memberof HistoJS
    * @since 1.0.0
+   * @version 1.0.0
    * @category Object
    * @param {Object}  The source point e.g. cell1 = {x_cent: 2126, y_cent:313}
    * @param {Object}  The target point  e.g. cell2 = {x_cent: 2175, y_cent: 310}
@@ -8717,7 +8725,7 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
    * @example
    *
    * computeCellsDistance({x_cent: 2126, y_cent:313},{x_cent: 2175, y_cent: 310})
-   * // => 49.092
+   * => 49.092
    *
    */  
 
@@ -8725,15 +8733,44 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
          return  Math.sqrt( Math.pow( (cell2.x_cent - cell1.x_cent), 2) + Math.pow( (cell2.y_cent - cell1.y_cent), 2) );
   }
 
+  /**
+   * Request neighbor analysis Info by click on info icon
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */  
+
   requestNeighborAnalysisInfo = () => {
       triggerHint("Find neighbor cells or target cells to the source selected "  + 
                   "cell-type within selected distance of pixels in image coordinates  ", "info", 7000);       
   }
 
+  /**
+   * Cancel neighbor selection by click on cancel icon
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */  
   cancelNeighborSelection = () => {
        removeChartBottomLists();
   }  
 
+
+  /**
+   * Event fires when neighbor source list changed
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */  
 
   neighborSourceListChanged = () => {
         let curSourceType = document.getElementById("neighborSourceList").value;
@@ -8747,11 +8784,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
             document.getElementById("neighborDistanceList").disabled = true;
             document.getElementById("neighborNumList").disabled = true;
         }
-
   }  
 
-
-
+  /**
+   * Event fires when  target neighbor list changed, in chart
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */  
 
   targetNeighborListChanged = () => {
         let curNeighbor = document.getElementById("targetNeighborList").value;
@@ -8761,6 +8804,16 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         }
   }
 
+  /**
+   * Event fires when neighbor distance changed
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */ 
+
   neighborDistanceListChanged = () => {
         let cellsDistance = document.getElementById("neighborDistanceList").value;
 
@@ -8769,12 +8822,33 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
         }
   } 
 
+  /**
+   * Event fires when neighbor filter info requrest
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */ 
+
   requestNeighborFilterInfo = () => {
      triggerHint("To visualize selected cell-Type and its neighbors of selected neighbor types within a certain selected distance between both and a certain number of neighbors");
   }
 
 
-    // For Tumor-Immune-Stromal/Phenotypes/etc  
+
+  /**
+   * For Tumor-Immune-Stromal/Phenotypes/etc  
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} cellTypesList  e.g.  [ { cellType: "00000" }, { cellType: "10000" },  ... ]
+   * @param {string} curChartOperation e.g. "Phenotypes" 
+   */   
+
     initCellTypesNeighborsAnalysis = (cellTypesList, curChartOperation) => { 
 
       chartOptions.lastContainerContent = document.getElementById("chartContainer").innerHTML;
@@ -8782,9 +8856,9 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
       let nodes = ""; 
 
       nodes +=  '<table>';
-      // nodes +=    '<tr>';
-      // nodes +=      '<th style="text-align: left; margin-left: 0vw;"><label style="margin-left: 0.69vw">Neighbors Analysis</label></th>';   
-      // nodes +=    '</tr>';        
+      //-- nodes +=    '<tr>';
+      //-- nodes +=      '<th style="text-align: left; margin-left: 0vw;"><label style="margin-left: 0.69vw">Neighbors Analysis</label></th>';   
+      //-- nodes +=    '</tr>';        
       nodes +=    '<colgroup><col style="width:23%"><col style="width:23%"><col style="width:23%"><col style="width:23%"><col style="width:8%"></colgroup>';
 
       nodes +=    '<tr>';
@@ -8842,16 +8916,15 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
             } 
       })
 
-      // getCurGrpChannelsName().forEach((marker, idx) => {
-      //       if(idx == 0) {
-      //          // create empty entry with the select list 
-      //          nodes +=    `<option value=""></option>`; 
-      //       }  
-                          
-      //       if(marker !== getSelectedDAPIChannelName()) {
-      //           nodes +=    `<option value=${marker}>${marker}</option>`; 
-      //       }
-      // });
+      //-- getCurGrpChannelsName().forEach((marker, idx) => {
+      //--       if(idx == 0) {
+      //--          // create empty entry with the select list 
+      //--          nodes +=    `<option value=""></option>`; 
+      //--       }  
+      //--       if(marker !== getSelectedDAPIChannelName()) {
+      //--           nodes +=    `<option value=${marker}>${marker}</option>`; 
+      //--       }
+      //-- });
       
       nodes +=         '</select>'; 
       nodes +=      '</th>';   
@@ -8914,9 +8987,17 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
       });   
 
+   }
 
-    }
 
+  /**
+   * CellTypes Neighbors Analysis
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */   
 
     cellTypesNeighborsAnalysis = () => {
 
@@ -8957,253 +9038,282 @@ createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
 
     }
 
-// Draw all sources cells and thier neighbors 
-drawAllSourcesAndNeighbors = (cellTypeColors) => {
+  
+  /**
+   * Draw all sources cells and thier neighbors 
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} cellTypeColors  e.g. { Tumor: "#ff4846", ... } or {"10011": "#ff4846", ... } for phenotypes 
+   */   
 
-        let curSourceType = filteredNeighbors["cellType"];
-        let curNeighborType = filteredNeighbors["neighborsType"];     
+    drawAllSourcesAndNeighbors = (cellTypeColors) => {
 
-        let sourceCellClr = cellTypeColors[ curSourceType ];
-        let targetNeighborClr = cellTypeColors[ curNeighborType ];
-        let totalNumOfNeighbors = 0;
+            let curSourceType = filteredNeighbors["cellType"];
+            let curNeighborType = filteredNeighbors["neighborsType"];     
 
-        for(let i = 0; i < filteredNeighbors["validNeighbors"].length; i++) {
-               d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('fill', sourceCellClr);
-               filteredNeighbors["validNeighbors"][i].neighbors.forEach(neighborLabel => {
-                   d3.select("#" + "spx-" + neighborLabel).style('fill', targetNeighborClr);
-                   d3.select("#" + "spx-" + neighborLabel).style('fill-opacity', getBoundaryFillOpacity());
-                   d3.select("#" + "spx-" + neighborLabel).style('stroke', 'black');
-                   d3.select("#" + "spx-" + neighborLabel).style('stroke-width', getStrokeWidth());
-                   d3.select("#" + "spx-" + neighborLabel).style('stroke-opacity', 1);
+            let sourceCellClr = cellTypeColors[ curSourceType ];
+            let targetNeighborClr = cellTypeColors[ curNeighborType ];
+            let totalNumOfNeighbors = 0;
 
-                   // sum the total of neighbor cells of certain type as curNeighborType
-                   totalNumOfNeighbors = totalNumOfNeighbors + 1;                       
-               })
+            for(let i = 0; i < filteredNeighbors["validNeighbors"].length; i++) {
+                   d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('fill', sourceCellClr);
+                   filteredNeighbors["validNeighbors"][i].neighbors.forEach(neighborLabel => {
+                       d3.select("#" + "spx-" + neighborLabel).style('fill', targetNeighborClr);
+                       d3.select("#" + "spx-" + neighborLabel).style('fill-opacity', getBoundaryFillOpacity());
+                       d3.select("#" + "spx-" + neighborLabel).style('stroke', 'black');
+                       d3.select("#" + "spx-" + neighborLabel).style('stroke-width', getStrokeWidth());
+                       d3.select("#" + "spx-" + neighborLabel).style('stroke-opacity', 1);
 
-               d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('fill-opacity', getBoundaryFillOpacity());
-               d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('stroke', 'black');
-               d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('stroke-width', getStrokeWidth());
-               d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('stroke-opacity', 1);
-        }
-    
+                       // sum the total of neighbor cells of certain type as curNeighborType
+                       totalNumOfNeighbors = totalNumOfNeighbors + 1;                       
+                   })
 
-        let numOfcellsPerClass = {};
-
-        numOfcellsPerClass[curSourceType] = filteredNeighbors["validNeighbors"].length;
-        numOfcellsPerClass[curNeighborType] = totalNumOfNeighbors
-        //-- NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816 }
-        //-- OR
-        //-- NumOfCellsPerClass Object e.g { 10011: 211, 10101: 288 } -- random number for illustratin purpose
-
-        drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  "Source-Neighbor" ); // Third param is for x axis Title          
-   
-        initCellNavigator(filteredNeighbors["validNeighbors"]);
-
-}
-
-processNeighborAnalysis = (curSourceType, curNeighborType, numOfNeighbor, cellsDistance, curChartOperation ) => {
-        // Global Var 
-        filteredNeighbors = {}; 
-        filteredNeighbors["cellType"]  = curSourceType;
-        filteredNeighbors["neighborsType"]  = curNeighborType;        
-        // e.g.filteredNeighbors= { cellType: "10101", neighborsType: "10111", validNeighbors: (9163) […] }
-        // e.g filteredNeighbors["validNeighbors"][0] = { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] }   
-
-        let featureToPlot;  
-        let cellTypeColors = {};
-        let tileClass = getClassType();
+                   d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('fill-opacity', getBoundaryFillOpacity());
+                   d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('stroke', 'black');
+                   d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('stroke-width', getStrokeWidth());
+                   d3.select("#"+filteredNeighbors["validNeighbors"][i].id).style('stroke-opacity', 1);
+            }
         
 
-        switch ( curChartOperation) {
-                    case 'Phenotypes':
-                                     { 
-                                      //-- e.g.:  allValidPhenotypes -> [{ binary: "10001", validCells: [ {id: "spx-3411"}, ..  ], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+            let numOfcellsPerClass = {};
 
-                                      // Extract needed columns and propse two new columns
-                                      let  extractedFeatures =  allTilesFeatures.map( entry => (
-                                                                        {
-                                                                            id: entry.id,
-                                                                            label: entry.label,
-                                                                            neighbors: entry.neighbors,
-                                                                            subCellType : null,
-                                                                            cellPhenotypeColor: null,
-                                                                            x_cent: entry.x_cent,
-                                                                            y_cent: entry.y_cent
-                                                                        }
-                                                                  ))
-                                      
-                                      // Preprocessing by hashing the array of object..
-                                      let allCellObjects = array2ObjWithHashKey("id", extractedFeatures); 
-                                      // allCellObjects { "spx-1": {label: 1, neighbors: Array(5) [ 4084, 4981, 4569], …}, "spx-2": {…} .. }
+            numOfcellsPerClass[curSourceType] = filteredNeighbors["validNeighbors"].length;
+            numOfcellsPerClass[curNeighborType] = totalNumOfNeighbors
+            //-- NumOfCellsPerClass Object { Tumor: 21104, Immune: 28816 }
+            //-- OR
+            //-- NumOfCellsPerClass Object e.g { 10011: 211, 10101: 288 } -- random number for illustratin purpose
 
-                                      // Fill null columns with data
-                                      allValidPhenotypes.forEach((cellPhenotype, idx) => {  
-                                          cellPhenotype.validCells.forEach((cell, idx) => {  
-                                               allCellObjects[cell.id].cellPhenotypeColor = cellPhenotype.phenotypeColor;
-                                               allCellObjects[cell.id].subCellType = cellPhenotype.binary;
-                                          })
-                                      })  
-                                      
-                                      // Create color array of the phenotypes e.g. 
-                                      // -- cellTypeColors Object { 10000: "#ff5900", 10001: "#ffb300", 10010: "#f2ff00", 10011: "#99ff00", … }
-                                      allValidPhenotypes.forEach( subCellPhenotype => { 
-                                              cellTypeColors[subCellPhenotype.binary] = subCellPhenotype.phenotypeColor;
-                                      })    
-
-
-                                      let curSourceTypeValidCells = allValidPhenotypes.filter(subCellPhenotype => subCellPhenotype.binary == curSourceType)[0].validCells;
-                                      //-- e.g.: { binary: "10001", validCells: [ {id: "spx-3411"}, ..  ], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}
-                                      //-- curSourceTypeValidCells : validCells: [ {id: "spx-3411"}, ..  ]
-
-                                      filteredNeighbors["validNeighbors"] =  curSourceTypeValidCells
-                                                                               .map(entry => (
-                                                                                     { 
-                                                                                        id: entry.id, 
-                                                                                        cellType: curSourceType,
-                                                                                        neighborsType: curNeighborType, 
-                                                                                        neighbors: allCellObjects[entry.id].neighbors.filter(
-                                                                                                           neighborLabel => (allCellObjects["spx-" + neighborLabel].subCellType == curNeighborType) &&
-                                                                                                                            ( cellsDistance ? computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) < cellsDistance :
-                                                                                                                                              computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) > cellsDistance 
-                                                                                                                                              //-- if cellsDistance = 0 means select "All/Any" 
-                                                                                                                            )  
-                                                                                                                         ) 
-                                                                                     }
-                                                                                 )).filter(entry =>  (numOfNeighbor >= 0 ? entry.neighbors.length == numOfNeighbor : entry.neighbors.length > 0) )
-                                                                                 // if  numOfNeighbor is "Any" with value =-1 then entry.neighbors.length > 0 will be selected  
-                                      
-                                      // e.g.filteredNeighbors= { cellType: "10101", neighborsType: "10111", validNeighbors: (9163) […] }
-                                      // e.g filteredNeighbors["validNeighbors"][0] = { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] }   
-
-                                      break;             
-                                    }                
-               case 'Tumor-Immune-Stromal':
-                                    { 
-
-                                     // To find neighbors 
-                                     let allCellObjects = array2ObjWithHashKey("id", allTilesFeaturesAndClassification); 
-                                     // allCellObjects { "spx-1": {…}, "spx-2": {…} .. }
-
-                                     filteredNeighbors["validNeighbors"] = allTilesFeaturesAndClassification.filter(entry => entry.Type == curSourceType)
-                                                                     .map(entry => (
-                                                                                     { 
-                                                                                        id: entry.id, 
-                                                                                        cellType: curSourceType,
-                                                                                        neighborsType: curNeighborType, 
-                                                                                        neighbors: entry.neighbors.filter(
-                                                                                                           neighborLabel => (allCellObjects["spx-" + neighborLabel].Type == curNeighborType) &&
-                                                                                                                            ( cellsDistance ? computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) < cellsDistance :
-                                                                                                                                              computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) > cellsDistance 
-                                                                                                                                               //-- if cellsDistance = 0 means select "All/Any" 
-                                                                                                                            ) 
-                                                                                                                         ) 
-                                                                                     }
-                                                                                 )).filter(entry =>  (numOfNeighbor >= 0 ? entry.neighbors.length == numOfNeighbor : entry.neighbors.length > 0) )
-                                                                                 // if  numOfNeighbor is "Any" with value =-1 then entry.neighbors.length > 0 will be selected  
-
-                                      let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
-                                      // chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
-
-                                      cellTypeColors = getCellTypeColorObj(chnlNameType);
-                                      // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
-
-                                      break;             
-                                    }  
-                  case 'Proteomic-Analysis':
-                                    {
-                                      triggerHint("To be Coded ..");
-                                      break;             
-                                    }                                                                
-                      case 'Cluster':
-                                    {
-                                      triggerHint("To be Coded ..");
-                                      break;             
-                                    }
-                             default:
-                                    {
-                                      triggerHint("No neighbors analysis option for this operation ..");
-                                      break;             
-                                    }                                        
-        }  
-
-
-        setBoundaryFillOpacity(1);
-        // Make all cells fill with none 
-        d3.selectAll(tileClass).style('fill', 'none');
-        d3.selectAll(tileClass).style('stroke', 'none');  
-        d3.selectAll(tileClass).style('fill-opacity', getBoundaryFillOpacity()); 
-
-
-        if(! isViewBarEmpty("grpFeaturesViewBar") ) {
-             clearViewBar("grpFeaturesViewBar");
-        }     
-
-        // Draw all sources cells and thier neighbors 
-        drawAllSourcesAndNeighbors(cellTypeColors);
-
-        let subOperation = getActiveSubOperationFromParent(curChartOperation);
-
-        setActiveSubOperationOnScreen(subOperation);
-
-
-  }
- 
-
-
-  confirmNeighborSelection = (curChartOperation) => {
-        let featuresDictionayInUse; 
-
-        switch ( curChartOperation) {
-                    case 'Phenotypes':
-                                     { 
-                                      featuresDictionayInUse = allTilesFeatures;
-                                      break;             
-                                     }             
-               case 'Tumor-Immune-Stromal':
-                                    { 
-                                      featuresDictionayInUse = allTilesFeaturesAndClassification;
-                                      break;             
-                                    }  
-                  case 'Proteomic-Analysis':
-                                    {
-                                      triggerHint("To be Coded ..");
-                                      break;             
-                                    }                                                                
-                      case 'Cluster':
-                                    {
-                                      triggerHint("To be Coded ..");
-                                      break;             
-                                    }
-                             default:
-                                    {
-                                      triggerHint("No features dictionary for this operation ..");
-                                      break;             
-                                    }                                        
-        }     
-
-         if(featuresDictionayInUse.length) {
-
-            let curSourceType = document.getElementById("neighborSourceList").value;
-            let curNeighbor = document.getElementById("targetNeighborList").value;
-            let numOfNeighbor = document.getElementById("neighborNumList").value; 
-            let cellsDistance = document.getElementById("neighborDistanceList").value; 
-            
-        
-
-             if( ( curSourceType !== "") && ( curNeighbor !== "") && (cellsDistance !== "") ) {
-
-                   processNeighborAnalysis(curSourceType, curNeighbor, parseInt(numOfNeighbor), parseInt(cellsDistance), curChartOperation );                 
-                 
-             } else {
-                  triggerHint("Please select cell-Type, Target Neighbor and a Distance of pixels..");
-             }
- 
- 
-        } else {
-            triggerHint("No neighbor data found, please create features from Features menu above.. ");
-        }        
+            drawCellTypesColumnChart(numOfcellsPerClass, cellTypeColors,  "Source-Neighbor" ); // Third param is for x axis Title          
+       
+            initCellNavigator(filteredNeighbors["validNeighbors"]);
 
     }
+
+
+  /**
+   * Draw all sources cells and thier neighbors 
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} cellTypeColors  e.g. { Tumor: "#ff4846", ... } or {"10011": "#ff4846", ... } for phenotypes 
+   */  
+
+    processNeighborAnalysis = (curSourceType, curNeighborType, numOfNeighbor, cellsDistance, curChartOperation ) => {
+            // Global Var 
+            filteredNeighbors = {}; 
+            filteredNeighbors["cellType"]  = curSourceType;
+            filteredNeighbors["neighborsType"]  = curNeighborType;        
+            // e.g.filteredNeighbors= { cellType: "10101", neighborsType: "10111", validNeighbors: (9163) […] }
+            // e.g filteredNeighbors["validNeighbors"][0] = { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] }   
+
+            let featureToPlot;  
+            let cellTypeColors = {};
+            let tileClass = getClassType();
+            
+
+            switch ( curChartOperation) {
+                        case 'Phenotypes':
+                                         { 
+                                          //-- e.g.:  allValidPhenotypes -> [{ binary: "10001", validCells: [ {id: "spx-3411"}, ..  ], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}, ...]
+
+                                          // Extract needed columns and propse two new columns
+                                          let  extractedFeatures =  allTilesFeatures.map( entry => (
+                                                                            {
+                                                                                id: entry.id,
+                                                                                label: entry.label,
+                                                                                neighbors: entry.neighbors,
+                                                                                subCellType : null,
+                                                                                cellPhenotypeColor: null,
+                                                                                x_cent: entry.x_cent,
+                                                                                y_cent: entry.y_cent
+                                                                            }
+                                                                      ))
+                                          
+                                          // Preprocessing by hashing the array of object..
+                                          let allCellObjects = array2ObjWithHashKey("id", extractedFeatures); 
+                                          // allCellObjects { "spx-1": {label: 1, neighbors: Array(5) [ 4084, 4981, 4569], …}, "spx-2": {…} .. }
+
+                                          // Fill null columns with data
+                                          allValidPhenotypes.forEach((cellPhenotype, idx) => {  
+                                              cellPhenotype.validCells.forEach((cell, idx) => {  
+                                                   allCellObjects[cell.id].cellPhenotypeColor = cellPhenotype.phenotypeColor;
+                                                   allCellObjects[cell.id].subCellType = cellPhenotype.binary;
+                                              })
+                                          })  
+                                          
+                                          // Create color array of the phenotypes e.g. 
+                                          // -- cellTypeColors Object { 10000: "#ff5900", 10001: "#ffb300", 10010: "#f2ff00", 10011: "#99ff00", … }
+                                          allValidPhenotypes.forEach( subCellPhenotype => { 
+                                                  cellTypeColors[subCellPhenotype.binary] = subCellPhenotype.phenotypeColor;
+                                          })    
+
+
+                                          let curSourceTypeValidCells = allValidPhenotypes.filter(subCellPhenotype => subCellPhenotype.binary == curSourceType)[0].validCells;
+                                          //-- e.g.: { binary: "10001", validCells: [ {id: "spx-3411"}, ..  ], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}
+                                          //-- curSourceTypeValidCells : validCells: [ {id: "spx-3411"}, ..  ]
+
+                                          filteredNeighbors["validNeighbors"] =  curSourceTypeValidCells
+                                                                                   .map(entry => (
+                                                                                         { 
+                                                                                            id: entry.id, 
+                                                                                            cellType: curSourceType,
+                                                                                            neighborsType: curNeighborType, 
+                                                                                            neighbors: allCellObjects[entry.id].neighbors.filter(
+                                                                                                               neighborLabel => (allCellObjects["spx-" + neighborLabel].subCellType == curNeighborType) &&
+                                                                                                                                ( cellsDistance ? computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) < cellsDistance :
+                                                                                                                                                  computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) > cellsDistance 
+                                                                                                                                                  //-- if cellsDistance = 0 means select "All/Any" 
+                                                                                                                                )  
+                                                                                                                             ) 
+                                                                                         }
+                                                                                     )).filter(entry =>  (numOfNeighbor >= 0 ? entry.neighbors.length == numOfNeighbor : entry.neighbors.length > 0) )
+                                                                                     // if  numOfNeighbor is "Any" with value =-1 then entry.neighbors.length > 0 will be selected  
+                                          
+                                          // e.g.filteredNeighbors= { cellType: "10101", neighborsType: "10111", validNeighbors: (9163) […] }
+                                          // e.g filteredNeighbors["validNeighbors"][0] = { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] }   
+
+                                          break;             
+                                        }                
+                   case 'Tumor-Immune-Stromal':
+                                        { 
+
+                                         // To find neighbors 
+                                         let allCellObjects = array2ObjWithHashKey("id", allTilesFeaturesAndClassification); 
+                                         //-- allCellObjects { "spx-1": {…}, "spx-2": {…} .. }
+
+                                         filteredNeighbors["validNeighbors"] = allTilesFeaturesAndClassification.filter(entry => entry.Type == curSourceType)
+                                                                         .map(entry => (
+                                                                                         { 
+                                                                                            id: entry.id, 
+                                                                                            cellType: curSourceType,
+                                                                                            neighborsType: curNeighborType, 
+                                                                                            neighbors: entry.neighbors.filter(
+                                                                                                               neighborLabel => (allCellObjects["spx-" + neighborLabel].Type == curNeighborType) &&
+                                                                                                                                ( cellsDistance ? computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) < cellsDistance :
+                                                                                                                                                  computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) > cellsDistance 
+                                                                                                                                                   //-- if cellsDistance = 0 means select "All/Any" 
+                                                                                                                                ) 
+                                                                                                                             ) 
+                                                                                         }
+                                                                                     )).filter(entry =>  (numOfNeighbor >= 0 ? entry.neighbors.length == numOfNeighbor : entry.neighbors.length > 0) )
+                                                                                     // if  numOfNeighbor is "Any" with value =-1 then entry.neighbors.length > 0 will be selected  
+
+                                          let chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
+                                          // chnlNameType is array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
+
+                                          cellTypeColors = getCellTypeColorObj(chnlNameType);
+                                          //-- return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+
+                                          break;             
+                                        }  
+                      case 'Proteomic-Analysis':
+                                        {
+                                          triggerHint("To be Coded ..");
+                                          break;             
+                                        }                                                                
+                          case 'Cluster':
+                                        {
+                                          triggerHint("To be Coded ..");
+                                          break;             
+                                        }
+                                 default:
+                                        {
+                                          triggerHint("No neighbors analysis option for this operation ..");
+                                          break;             
+                                        }                                        
+            }  
+
+
+            setBoundaryFillOpacity(1);
+            // Make all cells fill with none 
+            d3.selectAll(tileClass).style('fill', 'none');
+            d3.selectAll(tileClass).style('stroke', 'none');  
+            d3.selectAll(tileClass).style('fill-opacity', getBoundaryFillOpacity()); 
+
+
+            if(! isViewBarEmpty("grpFeaturesViewBar") ) {
+                 clearViewBar("grpFeaturesViewBar");
+            }     
+
+            // Draw all sources cells and thier neighbors 
+            drawAllSourcesAndNeighbors(cellTypeColors);
+
+            let subOperation = getActiveSubOperationFromParent(curChartOperation);
+
+            setActiveSubOperationOnScreen(subOperation);
+
+      }
+     
+
+  /**
+   * Confirm neighbor selection
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} curChartOperation  e.g. "Phenotypes"
+   */  
+    
+    confirmNeighborSelection = (curChartOperation) => {
+            let featuresDictionayInUse; 
+
+            switch ( curChartOperation) {
+                        case 'Phenotypes':
+                                         { 
+                                          featuresDictionayInUse = allTilesFeatures;
+                                          break;             
+                                         }             
+                   case 'Tumor-Immune-Stromal':
+                                        { 
+                                          featuresDictionayInUse = allTilesFeaturesAndClassification;
+                                          break;             
+                                        }  
+                      case 'Proteomic-Analysis':
+                                        {
+                                          triggerHint("To be Coded ..");
+                                          break;             
+                                        }                                                                
+                          case 'Cluster':
+                                        {
+                                          triggerHint("To be Coded ..");
+                                          break;             
+                                        }
+                                 default:
+                                        {
+                                          triggerHint("No features dictionary for this operation ..");
+                                          break;             
+                                        }                                        
+            }     
+
+             if(featuresDictionayInUse.length) {
+
+                let curSourceType = document.getElementById("neighborSourceList").value;
+                let curNeighbor = document.getElementById("targetNeighborList").value;
+                let numOfNeighbor = document.getElementById("neighborNumList").value; 
+                let cellsDistance = document.getElementById("neighborDistanceList").value; 
+                
+            
+
+                 if( ( curSourceType !== "") && ( curNeighbor !== "") && (cellsDistance !== "") ) {
+
+                       processNeighborAnalysis(curSourceType, curNeighbor, parseInt(numOfNeighbor), parseInt(cellsDistance), curChartOperation );                 
+                     
+                 } else {
+                      triggerHint("Please select cell-Type, Target Neighbor and a Distance of pixels..");
+                 }
+     
+     
+            } else {
+                triggerHint("No neighbor data found, please create features from Features menu above.. ");
+            }        
+
+        }
 
 
 
@@ -9211,121 +9321,132 @@ processNeighborAnalysis = (curSourceType, curNeighborType, numOfNeighbor, cellsD
 //---------------  Phenotype Sub-CellType Neighbor Dependency-----------------//
 //----------------------------------------------------------------------------//
 
-initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 0 /*All*/) => {
+  /**
+   * Init phenotypes neighbor dependency
+   *
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {number} numOfNeighbor   
+   * @param {number} cellsDistance   
+   */          
 
-    if(allTilesFeatures.length) {
+    initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 0 /*All*/) => {
 
-          let phenotypeColors = [];
-          let cellTypeColors = {};
-          let allValidBinaries = [];
-          let neighborsMatrix = null;
-          let dependencyWheelData = [];
-          let phenoBinaryName = {};
-          //--e.g. phenoBinaryName { 10001: "TCell", 10100: "KillerT" }
+        if(allTilesFeatures.length) {
 
-          // Extract needed columns and propose two new columns
-          let  extractedFeatures =  allTilesFeatures.map( entry => (
-                                            {
-                                                id: entry.id,
-                                                label: entry.label,
-                                                neighbors: entry.neighbors,
-                                                subCellType : null,
-                                                cellPhenotypeColor: null,
-                                                x_cent: entry.x_cent,
-                                                y_cent: entry.y_cent
-                                            }
-                                    ))
-          
-          // Preprocessing by hashing the array of object..
-          let allCellObjects = array2ObjWithHashKey("id", extractedFeatures); 
-          // allCellObjects { "spx-1": {label: 1, neighbors: Array(5) [ 4084, 4981, 4569], …}, "spx-2": {…} .. }
+              let phenotypeColors = [];
+              let cellTypeColors = {};
+              let allValidBinaries = [];
+              let neighborsMatrix = null;
+              let dependencyWheelData = [];
+              let phenoBinaryName = {};
+              //--e.g. phenoBinaryName { 10001: "TCell", 10100: "KillerT" }
 
-          // Fill null columns with data
-          allValidPhenotypes.forEach((cellPhenotype, idx) => {  
-              cellPhenotype.validCells.forEach((cell, idx) => {  
-                   allCellObjects[cell.id].cellPhenotypeColor = cellPhenotype.phenotypeColor;
-                   allCellObjects[cell.id].subCellType = cellPhenotype.binary;
-              })
-          })  
-          
-          // Create color array  and binary array of the phenotypes 
-          allValidPhenotypes.forEach( subCellPhenotype => { 
-                  cellTypeColors[subCellPhenotype.binary] = subCellPhenotype.phenotypeColor;
-                  // -- cellTypeColors Object { 10000: "#ff5900", 10001: "#ffb300", 10010: "#f2ff00", 10011: "#99ff00", … }
+              // Extract needed columns and propose two new columns
+              let  extractedFeatures =  allTilesFeatures.map( entry => (
+                                                {
+                                                    id: entry.id,
+                                                    label: entry.label,
+                                                    neighbors: entry.neighbors,
+                                                    subCellType : null,
+                                                    cellPhenotypeColor: null,
+                                                    x_cent: entry.x_cent,
+                                                    y_cent: entry.y_cent
+                                                }
+                                        ))
+              
+              // Preprocessing by hashing the array of object..
+              let allCellObjects = array2ObjWithHashKey("id", extractedFeatures); 
+              //-- allCellObjects { "spx-1": {label: 1, neighbors: Array(5) [ 4084, 4981, 4569], …}, "spx-2": {…} .. }
 
-                  allValidBinaries.push(subCellPhenotype.binary);     
-                  //--allValidBinaries Array e.g: [ "10000", "10001", "10010", "10011", "10100", "10101", "10110", "10111", "11000", "11001", … ]                           
+              // Fill null columns with data
+              allValidPhenotypes.forEach((cellPhenotype, idx) => {  
+                  cellPhenotype.validCells.forEach((cell, idx) => {  
+                       allCellObjects[cell.id].cellPhenotypeColor = cellPhenotype.phenotypeColor;
+                       allCellObjects[cell.id].subCellType = cellPhenotype.binary;
+                  })
+              })  
+              
+              // Create color array  and binary array of the phenotypes 
+              allValidPhenotypes.forEach( subCellPhenotype => { 
+                      cellTypeColors[subCellPhenotype.binary] = subCellPhenotype.phenotypeColor;
+                      // -- cellTypeColors Object { 10000: "#ff5900", 10001: "#ffb300", 10010: "#f2ff00", 10011: "#99ff00", … }
 
-                  if(subCellPhenotype.phenotypeName) {
-                       phenoBinaryName[subCellPhenotype.binary] = subCellPhenotype.phenotypeName;
-                  }   
-                  //--e.g. phenoBinaryName { 10001: "TCell", 10100: "KillerT" }
+                      allValidBinaries.push(subCellPhenotype.binary);     
+                      //--allValidBinaries Array e.g: [ "10000", "10001", "10010", "10011", "10100", "10101", "10110", "10111", "11000", "11001", … ]                           
 
-
-                  if(subCellPhenotype.phenotypeName) {
-                       phenotypeColors.push({id: subCellPhenotype.phenotypeName, color: subCellPhenotype.phenotypeColor});
-                  } else {
-                       phenotypeColors.push({id: subCellPhenotype.binary, color: subCellPhenotype.phenotypeColor});
-                  } 
-                  //-- phenotypeColors array of objects e.g. : [{id: 10000, color: "#ff5900"}, ...]
-
-          })    
-
-
-        for(let i = 0; i < allValidBinaries.length; i++) {
-           for(let j = i+1; j < allValidBinaries.length; j++) {
-
-                  let curSourceType = allValidBinaries[i];
-                  let curNeighborType = allValidBinaries[j];
-          
-                  let curSourceTypeValidCells = allValidPhenotypes.filter(subCellPhenotype => subCellPhenotype.binary == curSourceType)[0].validCells;
-                  //-- e.g.: { binary: "10001", validCells: [ {id: "spx-3411"}, ..  ], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}
-                  //-- curSourceTypeValidCells : validCells: [ {id: "spx-3411"}, ..  ]
-
-                  neighborsMatrix =    curSourceTypeValidCells
-                                               .map(entry => (
-                                                     { 
-                                                        id: entry.id, 
-                                                        cellType: curSourceType,
-                                                        neighborsType: curNeighborType, 
-                                                        neighbors: allCellObjects[entry.id].neighbors.filter(
-                                                                           neighborLabel => (allCellObjects["spx-" + neighborLabel].subCellType == curNeighborType) &&
-                                                                                            ( cellsDistance ? computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) < cellsDistance :
-                                                                                                              computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) > cellsDistance 
-                                                                                                              //-- if cellsDistance = 0 means select "All/Any" 
-                                                                                            ) 
-                                                                                         ) 
-                                                     }
-                                                 )).filter(entry =>  (numOfNeighbor >= 0 ? entry.neighbors.length == numOfNeighbor : entry.neighbors.length > 0) )
-                                                 // if  numOfNeighbor is "Any" with value =-1 then entry.neighbors.length > 0 will be selected 
-
-                // e.g neighborsMatrix[0] =  { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] } 
-
-                 // Total number of neighbors type e.g. 10111 per cellType e.g. 10101
-                let totalNumOfNeighbors = 0;
-                neighborsMatrix.forEach(entry => {
-                   totalNumOfNeighbors = totalNumOfNeighbors + entry.neighbors.length;
-                })
-
-                if(totalNumOfNeighbors) {
-                    let phenotype1 = phenoBinaryName[allValidBinaries[i]] ? phenoBinaryName[allValidBinaries[i]] : allValidBinaries[i];
-                    let phenotype2 = phenoBinaryName[allValidBinaries[j]] ? phenoBinaryName[allValidBinaries[j]] : allValidBinaries[j];                    
-                    //-- dependencyWheelData.push([ allValidBinaries[i], allValidBinaries[j], totalNumOfNeighbors ]);
-                    dependencyWheelData.push([ phenotype1, phenotype2, totalNumOfNeighbors ]);
-                    //--dependencyWheelData e.g. [["10011", "11011", 53], ["10011", "10101", 30], ... ]
-                }
-
-           }
-        }   
+                      if(subCellPhenotype.phenotypeName) {
+                           phenoBinaryName[subCellPhenotype.binary] = subCellPhenotype.phenotypeName;
+                      }   
+                      //--e.g. phenoBinaryName { 10001: "TCell", 10100: "KillerT" }
 
 
-        drawNeighborsDependencyWheelChart(dependencyWheelData, phenotypeColors);
+                      if(subCellPhenotype.phenotypeName) {
+                           phenotypeColors.push({id: subCellPhenotype.phenotypeName, color: subCellPhenotype.phenotypeColor});
+                      } else {
+                           phenotypeColors.push({id: subCellPhenotype.binary, color: subCellPhenotype.phenotypeColor});
+                      } 
+                      //-- phenotypeColors array of objects e.g. : [{id: 10000, color: "#ff5900"}, ...]
 
-    } else {
-        triggerHint("No neighbor data found, please create features from Features menu above.. ");
-    }  
+              })    
 
-}
+
+            for(let i = 0; i < allValidBinaries.length; i++) {
+               for(let j = i+1; j < allValidBinaries.length; j++) {
+
+                      let curSourceType = allValidBinaries[i];
+                      let curNeighborType = allValidBinaries[j];
+              
+                      let curSourceTypeValidCells = allValidPhenotypes.filter(subCellPhenotype => subCellPhenotype.binary == curSourceType)[0].validCells;
+                      //-- e.g.: { binary: "10001", validCells: [ {id: "spx-3411"}, ..  ], totalValidCellsNum: 6211, phenotypeColor: "#ffb300"}
+                      //-- curSourceTypeValidCells : validCells: [ {id: "spx-3411"}, ..  ]
+
+                      neighborsMatrix =    curSourceTypeValidCells
+                                                   .map(entry => (
+                                                         { 
+                                                            id: entry.id, 
+                                                            cellType: curSourceType,
+                                                            neighborsType: curNeighborType, 
+                                                            neighbors: allCellObjects[entry.id].neighbors.filter(
+                                                                               neighborLabel => (allCellObjects["spx-" + neighborLabel].subCellType == curNeighborType) &&
+                                                                                                ( cellsDistance ? computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) < cellsDistance :
+                                                                                                                  computeCellsDistance(allCellObjects["spx-" + neighborLabel], allCellObjects[entry.id]) > cellsDistance 
+                                                                                                                  //-- if cellsDistance = 0 means select "All/Any" 
+                                                                                                ) 
+                                                                                             ) 
+                                                         }
+                                                     )).filter(entry =>  (numOfNeighbor >= 0 ? entry.neighbors.length == numOfNeighbor : entry.neighbors.length > 0) )
+                                                     // if  numOfNeighbor is "Any" with value =-1 then entry.neighbors.length > 0 will be selected 
+
+                    // e.g neighborsMatrix[0] =  { id: "spx-13238", cellType: "10101", neighborsType: "10111", neighbors: [14327, 14395] } 
+
+                    // Total number of neighbors type e.g. 10111 per cellType e.g. 10101
+                    let totalNumOfNeighbors = 0;
+                    neighborsMatrix.forEach(entry => {
+                       totalNumOfNeighbors = totalNumOfNeighbors + entry.neighbors.length;
+                    })
+
+                    if(totalNumOfNeighbors) {
+                        let phenotype1 = phenoBinaryName[allValidBinaries[i]] ? phenoBinaryName[allValidBinaries[i]] : allValidBinaries[i];
+                        let phenotype2 = phenoBinaryName[allValidBinaries[j]] ? phenoBinaryName[allValidBinaries[j]] : allValidBinaries[j];                    
+                        //-- dependencyWheelData.push([ allValidBinaries[i], allValidBinaries[j], totalNumOfNeighbors ]);
+                        dependencyWheelData.push([ phenotype1, phenotype2, totalNumOfNeighbors ]);
+                        //--dependencyWheelData e.g. [["10011", "11011", 53], ["10011", "10101", 30], ... ]
+                    }
+
+               }
+            }   
+
+
+            drawNeighborsDependencyWheelChart(dependencyWheelData, phenotypeColors);
+
+        } else {
+            triggerHint("No neighbor data found, please create features from Features menu above.. ");
+        }  
+
+    }
 
 //----------------------------------------------------------------------------//
 //--------------------------- Dimensions Reduction ---------------------------//
@@ -9333,103 +9454,47 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
 //-----------------------------  Visualization -------------------------------//
 //----------------------------------------------------------------------------//
 
+    /**
+     * Cancel dim reducer selection, by click on the cancel button
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */ 
+
+     cancelDimReducerSelection = () => {
+           removeChartBottomLists();
+     }  
 
 
-  cancelDimReducerSelection = () => {
-       removeChartBottomLists();
-  }  
+    /**
+     * Plot Dim reduction output for basic markers
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {string} curChartOperation e.g. 'Phenotypes'
+     */ 
 
-
-  // confirmNeighborSelection = (curChartOperation) => {
-  //       let featuresDictionayInUse; 
-
-  //       switch ( curChartOperation) {
-  //                   case 'Phenotypes':
-  //                                    { 
-  //                                     featuresDictionayInUse = allTilesFeatures;
-  //                                     break;             
-  //                                    }             
-  //              case 'Tumor-Immune-Stromal':
-  //                                   { 
-  //                                     featuresDictionayInUse = allTilesFeaturesAndClassification;
-  //                                     break;             
-  //                                   }  
-  //                 case 'Proteomic-Analysis':
-  //                                   {
-  //                                     triggerHint("To be Coded ..");
-  //                                     break;             
-  //                                   }                                                                
-  //                     case 'Cluster':
-  //                                   {
-  //                                     triggerHint("To be Coded ..");
-  //                                     break;             
-  //                                   }
-  //                            default:
-  //                                   {
-  //                                     triggerHint("No features dictionary for this operation ..");
-  //                                     break;             
-  //                                   }                                        
-  //       }     
-
-  //        if(featuresDictionayInUse.length) {
-
-  //           let curSourceType = document.getElementById("neighborSourceList").value;
-  //           let curNeighbor = document.getElementById("targetNeighborList").value;
-  //           let numOfNeighbor = document.getElementById("neighborNumList").value; 
-  //           let cellsDistance = document.getElementById("neighborDistanceList").value; 
-            
-        
-
-  //            if( ( curSourceType !== "") && ( curNeighbor !== "") && (cellsDistance !== "") ) {
-
-  //                  processNeighborAnalysis(curSourceType, curNeighbor, parseInt(numOfNeighbor), parseInt(cellsDistance), curChartOperation );                 
-                 
-  //            } else {
-  //                 triggerHint("Please select cell-Type, Target Neighbor and a Distance of pixels..");
-  //            }
- 
- 
-  //       } else {
-  //           triggerHint("No neighbor data found, please create features from Features menu above.. ");
-  //       }        
-
-  //   }
-
-  // neighborSourceListChanged = () => {
-  //       let curSourceType = document.getElementById("neighborSourceList").value;
-
-  //       if(curSourceType !== "") {
-  //           document.getElementById("targetNeighborList").disabled = false;
-  //           document.getElementById("neighborDistanceList").disabled = false;
-  //           document.getElementById("neighborNumList").disabled = false;
-  //       } else {
-  //           document.getElementById("targetNeighborList").disabled = true;
-  //           document.getElementById("neighborDistanceList").disabled = true;
-  //           document.getElementById("neighborNumList").disabled = true;
-  //       }
-
-  // }  
-
-
-
-     // Plot Dim reduction output for basic markers
      processDimReductionAndPlot = (curChartOperation) => {
          
-        let dimReducer = getCurDimReducer(); //e.g. PCA or t-SNE
-        let numCells = getCurDimReducerCellNum(); // 0 for sample or (-1) for allcells
+        let dimReducer = getCurDimReducer(); // e.g. PCA or t-SNE
+        let numCells = getCurDimReducerCellNum(); //-- 0 for sample or (-1) for allcells
         let plotDim = getCurDimReducerPlotDim();  // 2D or 3D     
 
         let filteredData = {};
 
         let cellTypeColors = {};
 
-        //-- e.g. numSamplesPerType : 1000
+        // e.g. numSamplesPerType : 1000
         let numSamplesPerType; 
 
         let curCellTypes = []; 
-        //e.g. curCellTypes: [ "Tumor", "Immune", "Stromal", "Others" ] or   [ "Tumor", "Others" ] 
-        //-- For phenotypes
-        //e.g. curCellTypes: [ "10001", "10010", "10011", "10100", "10101", "10110", "10111", "11000", "11001", "11010", … ]
+        // e.g. curCellTypes: [ "Tumor", "Immune", "Stromal", "Others" ] or   [ "Tumor", "Others" ] 
+        //-- for phenotypes
+        // e.g. curCellTypes: [ "10001", "10010", "10011", "10100", "10101", "10110", "10111", "11000", "11001", "11010", … ]
         
         let filterByType = {};  
         // e.g  filterByType { Tumor: [..], Immune: [..], ... }  or
@@ -9437,12 +9502,12 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
         // filterByType["Immune"][0] : {ASMA_norm: 1.49, CD45_norm: 32.23, KERATIN_norm: 2.17, Max: "CD45_norm", Type: "Immune", id: "spx-59", label: 59}                        
 
         let chnlNames = [];
-        //-- e.g. chnlNames : [{ channel_name: "CD45" }, { channel_name: "KERATIN" }]  
+        // e.g. chnlNames : [{ channel_name: "CD45" }, { channel_name: "KERATIN" }]  
 
         let phenoBinaryName = {};
-        //--e.g. phenoBinaryName { 10001: "TCell", 10100: "KillerT" }
+        // e.g. phenoBinaryName { 10001: "TCell", 10100: "KillerT" }
 
-        if(numCells < 0 ) {
+        if( numCells < 0 ) {
            triggerHint("process all cells to be coded");
            return 0;
         }
@@ -9457,16 +9522,16 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
 
                             curCellTypes =  chnlNameType.map(entry => entry["channel_type"]);
                             curCellTypes.push("Others");        
-                            //e.g. curCellTypes: [ "Tumor", "Immune", "Stromal", "Others" ] or   [ "Tumor", "Others" ]     
+                            // e.g. curCellTypes: [ "Tumor", "Immune", "Stromal", "Others" ] or   [ "Tumor", "Others" ]     
 
                             cellTypeColors = getCellTypeColorObj(chnlNameType);
-                            // return cellTypeColors obj: { Tumor: "#ff4846", ... }  
+                            //-- return cellTypeColors obj: { Tumor: "#ff4846", ... }  
 
                             curCellTypes.forEach(type => {
                                 filterByType[type] = cellBasicClassification.filter(entry => entry.Type == type);
                             })
 
-                            //-- e.g  filterByType { Tumor: [..], Immune: [..], ... }
+                            // e.g  filterByType { Tumor: [..], Immune: [..], ... }
                             // Where the array represent the seleted features values e.g. KERATIN_norm,  CD45_norm , ASMA_norm              
                             // filterByType["Immune"][0] : {ASMA_norm: 1.49, CD45_norm: 32.23, KERATIN_norm: 2.17, Max: "CD45_norm", Type: "Immune", id: "spx-59", label: 59}                
                       
@@ -9479,7 +9544,7 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                                                             channel_name: entry.channel_name
                                                                         }
                                                                   ))
-                            //-- e.g. chnlNames : [{ channel_name: "CD45" }, { channel_name: "KERATIN" }]  
+                            // e.g. chnlNames : [{ channel_name: "CD45" }, { channel_name: "KERATIN" }]  
                             break;                            
 
                         } 
@@ -9492,27 +9557,28 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                       if(subCellPhenotype.phenotypeName) {
                                            phenoBinaryName[subCellPhenotype.binary] = subCellPhenotype.phenotypeName;
                                       }                                      
-                            }) 
+                            })
+
                             //-- return cellTypeColors obj: { "01010": "#ff4846", ... }  
-                            // -- allValidPhenotypes[0] : { binary: "10001", validCells: (32) […], totalValidCellsNum: 32, phenotypeColor: "#ff0000" }
-                            // -- allValidPhenotypes[9].validCells : [{ id: "spx-95281" }]
+                            //-- allValidPhenotypes[0] : { binary: "10001", validCells: (32) […], totalValidCellsNum: 32, phenotypeColor: "#ff0000" }
+                            //-- allValidPhenotypes[9].validCells : [{ id: "spx-95281" }]
 
                             curCellTypes =  allValidPhenotypes.map(entry => entry["binary"]);
-                            //-- e.g. curCellTypes: [ "10001", "10010", "10011", "10100", "10101", "10110", "10111", "11000", "11001", "11010", … ]
+                            // e.g. curCellTypes: [ "10001", "10010", "10011", "10100", "10101", "10110", "10111", "11000", "11001", "11010", … ]
 
-                            // let allCellObjects = array2ObjWithHashKey("id", allTilesFeaturesAndClassification); 
+                            //-- let allCellObjects = array2ObjWithHashKey("id", allTilesFeaturesAndClassification); 
                             // // allCellObjects { "spx-1": {…}, "spx-2": {…} .. }
 
-                            // let markerValue = Opts.cellFeatureToNormalize.substring(1); // select from  _mean, _max, _std, _nonzero_mean
+                            //-- let markerValue = Opts.cellFeatureToNormalize.substring(1); // select from  _mean, _max, _std, _nonzero_mean
 
                             curCellTypes.forEach(type => {
 
                                     filterByType[type] = allValidPhenotypes.filter(entry => entry.binary == type)[0].validCells;
-                                    // filterByType["10001"][0] : {id: "spx-59"}  
+                                    //-- filterByType["10001"][0] : {id: "spx-59"}  
 
                                     filterByType[type] = mergeArrayOfObjByKey( "id", filterByType[type], allTilesFeatures);
-                                    //-- e.g  filterByType { "10001": [..], "10010": [..], ... }
-                                    // filterByType["10001"][0] :{ id: "spx-2346", label: 2346, features: (5) […], area: 238,  … }  
+                                    // e.g  filterByType { "10001": [..], "10010": [..], ... }
+                                    //-- filterByType["10001"][0] :{ id: "spx-2346", label: 2346, features: (5) […], area: 238,  … }  
                               
 
                                     // Extract needed columns and propse two new columns
@@ -9524,8 +9590,8 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                                                             features: entry.features
                                                                         }
                                                                   ))
-                                    //-- e.g  filterByType { "10001": [..], "10010": [..], ... }
-                                    // filterByType["10001"][3] :{ id: "spx-2346", label: 2346, type: "Tumor", 
+                                    // e.g  filterByType { "10001": [..], "10010": [..], ... }
+                                    //-- filterByType["10001"][3] :{ id: "spx-2346", label: 2346, type: "Tumor", 
                                     //                         features: [{ Frame: "DAPI", mean: 23.34, nonzero_mean: 32.49, norm: 25.85,.. }, {..},..] }     
 
                                     let featToPlot =  "norm";
@@ -9538,7 +9604,7 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                                                delete filterByType[type][idx]["features"];
                                                              })
 
-                                    // filterByType["10001"][3] :{ id: "spx-2346", label: 2346, type: "Tumor", ASMA_norm: 2.91, CD45_norm: 3.96, 
+                                    //-- filterByType["10001"][3] :{ id: "spx-2346", label: 2346, type: "Tumor", ASMA_norm: 2.91, CD45_norm: 3.96, 
                                     //                               DAPI_norm: 122.52, IBA1_norm: 35.56, KERATIN_norm: 1.04}     
 
                             })
@@ -9549,7 +9615,7 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                             let curChannelsArr = [... getCurGrpChannelsName()];
                             // e.g. curChannelsArr :[ "DAPI", "KERATIN", "ASMA", "CD45", "IBA1" ]
 
-                            // -- Remove dapi from feature calculations during reduction
+                            // Remove dapi from feature calculations during reduction
                             if(Opts.excludeDapiChForPhenotypes) {
                                  let dapiChName = getSelectedDAPIChannelName();
                                  removeArrayElem(curChannelsArr, dapiChName);
@@ -9562,15 +9628,15 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                                                             channel_name: entry
                                                                         }
                                                                   ))
-                            //-- e.g. chnlNames : [{ channel_name: "DAPI" }, { channel_name: "IBA1" }, { channel_name: "KERATIN" }, 
+                            // e.g. chnlNames : [{ channel_name: "DAPI" }, { channel_name: "IBA1" }, { channel_name: "KERATIN" }, 
                             //                     { channel_name: "CD45" }, { channel_name: "ASMA" } ]
 
 
                                
-                            //-- e.g. numSamplesPerType : 100
+                            // e.g. numSamplesPerType : 100
                             numSamplesPerType = math.floor(Opts.maxNumOfAllSamples/Object.keys(cellTypeColors).length);  
 
-                           // let allValidTilesObject = array2ObjWithHashKey("id", allValidTiles);
+                           //-- let allValidTilesObject = array2ObjWithHashKey("id", allValidTiles);
 
                             break;  
 
@@ -9654,11 +9720,11 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                     });
 
                     if(plotDim == 3) {
-                        //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
+                        // For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
                         drawScatterChart3D(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , dimReducer + "-x", dimReducer + "-y", dimReducer + "-z"); 
 
                     } else {
-                        //--For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
+                        // For 2D  scatterData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
                         drawScatterChart(scatterData, "Random Sample " + allTypeSamples.length + " Cells" , dimReducer + "-x" + "( Sample #" + allTypeSamples.length+")", dimReducer + "-y"); 
                     }  
 
@@ -9678,8 +9744,18 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
    }
 
 
+    /**
+     * @deprecated since version 1.0.0
+     *
+     * Plot Dim reduction output for basic markers
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {string} curChartOperation e.g. 'Phenotypes'
+     */ 
 
-     // Plot Dim reduction output for basic markers
      processDimReductionAndPlot_old = (curChartOperation) => {
          
         let dimReducer = getCurDimReducer(); //e.g. PCA or t-SNE
@@ -9827,57 +9903,128 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
    }
 
  
+  /**
+   * For future use..
+   * 
+   * @function
+   * @todo Write the doc.
+   * @todo Implement this function.
+   */ 
+
+    dimReducersListChanged = () => {
+         // to be coded
+    }
+
+  /**
+   * For future use..
+   * 
+   * @function
+   * @todo Write the doc.
+   * @todo Implement this function.
+   */ 
+
+    dimReduceCellsNumListChanged = () => {
+         // to be coded
+    }
+
+  /**
+   * For future use..
+   * 
+   * @function
+   * @todo Write the doc.
+   * @todo Implement this function.
+   */ 
+
+    dimReducerPlotListChanged = () => {
+         // to be coded
+    }    
 
 
-   dimReducersListChanged = () => {
-     // to be coded
-  }
+    /**
+     * Get current dim reducer cell num
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @returns {number} i.e. 0 for sample or (-1) for allcells
+     */ 
 
-   dimReduceCellsNumListChanged = () => {
-     // to be coded
-  }
+    getCurDimReducerCellNum = () => {
+          return document.getElementById("dimReduceCellsNumList").value;
+    }
 
-   dimReducerPlotListChanged = () => {
-     // to be coded
-  }    
+    /**
+     * Get current dim reducer plot Dim
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @returns {number} i.e. 2 for 2D  and 3 for 3D
+     */ 
 
-  getCurDimReducerCellNum = () => {
-      return document.getElementById("dimReduceCellsNumList").value;
-  }
-
-
-  getCurDimReducerPlotDim = () => {
-      return document.getElementById("dimReducerPlotList").value;
-  }  
-
-
-  getCurDimReducer = () => {
-      return document.getElementById("dimReducersList").value;
-  }
-
-  requestDimReducerInfo = () => {
-     let dimReducer = getCurDimReducer();
-     let dimReducerEntry = dimReductionMethods.filter( entry => entry.method === dimReducer);
-     triggerHint(dimReducerEntry[0].description, "info", 10000);        
-  }
+    getCurDimReducerPlotDim = () => {
+          return document.getElementById("dimReducerPlotList").value;
+    }  
 
 
-    // For Tumor-Immune-Stromal/Phenotypes/etc  
+    /**
+     * Get current dim reducer 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @returns {string} e.g. "t-SNE"
+     */ 
+
+    getCurDimReducer = () => {
+          return document.getElementById("dimReducersList").value;
+    }
+
+    /**
+     * Get current dim reducer  info by clicking on info icon
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */ 
+
+    requestDimReducerInfo = () => {
+         let dimReducer = getCurDimReducer();
+         let dimReducerEntry = dimReductionMethods.filter( entry => entry.method === dimReducer);
+         triggerHint(dimReducerEntry[0].description, "info", 10000);        
+      }
+
+
+    /**
+     * Init cell types dim reduction mode
+     * For Tumor-Immune-Stromal/Phenotypes/etc 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {string} curChartOperation e.g. 'Phenotypes'
+     */       
+
     initCellTypesDimReductionMode = (curChartOperation) => { 
 
-      // if(curChartOperation == "Phenotypes") {
-      //     triggerHint("To be Coded");
-      //     return 0;
-      // }  
+      //-- if(curChartOperation == "Phenotypes") {
+      //--     triggerHint("To be Coded");
+      //--     return 0;
+      //-- }  
 
       chartOptions.lastContainerContent = document.getElementById("chartContainer").innerHTML;
 
       let nodes = ""; 
 
       nodes +=  '<table>';
-      // nodes +=    '<tr>';
-      // nodes +=      '<th style="text-align: left; margin-left: 0vw;"><label style="margin-left: 0.69vw">Neighbors Analysis</label></th>';   
-      // nodes +=    '</tr>';        
+      //-- nodes +=    '<tr>';
+      //-- nodes +=      '<th style="text-align: left; margin-left: 0vw;"><label style="margin-left: 0.69vw">Neighbors Analysis</label></th>';   
+      //-- nodes +=    '</tr>';        
       nodes +=    '<colgroup><col style="width:30%"><col style="width:30%"><col style="width:30%"><col style="width:10%"></colgroup>';
 
       nodes +=    '<tr>';
@@ -9907,9 +10054,9 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
       nodes +=      '<th style="text-align: left">'; 
       nodes +=        `<select  id="dimReduceCellsNumList" class="dimReducerClass" onChange = "dimReduceCellsNumListChanged()" style="width:85%; margin-left: 0.69vw; font-size: 0.57vw; -webkit-appearance: none;"  >`;
 
-      // for(let num = 100; num <= Opts.numSamplePerType; num = num + 100 ) {
-      //     nodes +=          `<option value=${num} > = ${num} </option>`;   // zero neighbores for cells that has no neighbors of the type    
-      // }
+      //-- for(let num = 100; num <= Opts.numSamplePerType; num = num + 100 ) {
+      //--     nodes +=          `<option value=${num} > = ${num} </option>`;   // zero neighbores for cells that has no neighbors of the type    
+      //-- }
 
       nodes +=          `<option value=0 selected> Random Sample</option>`;  
       nodes +=          `<option value=-1> All Cells</option>`;                 
@@ -9961,7 +10108,17 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
 //-------------------------  Main CellType Analysis------------------------------//
 //-------------------------------------------------------------------------------//
     
-    //e.g. t-SNE UMAP, PCA, LDA 
+   
+    /**
+     * Dim reduction operation on the side special bar
+     * e.g. t-SNE UMAP, PCA, LDA 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */      
+
     dimReductionOperation = () => { 
 
         let curChartOperation = document.getElementById("chartOperations").value;
@@ -9995,9 +10152,18 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                     }                                        
         }  
 
-      //  document.getElementById("chartOperationSettings").innerHTML = "";
- 
-  } 
+      //--  document.getElementById("chartOperationSettings").innerHTML = "";
+   } 
+
+
+    /**
+     * Analysis chart operation on the side special bar
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */      
 
     analysisChartOperation = () => {
 
@@ -10008,7 +10174,7 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                     case 'Phenotypes':
                                      { 
                                       triggerHint("To be Coded ..");  
-                                      // initPhenotypesAnalysisMode();
+                                      //-- initPhenotypesAnalysisMode();
                                       break;             
                                     }                
                case 'Tumor-Immune-Stromal':
@@ -10033,14 +10199,26 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                     }                                        
         }  
 
-      //  document.getElementById("chartOperationSettings").innerHTML = "";
+      //--  document.getElementById("chartOperationSettings").innerHTML = "";
  
   } 
 
-  initChartOperationSideSpecialBar = (operationType) => {
 
+
+    /**
+     * Init chart operation side special bar
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {string} operationType  e.g. 'Phenotypes'
+     */  
+
+    initChartOperationSideSpecialBar = (operationType) => {
 
         switch ( operationType) {
+   
                case 'Phenotypes':
                                     { 
                                       document.getElementById("chPlotsPanelSpecialBar").innerHTML = 
@@ -10123,1251 +10301,1372 @@ initPhenotypesNeighborDependency = (numOfNeighbor = -1 /*All*/, cellsDistance = 
                                     }                                        
         }     
 
-
-  }
-
+   }
 
 
+    /**
+     * Initiat Chart form to classify cells as Tumor/Immune/Stromal/Others 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */  
 
+      initChartClassifyCellsForm = () => { 
 
-  // Classify cells as Tumor/Immune/Stromal/Others 
-  initChartClassifyCellsForm = () => { 
+          chartOptions.lastContainerContent = document.getElementById("chartContainer").innerHTML;
 
-      chartOptions.lastContainerContent = document.getElementById("chartContainer").innerHTML;
+          // To init the markers list with pre selected values
+          let chnlNameType = []; // e.g.  array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
+          let cellTypeObj = {};   // e.g. cellTypeObj  Object { Tumor: "KERATIN" }
 
-      // To init the markers list with pre selected values
-      let chnlNameType = []; //  array of object: [{"channel_name": "CD45", "channel_type" : "Immune"}, ...]
-     
-      let cellTypeObj = {};   // cellTypeObj  Object { Tumor: "KERATIN" }
-
-      if( isGrpChannelsNameTypeExist( getSelectedGrpIndex() ) ) {
-          chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
-          chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
-             let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
-             let cellName = chnlNameTypeEntry.channel_name; // e.g. KERATIN 
-              cellTypeObj[cellType] = cellName; // cellTypeObj  Object { Tumor: "KERATIN", ..}
-          });         
-      }
-
-
-      let nodes = ""; 
-
-      nodes +=  '<table>';
-      nodes +=    '<colgroup><col style="width:40%"><col style="width:30%"><col style="width:20%"><col style="width:10%"></colgroup>';
-      nodes +=    '<tr>';
-      nodes +=      '<th style="text-align: left; margin-left: 0vw;"><label style="margin-left: 0.69vw">Select Marker</label></th>';
-      nodes +=      '<th style="text-align: left"><label style="margin-left: 0.69vw">Cell-Type</label></th>';
-      nodes +=      '<th style="text-align: left"><label style="margin-left: 0.69vw">Color</label></th>'
-      nodes +=      '<th style="text-align: left"></th>'      
-      nodes +=    '</tr>';
-
-      mainCellTypesList.forEach((cellTypeEntry, idx) => {   
-          let cellType = cellTypeEntry.cellType; // e.g. Tumor   
-          let clr  = cellTypeEntry.cellTypeColor;
-
-          // Initiat list of markers to choose from 
-          nodes +=    '<tr>';
-          nodes +=      '<th style="text-align: left">'; 
-          // No selection list for "Others" cellType
-          if(cellType !== "Others") {
-              nodes +=        `<select  id="markerList.${cellType}"  style="width:70%; margin-left: 0.69vw; font-size: 0.52vw; -webkit-appearance: none;"  >`;
-              getCurGrpChannelsName().forEach((marker, idx) => {
-                    if(idx == 0) {
-                       // create empty entry with the select list 
-                       nodes +=    `<option value=""></option>`; 
-                    }  
-                                  
-                    if(marker !== getSelectedDAPIChannelName()) {
-                        if(marker === cellTypeObj[cellType]) {
-                            nodes +=    `<option value=${marker} selected>${marker}</option>`; 
-                        } else {
-                            nodes +=    `<option value=${marker}>${marker}</option>`; 
-                        }
-                               
-                    }
-              });
-              nodes +=         '</select>'; 
+          if( isGrpChannelsNameTypeExist( getSelectedGrpIndex() ) ) {
+              chnlNameType =  getGrpChannelsNameType(getSelectedGrpIndex());
+              chnlNameType.forEach((chnlNameTypeEntry, idx) => { 
+                 let cellType = chnlNameTypeEntry.channel_type; // e.g. Tumor 
+                 let cellName = chnlNameTypeEntry.channel_name; // e.g. KERATIN 
+                  cellTypeObj[cellType] = cellName; // cellTypeObj  Object { Tumor: "KERATIN", ..}
+              });         
           }
 
-          nodes +=      '</th>';
 
-          // Initiat textbox to of cellType e.g. Tumor, Immune, Stromal, Others.
+          let nodes = ""; 
+
+          nodes +=  '<table>';
+          nodes +=    '<colgroup><col style="width:40%"><col style="width:30%"><col style="width:20%"><col style="width:10%"></colgroup>';
+          nodes +=    '<tr>';
+          nodes +=      '<th style="text-align: left; margin-left: 0vw;"><label style="margin-left: 0.69vw">Select Marker</label></th>';
+          nodes +=      '<th style="text-align: left"><label style="margin-left: 0.69vw">Cell-Type</label></th>';
+          nodes +=      '<th style="text-align: left"><label style="margin-left: 0.69vw">Color</label></th>'
+          nodes +=      '<th style="text-align: left"></th>'      
+          nodes +=    '</tr>';
+
+          mainCellTypesList.forEach((cellTypeEntry, idx) => {   
+              let cellType = cellTypeEntry.cellType; // e.g. Tumor   
+              let clr  = cellTypeEntry.cellTypeColor;
+
+              // Initiat list of markers to choose from 
+              nodes +=    '<tr>';
+              nodes +=      '<th style="text-align: left">'; 
+              // No selection list for "Others" cellType
+              if(cellType !== "Others") {
+                  nodes +=        `<select  id="markerList.${cellType}"  style="width:70%; margin-left: 0.69vw; font-size: 0.52vw; -webkit-appearance: none;"  >`;
+                  getCurGrpChannelsName().forEach((marker, idx) => {
+                        if(idx == 0) {
+                           // create empty entry with the select list 
+                           nodes +=    `<option value=""></option>`; 
+                        }  
+                                      
+                        if(marker !== getSelectedDAPIChannelName()) {
+                            if(marker === cellTypeObj[cellType]) {
+                                nodes +=    `<option value=${marker} selected>${marker}</option>`; 
+                            } else {
+                                nodes +=    `<option value=${marker}>${marker}</option>`; 
+                            }
+                                   
+                        }
+                  });
+                  nodes +=         '</select>'; 
+              }
+
+              nodes +=      '</th>';
+
+              // Initiat textbox to of cellType e.g. Tumor, Immune, Stromal, Others.
+              nodes +=      '<th style="text-align: left">'; 
+              nodes +=        `<input type="text" id="cellTypeText.${cellType}" value = ${cellType} style="background-color:white; margin-Left: 0vw; margin-Top: 0vh; width: 100%; height:1vh;"  disabled />`      
+              nodes +=      '</th>';      
+
+
+              nodes +=      '<th style="padding-left:0;">'; 
+              //-- nodes +=        '<input  id="markerColorId.tumor" onchange="cellTypeColorChanged()" >';  
+              nodes +=        `<a href="javascript:void(0)" ><span id="markerColor.${cellType}" style="background-color:${clr};   padding-left:0.5vw;">&nbsp</span>`    
+              //-- nodes +=           `<input type='text' id="markerColor.${cellType}" />`
+              nodes +=      '</th>';
+
+              nodes +=      '<th style="padding-left:0;">'; 
+              //-- nodes +=        '<input  id="markerColorId.tumor" onchange="cellTypeColorChanged()" >';  
+              nodes +=        `<a  href="javascript:void(0)" id="markerInfo.${cellType}" onclick="requestCellClassifyInfo(this)"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
+              nodes +=      '</th>';            
+
+              nodes +=    '</tr>';  
+          });    
+
+
+          // Initiat list of cluster methods to choose from 
+          nodes +=    '<tr>';
+          nodes +=      '<th style="text-align: left; margin-left: 0vw; margin-Top: 0vh"><label style="margin-left: 0.69vw; margin-Top: 0vh">Select Method</label></th>';      
           nodes +=      '<th style="text-align: left">'; 
-          nodes +=        `<input type="text" id="cellTypeText.${cellType}" value = ${cellType} style="background-color:white; margin-Left: 0vw; margin-Top: 0vh; width: 100%; height:1vh;"  disabled />`      
-          nodes +=      '</th>';      
+          nodes +=        `<select  id="clusterMethodsList" onchange="onChangeClusterMethod()" style="margin-Left: 0vw; margin-Top: 0vh; width: 100%;  font-size: 0.62vw; -webkit-appearance: none;"  >`;
+
+          mainClusterMethods.forEach((clusterMethodEntry, idx) => {
+                let clusterMethod = clusterMethodEntry.method; // e.g. GMM 
+                if(idx == 0) {
+                    nodes +=    `<option value=${clusterMethod} >${clusterMethod}</option>`; 
+                } else {
+                    nodes +=    `<option value=${clusterMethod}>${clusterMethod}</option>`; 
+                }
+          });
+
+          nodes +=         '</select>'; 
+          nodes +=      '</th>';
 
 
           nodes +=      '<th style="padding-left:0;">'; 
-          // nodes +=        '<input  id="markerColorId.tumor" onchange="cellTypeColorChanged()" >';  
-          nodes +=        `<a href="javascript:void(0)" ><span id="markerColor.${cellType}" style="background-color:${clr};   padding-left:0.5vw;">&nbsp</span>`    
-          // nodes +=           `<input type='text' id="markerColor.${cellType}" />`
           nodes +=      '</th>';
 
           nodes +=      '<th style="padding-left:0;">'; 
-          // nodes +=        '<input  id="markerColorId.tumor" onchange="cellTypeColorChanged()" >';  
-          nodes +=        `<a  href="javascript:void(0)" id="markerInfo.${cellType}" onclick="requestCellClassifyInfo(this)"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
+          nodes +=        `<a  href="javascript:void(0)" id="clusterMethodInfo" onclick="requestClusterMethodInfo()"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
           nodes +=      '</th>';            
 
           nodes +=    '</tr>';  
-      });    
 
 
-      // Initiat list of cluster methods to choose from 
-      nodes +=    '<tr>';
-      nodes +=      '<th style="text-align: left; margin-left: 0vw; margin-Top: 0vh"><label style="margin-left: 0.69vw; margin-Top: 0vh">Select Method</label></th>';      
-      nodes +=      '<th style="text-align: left">'; 
-      nodes +=        `<select  id="clusterMethodsList" onchange="onChangeClusterMethod()" style="margin-Left: 0vw; margin-Top: 0vh; width: 100%;  font-size: 0.62vw; -webkit-appearance: none;"  >`;
-
-      mainClusterMethods.forEach((clusterMethodEntry, idx) => {
-            let clusterMethod = clusterMethodEntry.method; // e.g. GMM 
-            if(idx == 0) {
-                nodes +=    `<option value=${clusterMethod} >${clusterMethod}</option>`; 
-            } else {
-                nodes +=    `<option value=${clusterMethod}>${clusterMethod}</option>`; 
-            }
-      });
-
-      nodes +=         '</select>'; 
-      nodes +=      '</th>';
+          // Initiat Threshold-based luster methods to choose from   [ mean, min,  max, "25%", "50%", "75%"]
+          nodes +=    '<tr id="OthersTypeThresholdTableEntry" style="visibility: visible;">';
+          nodes +=      '<th style="text-align: left; margin-left: 0vw; margin-Top: 0vh"><label style="margin-left: 0.69vw; margin-Top: 0vh">Threshold Val</label></th>';      
+          nodes +=      '<th style="text-align: left">'; 
+          nodes +=        `<select  id="thresholdBasedMethodsList"  style="margin-Left: 0vw; margin-Top: 0vh; width: 100%;  font-size: 0.62vw; -webkit-appearance: none;"  >`;
+          nodes +=          `<option value='max' >Max</option>`; 
+          nodes +=          `<option value='75%' >Q3</option>`; 
+          nodes +=          `<option value='mean' selected>Mean</option>`; 
+          nodes +=          `<option value='50%' >Q2</option>`; 
+          nodes +=          `<option value='25%' >Q1</option>`; 
+          nodes +=          `<option value='min' >Min</option>`;             
+          nodes +=         '</select>'; 
+          nodes +=      '</th>';
 
 
-      nodes +=      '<th style="padding-left:0;">'; 
-      nodes +=      '</th>';
+          nodes +=      '<th style="padding-left:0;">'; 
+          nodes +=      '</th>';
 
-      nodes +=      '<th style="padding-left:0;">'; 
-      nodes +=        `<a  href="javascript:void(0)" id="clusterMethodInfo" onclick="requestClusterMethodInfo()"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
-      nodes +=      '</th>';            
+          nodes +=      '<th style="padding-left:0;">'; 
+          nodes +=        `<a  href="javascript:void(0)" id="thresholdBasedMethodInfo" onclick="requestThresholdBasedMethodInfo()"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
+          nodes +=      '</th>';            
 
-      nodes +=    '</tr>';  
-
-
-      // Initiat Threshold-based luster methods to choose from   [ mean, min,  max, "25%", "50%", "75%"]
-      nodes +=    '<tr id="OthersTypeThresholdTableEntry" style="visibility: visible;">';
-      nodes +=      '<th style="text-align: left; margin-left: 0vw; margin-Top: 0vh"><label style="margin-left: 0.69vw; margin-Top: 0vh">Threshold Val</label></th>';      
-      nodes +=      '<th style="text-align: left">'; 
-      nodes +=        `<select  id="thresholdBasedMethodsList"  style="margin-Left: 0vw; margin-Top: 0vh; width: 100%;  font-size: 0.62vw; -webkit-appearance: none;"  >`;
-      nodes +=          `<option value='max' >Max</option>`; 
-      nodes +=          `<option value='75%' >Q3</option>`; 
-      nodes +=          `<option value='mean' selected>Mean</option>`; 
-      nodes +=          `<option value='50%' >Q2</option>`; 
-      nodes +=          `<option value='25%' >Q1</option>`; 
-      nodes +=          `<option value='min' >Min</option>`;             
-      nodes +=         '</select>'; 
-      nodes +=      '</th>';
+          nodes +=    '</tr>';        
 
 
-      nodes +=      '<th style="padding-left:0;">'; 
-      nodes +=      '</th>';
+          nodes +=  '</table>';                
 
-      nodes +=      '<th style="padding-left:0;">'; 
-      nodes +=        `<a  href="javascript:void(0)" id="thresholdBasedMethodInfo" onclick="requestThresholdBasedMethodInfo()"><i style="font-size:1vw;" class="fa fa-info-circle"></i></a>`    
-      nodes +=      '</th>';            
+          nodes +=  '<hr style="margin-bottom: 1vh;">';
+          nodes +=  '<table>';
+          nodes +=    '<colgroup><col style="width:50%"><col style="width:50%"></colgroup>';
+          nodes +=    '<tr>';   
+          nodes +=      '<th><i style="font-size:1vw"  onclick="confirmCellClassifySettings()"  class="fa fa-check-circle"></i></th>';
+          nodes +=      '<th><i style="font-size:1vw"  onclick="cancelCellClassifySettings()" class="fa fa-times-circle"></i></th>';      
+          nodes +=    '</tr>';  
+          nodes +=  '</table>';  
 
-      nodes +=    '</tr>';        
+               
 
+          document.getElementById("chartContainer").innerHTML  = nodes;
 
-      nodes +=  '</table>';                
+          //-- resetGrpChannelsNameType( getSelectedGrpIndex() );
 
-      nodes +=  '<hr style="margin-bottom: 1vh;">';
-      nodes +=  '<table>';
-      nodes +=    '<colgroup><col style="width:50%"><col style="width:50%"></colgroup>';
-      nodes +=    '<tr>';   
-      nodes +=      '<th><i style="font-size:1vw"  onclick="confirmCellClassifySettings()"  class="fa fa-check-circle"></i></th>';
-      nodes +=      '<th><i style="font-size:1vw"  onclick="cancelCellClassifySettings()" class="fa fa-times-circle"></i></th>';      
-      nodes +=    '</tr>';  
-      nodes +=  '</table>';  
-
-           
-
-      document.getElementById("chartContainer").innerHTML  = nodes;
-
-      // resetGrpChannelsNameType( getSelectedGrpIndex() );
-
-      // mainCellTypesList.forEach((cellTypeEntry, idx) => {  
-      //     let cellType = cellTypeEntry.cellType; // e.g. Tumor   
-      //     let clr  = cellTypeEntry.cellTypeColor;        
-      //     $(`#markerColor.${cellType}`).spectrum({ color: clr});  
-
-      // });      
-
-    
-
-      if( isFeaturesLoaded() ) { 
-         // freezeInput("chartOperations", false);
-      }       
-  }   
+          //-- mainCellTypesList.forEach((cellTypeEntry, idx) => {  
+          //--     let cellType = cellTypeEntry.cellType; // e.g. Tumor   
+          //--     let clr  = cellTypeEntry.cellTypeColor;        
+          //--     $(`#markerColor.${cellType}`).spectrum({ color: clr});  
+          //-- });      
 
 
+          if( isFeaturesLoaded() ) { 
+             //-- freezeInput("chartOperations", false);
+          }       
+      }   
 
- // To create features  dynamically //
-  initBarChartSettings = () => {                       //<<<<<<<<<<<<-------------------  Future use
-     // To create features checkboxes dynamically 
-      for(let n = 0; n < featureKeys.length; n++) {
-            if(n >= 3) { // means there is more than 3 different features 
-                      let randNum= Math.floor(Math.random() * 20);
-                      let randColor = d3.schemeCategory20[randNum % 20];
-                      chartOptions.histogram.bgColor.push(randColor);
-            }
+
+    /**
+     * To create features  dynamically 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */  
+
+      initBarChartSettings = () => {                       //<<<<<<<<<<<<-------------------  Future use
+         // To create features checkboxes dynamically 
+          for(let n = 0; n < featureKeys.length; n++) {
+                if(n >= 3) { // means there is more than 3 different features 
+                          let randNum= Math.floor(Math.random() * 20);
+                          let randColor = d3.schemeCategory20[randNum % 20];
+                          chartOptions.histogram.bgColor.push(randColor);
+                }
+          }
+
       }
 
-  }
 
- // clear the content of any drawing on the panel (e.g. tile histogram) 
- clearChPlotsPanelCanvas = () => {
-    let canvas =  document.getElementById("chartDrawCanvas");
-    let ctx =  canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
- }
+     
+    /**
+     * Clear the content of any drawing on the panel (e.g. tile histogram) 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */  
 
- resetChartFirstAppearFlag = () => {
-    chartOptions.isFirstAppear = true;
- }
+     clearChPlotsPanelCanvas = () => {
+        let canvas =  document.getElementById("chartDrawCanvas");
+        let ctx =  canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+     }
 
- // reset chart canvas when mouse move out 
- destroyChart = () => {
 
-    if(chartOptions.defaultLibrary == "highcharts") {
+    /**
+     * Reset chart first appear flag, when it shows for the first time 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */  
 
-        if(chartOptions.container){
-            chartOptions.container.destroy();
-            chartOptions.container = null;
-         }
-    }
+     resetChartFirstAppearFlag = () => {
+        chartOptions.isFirstAppear = true;
+     }
 
-    if(chartOptions.defaultLibrary == "chartjs") {
+    /**
+     * Reset chart canvas when mouse move out 
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */ 
 
-        if(chartOptions.canvas){
-            chartOptions.canvas.destroy();
-            chartOptions.canvas = null;
-         }
-    } 
-
-    resetChartFirstAppearFlag(); 
- }
-
- resetChartPlottingData = () => {
-
-    if(chartOptions.container != null) {
+     destroyChart = () => {
 
         if(chartOptions.defaultLibrary == "highcharts") {
-           let zeroArray = Array.apply(null, new Array( getCurGrpNumOfChannels() )).map(Number.prototype.valueOf,0);
-           let updatedSeries = chartOptions.container.series.map( serie => {
-                return {
-                        name: serie.name,
-                        color: serie.color,
-                        data: zeroArray
-                }
-            })
 
-          chartOptions.container.update({series: updatedSeries}); //true / false to redraw  
-          chartOptions.container.redraw();   
-            // for (let i = chartOptions.container.series.length-1; i >= 0; i--) {
-            //     // chartOptions.container.series[i].remove();
-            //     chartOptions.container.series[i].update({data: [0,0,0,0,0]});
-            //     // chartOptions.container.series[i].update({data: []});
-            // }      
-
-
-        }   
+            if(chartOptions.container){
+                chartOptions.container.destroy();
+                chartOptions.container = null;
+             }
+        }
 
         if(chartOptions.defaultLibrary == "chartjs") {
-            chartOptions.canvas.data.datasets = chartOptions.canvas.data.datasets.map( dataset => {
-                return {
-                        label: dataset.label,
-                        backgroundColor: dataset.backgroundColor,
-                        data: []
-                }
-            })
-            // chartOptions.canvas.data.datasets = noValueDatasets;
-            chartOptions.canvas.update();
+
+            if(chartOptions.canvas){
+                chartOptions.canvas.destroy();
+                chartOptions.canvas = null;
+             }
+        } 
+
+        resetChartFirstAppearFlag(); 
+     }
+
+    /**
+     * Reset chart plotting data
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */ 
+
+     resetChartPlottingData = () => {
+
+        if(chartOptions.container != null) {
+
+            if(chartOptions.defaultLibrary == "highcharts") {
+               let zeroArray = Array.apply(null, new Array( getCurGrpNumOfChannels() )).map(Number.prototype.valueOf,0);
+               let updatedSeries = chartOptions.container.series.map( serie => {
+                    return {
+                            name: serie.name,
+                            color: serie.color,
+                            data: zeroArray
+                    }
+                })
+
+              chartOptions.container.update({series: updatedSeries}); //-- true / false to redraw  
+              chartOptions.container.redraw();   
+                //-- for (let i = chartOptions.container.series.length-1; i >= 0; i--) {
+                //--     // chartOptions.container.series[i].remove();
+                //--     chartOptions.container.series[i].update({data: [0,0,0,0,0]});
+                //--     // chartOptions.container.series[i].update({data: []});
+                //-- }      
+
+            }   
+
+            if(chartOptions.defaultLibrary == "chartjs") {
+                chartOptions.canvas.data.datasets = chartOptions.canvas.data.datasets.map( dataset => {
+                    return {
+                            label: dataset.label,
+                            backgroundColor: dataset.backgroundColor,
+                            data: []
+                    }
+                })
+
+                //-- chartOptions.canvas.data.datasets = noValueDatasets;
+                chartOptions.canvas.update();
+            }    
         }    
-    }    
- } 
+     } 
 
 //------------------------------------------------------------------------------//
 //------------------------- Neighbors Dependency Wheel  --------- --------------//
 //------------------------------------------------------------------------------//
 
-// chartData e.g. [["10011", "11011", 53], ["10011", "10101", 30], ... ]
-drawNeighborsDependencyWheelChart = (chartData, phenotypeColors) => {
+    /**
+     * Draw neighbors dependency wheel chart
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData e.g. [["10011", "11011", 53], ["10011", "10101", 30], ... ]
+     * @param {Array} phenotypeColors  array of objects e.g. : [{id: 10000, color: "#ff5900"}, ...]
+     */      
 
-    console.log("chartData", chartData);
+    drawNeighborsDependencyWheelChart = (chartData, phenotypeColors) => {
 
-    if(chartOptions.animation) {
-      chartOptions.animation = {duration: chartOptions.animationDuration};
-    } 
+        console.log("chartData", chartData);
 
-    if(chartOptions.defaultLibrary == "highcharts") {
+        if(chartOptions.animation) {
+          chartOptions.animation = {duration: chartOptions.animationDuration};
+        } 
 
+        if(chartOptions.defaultLibrary == "highcharts") {
 
-        chartOptions.container = Highcharts.chart('chartContainer', {
+            chartOptions.container = Highcharts.chart('chartContainer', {
 
-                    chart: {
-                        backgroundColor: chartOptions.backgroundColor,
-                        height: (9 / 16 * 100) + '%' // 16:9 ratio
-                    },
-                    title: {
-                        text: 'Neighbor relations',
-                        style: {
-                            color: '#fff',
-                            fontWeight: 'bold',
-                            fontSize: '12px',
-                            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-                        }
-                    },
-
-                    accessibility: {
-                        point: {
-                            valueDescriptionFormat: '{index}. From {point.from} to {point.to}: {point.weight}.'
-                        }
-                    },
-
-
-                    series: [{
-                        keys: ['from', 'to', 'weight'],
-                        data: chartData,
-                        type: 'dependencywheel',
-                        name: 'Dependency wheel series',
-                        nodes: phenotypeColors,    //-- e.g.: [{id: "10001", color: "#FF0000"}, ]                    
-                        dataLabels: {
-                            color: chartOptions.labelsColor,  // label color
-                            textPath: {
-                                enabled: true,
-                                attributes: {
-                                    dy: 5
-                                }
-                            },
-                            distance: 10
+                        chart: {
+                            backgroundColor: chartOptions.backgroundColor,
+                            height: (9 / 16 * 100) + '%' // 16:9 ratio
                         },
-                        size: '95%'
-                    }],                    
+                        title: {
+                            text: 'Neighbor relations',
+                            style: {
+                                color: '#fff',
+                                fontWeight: 'bold',
+                                fontSize: '12px',
+                                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
 
-        });          
-    }  
-}
+                            }
+                        },
+
+                        accessibility: {
+                            point: {
+                                valueDescriptionFormat: '{index}. From {point.from} to {point.to}: {point.weight}.'
+                            }
+                        },
+
+
+                        series: [{
+                            keys: ['from', 'to', 'weight'],
+                            data: chartData,
+                            type: 'dependencywheel',
+                            name: 'Dependency wheel series',
+                            nodes: phenotypeColors,    //-- e.g.: [{id: "10001", color: "#FF0000"}, ]                    
+                            dataLabels: {
+                                color: chartOptions.labelsColor,  // label color
+                                textPath: {
+                                    enabled: true,
+                                    attributes: {
+                                        dy: 5
+                                    }
+                                },
+                                distance: 10
+                            },
+                            size: '95%'
+                        }],                    
+            });          
+        }  
+    }
 
 
 //------------------------------------------------------------------------------//
 //------------------------- Basic Analysis Histogram Chart Column --------------//
 //--------------------------(((((((((( Test ))))))))))--------------------------//
 
-testCellTypeHistogramDraw = () => {
-    var data = [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 3.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
+    /**
+     * For testing purpose only
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     */     
 
+    testCellTypeHistogramDraw = () => {
+        let data = [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 3.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
 
-
-    var data1 = [4.5, 4, 5.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 5.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 5.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 5.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 5.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 5.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 5.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 5.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 5.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 5.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 5.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 6, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
-
-    chartOptions.container = Highcharts.chart('chartContainer', {
-        chart: {
-            backgroundColor: chartOptions.backgroundColor,
-            height: '70%'
-        },
-
-        title: {
-            text: ''
-        },
-        legend: {
-            align: 'center',  // left, right
-            verticalAlign: 'top',  // top, middle or bottom
-            layout: 'horizontal',  //horizontal , proximate, vertical
-            itemStyle: {
-                color: 'white',
-                fontWeight: 'bold'
-            }
-        }, 
-
-        xAxis: {
-            title: { 
-                text: 'Area',
-                style: {
-                    color: '#fff',
-                    fontWeight: 'bold',
-                    fontSize: '10px',
-                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-                }                            
-
-
-             },
-
-            labels: {
-                  rotation: 0,
-                  style: {
-                      color: "white",
-                      fontWeight: "bold"
-                  }
-            }                        
-        }, 
-
-        yAxis: {
-            title: { 
-                text: '# Cells',
-                style: {
-                    color: '#fff',
-                    fontSize: '10px',
-                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-                }                            
-
-
-             },        
-            gridLineWidth: 0,
-            labels: {
-                  style: {
-                      color: "white", //chartOptions.yAxisTicksColor,
-                      fontWeight: "bold" //chartOptions.axisFontWeight
-                  } 
-              }          
-
-        },
-
-        series: [{
-            name: 'Tumor',
-            type: 'histogram',
-            color: "#ff4846",
-            borderColor: "white",
-            borderWidth: 3,            
-            baseSeries: 's1',
-            opacity: 0.9,
-            zIndex: 1
-          //  binsNumber: 5
-        }, {
-            name: 'Data',
-            visible: false,
-            showInLegend: false,    
-           // type: 'scatter',
-            data: data,
-            id: 's1',
-            marker: {
-                radius: 1.5
-            }
-        },{
-            name: 'Immune',
-            type: 'histogram',
-            color: '#61c346', 
-            borderColor: "white",
-            borderWidth: 3,                          
-            baseSeries: 's2',
-            zIndex: -1
-          //  binsNumber: 5 
-        }, {
-            name: 'Data',
-            visible: false,
-            showInLegend: false,    
-           // type: 'scatter',
-            data: data1,
-            id: 's2',
-            marker: {
-                radius: 1.5
-            }
-        }]
-    });
-
-
-}
-
-// chartData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
-drawCellTypesHistogramChart = (chartData, featureToPlot) => {
-
-    if(chartOptions.animation) {
-      chartOptions.animation = {duration: chartOptions.animationDuration};
-    } 
-
-    if(chartOptions.defaultLibrary == "highcharts") {
-
-          Highcharts.setOptions({
-              plotOptions: {
-                  series: {
-                      animation: chartOptions.animation,
-                      // borderColor: '#303030'
-                      borderWidth: 0  // bar border, default is 1 and white
-                  }
-              }
-          });   
-
-
-         let cellTypeColors = {}
-
-          mainCellTypesList.forEach((cellTypeEntry, idx) => {
-                 let cellType = cellTypeEntry.cellType;
-                 let clr = cellTypeEntry.cellTypeColor;
-
-                 cellTypeColors[cellTypeEntry.cellType] = cellTypeEntry.cellTypeColor; 
-          });    
-
-          // cellTypeColors is Object: { Tumor: "#ff4846", Immune: "#61c346", Stromal: "#5dd1ff", Others: "#6244d9" }
-
-          let seriesToPlot = [];
- 
-          Object.keys(chartData).forEach((basicClass, idx) => {    // basicClass is [ "Tumor", "Immune", "Stromal" ];      
-               seriesToPlot.push({ name: basicClass, 
-                                   type: 'histogram', 
-                                   color: cellTypeColors[basicClass],                                    
-                                   borderColor: "black", 
-                                   borderWidth: 0,
-                                   baseSeries: "bs" + idx,
-                                   opacity: 0.9,
-                                   zIndex: idx
-                                   // binsNumber: 10                                  
-                              });
-
-               seriesToPlot.push({ name: 'Data',
-                                   visible: false,
-                                   showInLegend: false,
-                                   data: chartData[basicClass],
-                                   id: "bs" + idx, 
-
-                                });
-          });     
-
- 
+        let data1 = [4.5, 4, 5.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 5.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 5.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 5.2, 3.7, 3.3, 3.2, 3.2, 3.1, 2.3, 2.8, 5.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 5.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 5.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 5.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 5.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 5.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 5.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 6, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
 
         chartOptions.container = Highcharts.chart('chartContainer', {
+            chart: {
+                backgroundColor: chartOptions.backgroundColor,
+                height: '70%'
+            },
 
-                    chart: {
-                        backgroundColor: chartOptions.backgroundColor,
-                        height: (9 / 16 * 100) + '%' // 16:9 ratio
-                    },
-                    title: {
-                        text: ''
-                    },
-                    legend: {
-                        align: 'center',  // left, right
-                        verticalAlign: 'top',  // top, middle or bottom
-                        layout: 'horizontal',  //horizontal , proximate, vertical
-                        itemStyle: {
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }
-                    },   
+            title: {
+                text: ''
+            },
+            legend: {
+                align: 'center',  // left, right
+                verticalAlign: 'top',  // top, middle or bottom
+                layout: 'horizontal',  //horizontal , proximate, vertical
+                itemStyle: {
+                    color: 'white',
+                    fontWeight: 'bold'
+                }
+            }, 
 
-                    xAxis: {
-                        title: { 
-                            text: featureToPlot,
-                            style: {
-                                color: '#fff',
-                                fontWeight: 'bold',
-                                fontSize: '10px',
-                                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+            xAxis: {
+                title: { 
+                    text: 'Area',
+                    style: {
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '10px',
+                        fontFamily: 'Trebuchet MS, Verdana, sans-serif'
 
-                            }                            
+                    }                            
+
+
+                 },
+
+                labels: {
+                      rotation: 0,
+                      style: {
+                          color: "white",
+                          fontWeight: "bold"
+                      }
+                }                        
+            }, 
+
+            yAxis: {
+                title: { 
+                    text: '# Cells',
+                    style: {
+                        color: '#fff',
+                        fontSize: '10px',
+                        fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+                    }                            
+
+
+                 },        
+                gridLineWidth: 0,
+                labels: {
+                      style: {
+                          color: "white", //-- chartOptions.yAxisTicksColor,
+                          fontWeight: "bold" //-- chartOptions.axisFontWeight
+                      } 
+                  }          
+
+            },
+
+            series: [{
+                name: 'Tumor',
+                type: 'histogram',
+                color: "#ff4846",
+                borderColor: "white",
+                borderWidth: 3,            
+                baseSeries: 's1',
+                opacity: 0.9,
+                zIndex: 1
+              //--  binsNumber: 5
+            }, {
+                name: 'Data',
+                visible: false,
+                showInLegend: false,    
+               //-- type: 'scatter',
+                data: data,
+                id: 's1',
+                marker: {
+                    radius: 1.5
+                }
+            },{
+                name: 'Immune',
+                type: 'histogram',
+                color: '#61c346', 
+                borderColor: "white",
+                borderWidth: 3,                          
+                baseSeries: 's2',
+                zIndex: -1
+                //--  binsNumber: 5 
+            }, {
+                name: 'Data',
+                visible: false,
+                showInLegend: false,    
+               //-- type: 'scatter',
+                data: data1,
+                id: 's2',
+                marker: {
+                    radius: 1.5
+                }
+            }]
+        });
+
+
+    }
+
+
+    /**
+     * Draw cell types histogram chart
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
+     * @param {string} featureToPlot  e.g. "solidity"  
+     */   
+
+    drawCellTypesHistogramChart = (chartData, featureToPlot) => {
+
+        if(chartOptions.animation) {
+          chartOptions.animation = {duration: chartOptions.animationDuration};
+        } 
+
+        if(chartOptions.defaultLibrary == "highcharts") {
+
+              Highcharts.setOptions({
+                  plotOptions: {
+                      series: {
+                          animation: chartOptions.animation,
+                          //-- borderColor: '#303030'
+                          borderWidth: 0  // bar border, default is 1 and white
+                      }
+                  }
+              });   
+
+
+             let cellTypeColors = {}
+
+              mainCellTypesList.forEach((cellTypeEntry, idx) => {
+                     let cellType = cellTypeEntry.cellType;
+                     let clr = cellTypeEntry.cellTypeColor;
+                     cellTypeColors[cellTypeEntry.cellType] = cellTypeEntry.cellTypeColor; 
+              });    
+
+              //-- cellTypeColors is Object: { Tumor: "#ff4846", Immune: "#61c346", Stromal: "#5dd1ff", Others: "#6244d9" }
+
+              let seriesToPlot = [];
+     
+              Object.keys(chartData).forEach((basicClass, idx) => {    // basicClass is [ "Tumor", "Immune", "Stromal" ];      
+                   seriesToPlot.push({ name: basicClass, 
+                                       type: 'histogram', 
+                                       color: cellTypeColors[basicClass],                                    
+                                       borderColor: "black", 
+                                       borderWidth: 0,
+                                       baseSeries: "bs" + idx,
+                                       opacity: 0.9,
+                                       zIndex: idx
+                                       //-- binsNumber: 10                                  
+                                  });
+
+                   seriesToPlot.push({ name: 'Data',
+                                       visible: false,
+                                       showInLegend: false,
+                                       data: chartData[basicClass],
+                                       id: "bs" + idx, 
+
+                                    });
+              });     
+
+     
+
+            chartOptions.container = Highcharts.chart('chartContainer', {
+
+                        chart: {
+                            backgroundColor: chartOptions.backgroundColor,
+                            height: (9 / 16 * 100) + '%' // 16:9 ratio
                         },
-
-                        labels: {
-                              rotation: 0,
-                              style: {
-                                  color: "white",
-                                  fontWeight: "bold"
-                              }
-                        }                        
-                    },                         
-
-                    yAxis: {
-                        min: 0,
-                        gridLineWidth: 0,                        
                         title: {
-                            text: '(# Cells)',
-                            style: {
-                                color: '#fff',
-                                fontSize: '10px',
-                                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-                            }                             
+                            text: ''
                         },
-                        labels: {
-                              style: {
-                                  color: chartOptions.yAxisTicksColor,
-                                  fontWeight: chartOptions.axisFontWeight
-                              } 
-                        }                         
-                    },
+                        legend: {
+                            align: 'center',  //-- left, right
+                            verticalAlign: 'top',  //-- top, middle or bottom
+                            layout: 'horizontal',  //--horizontal , proximate, vertical
+                            itemStyle: {
+                                color: 'white',
+                                fontWeight: 'bold'
+                            }
+                        },   
 
-                    // tooltip: {
-                    //     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    //     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    //         '<td style="padding:0; color:black"><b>{point.y:.1f} </b></td></tr>',
-                    //     footerFormat: '</table>',
-                    //     shared: true,
-                    //     useHTML: true
-                    // },
+                        xAxis: {
+                            title: { 
+                                text: featureToPlot,
+                                style: {
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    fontSize: '10px',
+                                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
 
-                    // plotOptions: {
-                    //     column: {
-                    //         pointPadding: 0.2,
-                    //         borderWidth: 0
-                    //     }
-                    // },
+                                }                            
+                            },
 
-                    series: seriesToPlot,
-
-                    exporting: { // to show/hide chart context menu on the right
-                       enabled: true
-                    }, 
-
-                    responsive: {
-                       rules: [{
-                          condition: {
-                              maxWidth: 500
-                          },
-                          chartOptions: {
-                              legend: {
-                                  align: 'center',
-                                  verticalAlign: 'top',
-                                  layout: 'horizontal'
-                              },
-                              yAxis: {
-
-                                  labels: {
-                                      align: 'left',
-
-                                       x: 0
-                                       // y: -5
-                                  },
-                                  title: {
-                                      text: null
+                            labels: {
+                                  rotation: 0,
+                                  style: {
+                                      color: "white",
+                                      fontWeight: "bold"
                                   }
+                            }                        
+                        },                         
+
+                        yAxis: {
+                            min: 0,
+                            gridLineWidth: 0,                        
+                            title: {
+                                text: '(# Cells)',
+                                style: {
+                                    color: '#fff',
+                                    fontSize: '10px',
+                                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+                                }                             
+                            },
+                            labels: {
+                                  style: {
+                                      color: chartOptions.yAxisTicksColor,
+                                      fontWeight: chartOptions.axisFontWeight
+                                  } 
+                            }                         
+                        },
+
+                        //-- tooltip: {
+                        //--     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        //--     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        //--         '<td style="padding:0; color:black"><b>{point.y:.1f} </b></td></tr>',
+                        //--     footerFormat: '</table>',
+                        //--     shared: true,
+                        //--     useHTML: true
+                        //-- },
+
+                        //-- plotOptions: {
+                        //--     column: {
+                        //--         pointPadding: 0.2,
+                        //--         borderWidth: 0
+                        //--     }
+                        //-- },
+
+                        series: seriesToPlot,
+
+                        exporting: { // to show/hide chart context menu on the right
+                           enabled: true
+                        }, 
+
+                        responsive: {
+                           rules: [{
+                              condition: {
+                                  maxWidth: 500
                               },
-                              subtitle: {
-                                  text: null
-                              },
-                              credits: {
-                                  enabled: false
+                              chartOptions: {
+                                  legend: {
+                                      align: 'center',
+                                      verticalAlign: 'top',
+                                      layout: 'horizontal'
+                                  },
+                                  yAxis: {
+
+                                      labels: {
+                                          align: 'left',
+
+                                           x: 0
+                                           //-- y: -5
+                                      },
+                                      title: {
+                                          text: null
+                                      }
+                                  },
+                                  subtitle: {
+                                      text: null
+                                  },
+                                  credits: {
+                                      enabled: false
+                                  }
                               }
-                          }
-                       }]
-                    }                                       
-        });          
-    }  
-}
+                           }]
+                        }                                       
+            });          
+        }  
+    }
 
 //-----------------------------------------TEST-----------------------------------------------------//
 //-------------------------------------Draw Corr Heatmap--------------------------------------------//
 //--------------------------------------------------------------------------------------------------//
 
-drawCellTypesFeaturesCorrHeatmap = (chartData, featureToPlot) => {
-
-        function getPointCategoryName(point, dimension) {
-            var series = point.series,
-                isY = dimension === 'y',
-                axis = series[isY ? 'yAxis' : 'xAxis'];
-            return axis.categories[point[isY ? 'y' : 'x']];
-        }
-
-        chartOptions.container = Highcharts.chart('chartContainer', {
-
-            chart: {
-                type: 'heatmap',
-                // marginTop: 40,
-                // marginBottom: 80,
-                // plotBorderWidth: 1,
-                backgroundColor: chartOptions.backgroundColor,
-                height: (9 / 16 * 100) + '%' // 16:9 ratio
-            },
+    /**
+     * Draw cell types features correlation heatmap
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData e.g. { Tumor: [ 163, 194, 195, … ] , Immune: [ 519, 316.5, 170, … ], ...}
+     * @param {string} featureToPlot  e.g. "solidity"  
+     */   
 
 
+    drawCellTypesFeaturesCorrHeatmap = (chartData, featureToPlot) => {
 
-            title: {
-                text: ''
-            },
-
-            xAxis: {
-                categories: featureToPlot,
-                labels: {
-                      style: {
-                          color: chartOptions.xAxisTicksColor,
-                          fontWeight: chartOptions.axisFontWeight
-                      } 
-                }                 
-            },
-
-            yAxis: {
-                categories: featureToPlot,
-                title: null,
-                reversed: true,
-                labels: {
-                      style: {
-                          color: chartOptions.yAxisTicksColor,
-                          fontWeight: chartOptions.axisFontWeight
-                      } 
-                }                 
-            },
-
-            colorAxis: [{
-                min: 0,
-                max: 1,
-                minColor: '#FFFFFF',
-                maxColor: Highcharts.getOptions().colors[0]
-                // minColor: 'white',
-                // maxColor: 'blue'
-                // stops: [
-                //     [-1.0, '#660000'],
-                //     [-0.875, '#990000'],  
-                //     [-0.75, '#cc0000'],  
-                //     [-0.625, '#ff1a1a'],  
-                //     [-0.5, '#ff4d4d'],  
-                //     [-0.375, '#ff8080'],  
-                //     [-0.25, '#ffb3b3'],  
-                //     [-0.125, '#ffe6e6'],
-                //     [ 0.0, '#ffffff'],                    
-                //     [ 0.125, '#e6f2ff'],                    
-                //     [ 0.25, '#cce6ff'],
-                //     [ 0.375, '#99ccff'],
-                //     [ 0.5, '#66b3ff'],
-                //     [ 0.625, '#3399ff'],
-                //     [ 0.75, '#0080ff'],
-                //     [ 0.875, '#0066cc'],
-                //     [ 1.0, '#004d99']
-                // ]                                
-            }, 
-            {
-                min: -1,
-                max: 0,
-                minColor: '#ff5c33',
-                maxColor: '#FFFFFF'                
-
-            }],
-
-            legend: {
-                align: 'right',
-                layout: 'vertical',
-                margin: 0,
-                verticalAlign: 'top',
-                y: 0,
-                symbolHeight: 150
-            },
-
-            tooltip: {
-                formatter: function () {
-                    // return '<b>' + getPointCategoryName(this.point, 'x') + '</b> has <br><b>' +
-                    //     this.point.value + '</b> corr with <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
-                    return  this.point.value;                        
-                }
-            },
-
-            series: [{
-                name: 'Features Correlation',
-                borderWidth: 1,
-                data: chartData,
-                dataLabels: {
-                    enabled: false,
-                    color: '#000000'
-                }
-            }],
-
-            // responsive: {
-            //     rules: [{
-            //         condition: {
-            //             maxWidth: 500
-            //         },
-            //         chartOptions: {
-            //             yAxis: {
-            //                 labels: {
-            //                     formatter: function () {
-            //                         return this.value.charAt(0);
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }]
-            // }
-
-        }, 
-            // For negative correlation values color with red 
-            function(chart) {
-              chart.series[0].data.forEach(point => {
-                if (point.value < 0) {
-
-                    let heatmapColor;
-
-                    if(point.value >= -0.125) {
-                        heatmapColor = '#ffe6e6';
-
-                    } else if ( (point.value < -0.125) && (point.value >= -0.250) ) {
-                        // heatmapColor = '#ffb3b3';
-                        heatmapColor = '#ffd6cc';
-
-                    } else if ( (point.value < -0.250) && (point.value >= -0.375) ) {
-                        // heatmapColor = '#ff8080';
-                        heatmapColor = '#ffc2b3';
-
-                    } else if ( (point.value < -0.375) && (point.value >= -0.500) ) {
-                        // heatmapColor = '#ff4d4d';
-                        heatmapColor = '#ffad99';
-
-                    } else if ( (point.value < -0.500) && (point.value >= -0.625) ) {
-                        // heatmapColor = '#ff1a1a';
-                        heatmapColor = '#ff9980';
-
-                    } else if ( (point.value < -0.625) && (point.value >= -0.750) ) {
-                        // heatmapColor = '#cc0000';
-                        heatmapColor = '#ff8566';
-
-                    } else if ( (point.value < -0.750) && (point.value >= -0.875) ) {
-                        // heatmapColor = '#990000';
-                        heatmapColor = '#ff704d';
-
-                    } else if ( (point.value < -0.875) && (point.value >= -1.000) ) {
-                        // heatmapColor = '#660000';
-                        heatmapColor = '#ff5c33';
-
-                    } 
-
-                    point.update({ color: heatmapColor});
-                }
-              })
+            function getPointCategoryName(point, dimension) {
+                var series = point.series,
+                    isY = dimension === 'y',
+                    axis = series[isY ? 'yAxis' : 'xAxis'];
+                return axis.categories[point[isY ? 'y' : 'x']];
             }
 
-        );
-}
+            chartOptions.container = Highcharts.chart('chartContainer', {
+
+                chart: {
+                    type: 'heatmap',
+                    //-- marginTop: 40,
+                    //-- marginBottom: 80,
+                    //-- plotBorderWidth: 1,
+                    backgroundColor: chartOptions.backgroundColor,
+                    height: (9 / 16 * 100) + '%' // 16:9 ratio
+                },
+
+
+
+                title: {
+                    text: ''
+                },
+
+                xAxis: {
+                    categories: featureToPlot,
+                    labels: {
+                          style: {
+                              color: chartOptions.xAxisTicksColor,
+                              fontWeight: chartOptions.axisFontWeight
+                          } 
+                    }                 
+                },
+
+                yAxis: {
+                    categories: featureToPlot,
+                    title: null,
+                    reversed: true,
+                    labels: {
+                          style: {
+                              color: chartOptions.yAxisTicksColor,
+                              fontWeight: chartOptions.axisFontWeight
+                          } 
+                    }                 
+                },
+
+                colorAxis: [{
+                    min: 0,
+                    max: 1,
+                    minColor: '#FFFFFF',
+                    maxColor: Highcharts.getOptions().colors[0]
+                    //-- minColor: 'white',
+                    //-- maxColor: 'blue'
+                    //-- stops: [
+                    //--     [-1.0, '#660000'],
+                    //--     [-0.875, '#990000'],  
+                    //--     [-0.75, '#cc0000'],  
+                    //--     [-0.625, '#ff1a1a'],  
+                    //--     [-0.5, '#ff4d4d'],  
+                    //--     [-0.375, '#ff8080'],  
+                    //--     [-0.25, '#ffb3b3'],  
+                    //--     [-0.125, '#ffe6e6'],
+                    //--     [ 0.0, '#ffffff'],                    
+                    //--     [ 0.125, '#e6f2ff'],                    
+                    //--     [ 0.25, '#cce6ff'],
+                    //--     [ 0.375, '#99ccff'],
+                    //--     [ 0.5, '#66b3ff'],
+                    //--     [ 0.625, '#3399ff'],
+                    //--     [ 0.75, '#0080ff'],
+                    //--     [ 0.875, '#0066cc'],
+                    //--     [ 1.0, '#004d99']
+                    //-- ]                                
+                }, 
+                {
+                    min: -1,
+                    max: 0,
+                    minColor: '#ff5c33',
+                    maxColor: '#FFFFFF'                
+
+                }],
+
+                legend: {
+                    align: 'right',
+                    layout: 'vertical',
+                    margin: 0,
+                    verticalAlign: 'top',
+                    y: 0,
+                    symbolHeight: 150
+                },
+
+                tooltip: {
+                    formatter: function () {
+                        //-- return '<b>' + getPointCategoryName(this.point, 'x') + '</b> has <br><b>' +
+                        //--     this.point.value + '</b> corr with <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
+                        return  this.point.value;                        
+                    }
+                },
+
+                series: [{
+                    name: 'Features Correlation',
+                    borderWidth: 1,
+                    data: chartData,
+                    dataLabels: {
+                        enabled: false,
+                        color: '#000000'
+                    }
+                }],
+
+                //-- responsive: {
+                //--     rules: [{
+                //--         condition: {
+                //--             maxWidth: 500
+                //--         },
+                //--         chartOptions: {
+                //--             yAxis: {
+                //--                 labels: {
+                //--                     formatter: function () {
+                //--                         return this.value.charAt(0);
+                //--                     }
+                //--                 }
+                //--             }
+                //--         }
+                //--     }]
+                //-- }
+
+            }, 
+                // For negative correlation values color with red 
+                function(chart) {
+                  chart.series[0].data.forEach(point => {
+                    if (point.value < 0) {
+
+                        let heatmapColor;
+
+                        if(point.value >= -0.125) {
+                            heatmapColor = '#ffe6e6';
+
+                        } else if ( (point.value < -0.125) && (point.value >= -0.250) ) {
+                            //-- heatmapColor = '#ffb3b3';
+                            heatmapColor = '#ffd6cc';
+
+                        } else if ( (point.value < -0.250) && (point.value >= -0.375) ) {
+                            //-- heatmapColor = '#ff8080';
+                            heatmapColor = '#ffc2b3';
+
+                        } else if ( (point.value < -0.375) && (point.value >= -0.500) ) {
+                            //-- heatmapColor = '#ff4d4d';
+                            heatmapColor = '#ffad99';
+
+                        } else if ( (point.value < -0.500) && (point.value >= -0.625) ) {
+                            //-- heatmapColor = '#ff1a1a';
+                            heatmapColor = '#ff9980';
+
+                        } else if ( (point.value < -0.625) && (point.value >= -0.750) ) {
+                            //-- heatmapColor = '#cc0000';
+                            heatmapColor = '#ff8566';
+
+                        } else if ( (point.value < -0.750) && (point.value >= -0.875) ) {
+                            //-- heatmapColor = '#990000';
+                            heatmapColor = '#ff704d';
+
+                        } else if ( (point.value < -0.875) && (point.value >= -1.000) ) {
+                            //-- heatmapColor = '#660000';
+                            heatmapColor = '#ff5c33';
+
+                        } 
+
+                        point.update({ color: heatmapColor});
+                    }
+                  })
+                }
+
+            );
+    }
 //--------------------------------------------------------------------------------------------------//
 //-------------------------------------scatter chart 3D---------------------------------------------//
 //--------------------------------------------------------------------------------------------------//
 
-drawScatterChart3D = (chartData3D , subTitle = null, xTitle = null, yTitle = null, zTitle =  null) => {
+    /**
+     * Draw scatter chart 3D
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData3D e.g. [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
+     * @param {string} subTitle 
+     * @param {string} xTitle  
+     * @param {string} yTitle  
+     * @param {string} zTitle                     
+     */      
 
-        // Give the points a 3D feel by adding a radial gradient
-        // Highcharts.setOptions({
-        //     colors: Highcharts.getOptions().colors.map(function (color) {
-        //         return {
-        //             radialGradient: {
-        //                 cx: 0.4,
-        //                 cy: 0.3,
-        //                 r: 0.5
-        //             },
-        //             stops: [
-        //                 [0, color],
-        //                 [1, Highcharts.color(color).brighten(-0.2).get('rgb')]
-        //             ]
-        //         };
-        //     })
-        // });
+    drawScatterChart3D = (chartData3D , subTitle = null, xTitle = null, yTitle = null, zTitle =  null) => {
 
-        // Set up the chart
-        chartOptions.container = new Highcharts.Chart({
-            chart: {
-                renderTo: 'chartContainer',
-                margin: 10,
-                backgroundColor: chartOptions.backgroundColor,
-                height: '80%',                
-                type: 'scatter3d',
-                animation: false,
-                options3d: {
-                    enabled: true,
-                    alpha: 10,
-                    beta: 30,
-                    depth: 100,
-                    viewDistance: 5,
-                    fitToPlot: true,
-                    frame: {
-                        bottom: { size: 1, color: 'rgba(0,0,0,0.02)' },
-                        back: { size: 1, color: 'rgba(0,0,0,0.04)' },
-                        side: { size: 1, color: 'rgba(0,0,0,0.06)' }
+            //-- Give the points a 3D feel by adding a radial gradient
+            //-- Highcharts.setOptions({
+            //--     colors: Highcharts.getOptions().colors.map(function (color) {
+            //--         return {
+            //--             radialGradient: {
+            //--                 cx: 0.4,
+            //--                 cy: 0.3,
+            //--                 r: 0.5
+            //--             },
+            //--             stops: [
+            //--                 [0, color],
+            //--                 [1, Highcharts.color(color).brighten(-0.2).get('rgb')]
+            //--             ]
+            //--         };
+            //--     })
+            //-- });
+
+            // Set up the chart
+            chartOptions.container = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'chartContainer',
+                    margin: 10,
+                    backgroundColor: chartOptions.backgroundColor,
+                    height: '80%',                
+                    type: 'scatter3d',
+                    animation: false,
+                    options3d: {
+                        enabled: true,
+                        alpha: 10,
+                        beta: 30,
+                        depth: 100,
+                        viewDistance: 5,
+                        fitToPlot: true,
+                        frame: {
+                            bottom: { size: 1, color: 'rgba(0,0,0,0.02)' },
+                            back: { size: 1, color: 'rgba(0,0,0,0.04)' },
+                            side: { size: 1, color: 'rgba(0,0,0,0.06)' }
+                        }
                     }
-                }
-            },
-            title: {
-                text: ''
-            },
-            subtitle: {
-                text: ''
-            },
-            // plotOptions: {
-            //     scatter: {
-            //         width: 10,
-            //         height: 10,
-            //         depth: 10
-            //     }
-            // },
-            yAxis: {
-                // min: 0,
-                // max: 10,
-                title: null
-            },
-            xAxis: {
-                // min: 0,
-                // max: 10,
-                gridLineWidth: 1
-            },
-            zAxis: {
-                // min: 0,
-                // max: 10,
-                showFirstLabel: false
-            },
-            legend: {
-               enabled: true,
-               align: 'center',
-               verticalAlign: 'top',
-               layout: 'horizontal',
-                itemStyle: {
-                    color: 'white',
-                    fontWeight: 'bold',
-                    fontSize: "10px"
-                }               
-            },
-            series: chartData3D,
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                //-- plotOptions: {
+                //--     scatter: {
+                //--         width: 10,
+                //--         height: 10,
+                //--         depth: 10
+                //--     }
+                //-- },
+                yAxis: {
+                    //-- min: 0,
+                    //-- max: 10,
+                    title: null
+                },
+                xAxis: {
+                    //-- min: 0,
+                    //-- max: 10,
+                    gridLineWidth: 1
+                },
+                zAxis: {
+                    //-- min: 0,
+                    //-- max: 10,
+                    showFirstLabel: false
+                },
+                legend: {
+                   enabled: true,
+                   align: 'center',
+                   verticalAlign: 'top',
+                   layout: 'horizontal',
+                    itemStyle: {
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: "10px"
+                    }               
+                },
+                series: chartData3D,
 
-            responsive: {
-               rules: [{
-                  condition: {
-                      maxWidth: 500
-                  },
-                  chartOptions: {
-                      credits: {
-                          enabled: false
+                responsive: {
+                   rules: [{
+                      condition: {
+                          maxWidth: 500
+                      },
+                      chartOptions: {
+                          credits: {
+                              enabled: false
+                          }
                       }
-                  }
-               }]
-            }  
-            
+                   }]
+                }  
+                
 
-        });
+            });
 
 
-        // Add mouse and touch events for rotation
-        (function (H) {
-            function dragStart(eStart) {
-                eStart = chartOptions.container.pointer.normalize(eStart);
+            // Add mouse and touch events for rotation
+            (function (H) {
+                function dragStart(eStart) {
+                    eStart = chartOptions.container.pointer.normalize(eStart);
 
-                var posX = eStart.chartX,
-                    posY = eStart.chartY,
-                    alpha = chartOptions.container.options.chart.options3d.alpha,
-                    beta = chartOptions.container.options.chart.options3d.beta,
-                    sensitivity = 5,  // lower is more sensitive
-                    handlers = [];
+                    var posX = eStart.chartX,
+                        posY = eStart.chartY,
+                        alpha = chartOptions.container.options.chart.options3d.alpha,
+                        beta = chartOptions.container.options.chart.options3d.beta,
+                        sensitivity = 5,  // lower is more sensitive
+                        handlers = [];
 
-                function drag(e) {
-                    // Get e.chartX and e.chartY
-                    e = chartOptions.container.pointer.normalize(e);
+                    function drag(e) {
+                        // Get e.chartX and e.chartY
+                        e = chartOptions.container.pointer.normalize(e);
 
-                    chartOptions.container.update({
-                        chart: {
-                            options3d: {
-                                alpha: alpha + (e.chartY - posY) / sensitivity,
-                                beta: beta + (posX - e.chartX) / sensitivity
+                        chartOptions.container.update({
+                            chart: {
+                                options3d: {
+                                    alpha: alpha + (e.chartY - posY) / sensitivity,
+                                    beta: beta + (posX - e.chartX) / sensitivity
+                                }
                             }
-                        }
-                    }, undefined, undefined, false);
+                        }, undefined, undefined, false);
+                    }
+
+                    function unbindAll() {
+                        handlers.forEach(function (unbind) {
+                            if (unbind) {
+                                unbind();
+                            }
+                        });
+                        handlers.length = 0;
+                    }
+
+                    handlers.push(H.addEvent(document, 'mousemove', drag));
+                    handlers.push(H.addEvent(document, 'touchmove', drag));
+
+
+                    handlers.push(H.addEvent(document, 'mouseup', unbindAll));
+                    handlers.push(H.addEvent(document, 'touchend', unbindAll));
                 }
+                H.addEvent(chartOptions.container.container, 'mousedown', dragStart);
+                H.addEvent(chartOptions.container.container, 'touchstart', dragStart);
+            }(Highcharts));
 
-                function unbindAll() {
-                    handlers.forEach(function (unbind) {
-                        if (unbind) {
-                            unbind();
-                        }
-                    });
-                    handlers.length = 0;
-                }
-
-                handlers.push(H.addEvent(document, 'mousemove', drag));
-                handlers.push(H.addEvent(document, 'touchmove', drag));
-
-
-                handlers.push(H.addEvent(document, 'mouseup', unbindAll));
-                handlers.push(H.addEvent(document, 'touchend', unbindAll));
-            }
-            H.addEvent(chartOptions.container.container, 'mousedown', dragStart);
-            H.addEvent(chartOptions.container.container, 'touchstart', dragStart);
-        }(Highcharts));
-
-
-}   
+    }   
 
 
 //--------------------------------------------------------------------------------------------------//
 //-------------------------------------scatter chart 2D---------------------------------------------//
 //--------------------------------------------------------------------------------------------------//
-// can be used for t-SNE 2D
-// chartData [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}] 
 
-drawScatterChart = (chartData, subTitle = null, xTitle = null, yTitle = null) => {
 
-    if(chartOptions.defaultLibrary == "highcharts") {
+    /**
+     * Draw scatter chart 2D
+     * Can be used for t-SNE 2D
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData e.g. [{ name: Tumor, color: TumorCOlor, data: [[100, 161], [175, 122] .. ] }, {...}]  
+     * @param {string} subTitle 
+     * @param {string} xTitle  
+     * @param {string} yTitle                      
+     */       
 
-        chartOptions.container =  Highcharts.chart('chartContainer', {
+    drawScatterChart = (chartData, subTitle = null, xTitle = null, yTitle = null) => {
 
-                    chart: {
-                        backgroundColor: chartOptions.backgroundColor,
-                        type: 'scatter',
-                        height: '70%'
-                    },
-                    title: {
-                        text: ""
-                    },
-                    subtitle: {
-                        text: subTitle,
-                        style: {
-                            color: '#fff',
-                            fontWeight: 'bold',
-                            fontSize: '10px',
-                            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+        if(chartOptions.defaultLibrary == "highcharts") {
 
-                        }                        
-                    },
-                    xAxis: {
+            chartOptions.container =  Highcharts.chart('chartContainer', {
+
+                        chart: {
+                            backgroundColor: chartOptions.backgroundColor,
+                            type: 'scatter',
+                            height: '70%'
+                        },
                         title: {
-                            enabled: true,
-                            text: xTitle,
+                            text: ""
+                        },
+                        subtitle: {
+                            text: subTitle,
                             style: {
                                 color: '#fff',
                                 fontWeight: 'bold',
                                 fontSize: '10px',
                                 fontFamily: 'Trebuchet MS, Verdana, sans-serif'
 
+                            }                        
+                        },
+                        xAxis: {
+                            title: {
+                                enabled: true,
+                                text: xTitle,
+                                style: {
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    fontSize: '10px',
+                                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+                                }                             
+                            },
+                            labels: {
+                                  style: {
+                                      color: chartOptions.yAxisTicksColor,
+                                      fontWeight: chartOptions.axisFontWeight
+                                      //-- fontSize: "1vw"
+                                  } 
                             }                             
                         },
-                        labels: {
-                              style: {
-                                  color: chartOptions.yAxisTicksColor,
-                                  fontWeight: chartOptions.axisFontWeight
-                                  // fontSize: "1vw"
-                              } 
-                        }                             
-                    },
-                    yAxis: {
-                        gridLineWidth: 0, 
-                        title: {
-                            text: yTitle,
-                            style: {
-                                color: '#fff',
+                        yAxis: {
+                            gridLineWidth: 0, 
+                            title: {
+                                text: yTitle,
+                                style: {
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    fontSize: '10px',
+                                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+                                }                             
+                            },
+                            labels: {
+                                  style: {
+                                      color: chartOptions.yAxisTicksColor,
+                                      fontWeight: chartOptions.axisFontWeight
+                                      //-- fontSize: "1vw"
+                                  }  
+                            }                            
+                        },
+
+                        legend: {
+                            align: 'center',  //-- left, right
+                            verticalAlign: 'top',  //-- top, middle or bottom
+                            layout: 'horizontal',  //-- horizontal , proximate, vertical
+                            itemStyle: {
+                                color: 'white',
                                 fontWeight: 'bold',
-                                fontSize: '10px',
-                                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-                            }                             
-                        },
-                        labels: {
-                              style: {
-                                  color: chartOptions.yAxisTicksColor,
-                                  fontWeight: chartOptions.axisFontWeight
-                                  // fontSize: "1vw"
-                              }  
-                        }                            
-                    },
-
-                    legend: {
-                        align: 'center',  // left, right
-                        verticalAlign: 'top',  // top, middle or bottom
-                        layout: 'horizontal',  //horizontal , proximate, vertical
-                        itemStyle: {
-                            color: 'white',
-                            fontWeight: 'bold',
-                            fontSize: "10px"
-                        }
-                    },   
+                                fontSize: "10px"
+                            }
+                        },   
 
 
-                    // legend: {
-                    //     layout: 'vertical',
-                    //     align: 'left',
-                    //     verticalAlign: 'top',
-                    //     x: 100,
-                    //     y: 70,
-                    //     floating: true,
-                    //     backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
-                    //     borderWidth: 1
-                    // },
-                    plotOptions: {
-                        scatter: {
-                            marker: {
-                                radius: 2,
+                        //-- legend: {
+                        //--     layout: 'vertical',
+                        //--     align: 'left',
+                        //--     verticalAlign: 'top',
+                        //--     x: 100,
+                        //--     y: 70,
+                        //--     floating: true,
+                        //--     backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
+                        //--     borderWidth: 1
+                        //-- },
+
+                        plotOptions: {
+                            scatter: {
+                                marker: {
+                                    radius: 2,
+                                    states: {
+                                        hover: {
+                                            enabled: true,
+                                            lineColor: 'rgb(100,100,100)'
+                                        }
+                                    }
+                                },
                                 states: {
                                     hover: {
-                                        enabled: true,
-                                        lineColor: 'rgb(100,100,100)'
+                                        marker: {
+                                            enabled: false
+                                        }
                                     }
+                                },
+                                tooltip: {
+                                    headerFormat: '<b>{series.name}</b><br>',
+                                    pointFormat: '{point.x} , {point.y}'
                                 }
-                            },
-                            states: {
-                                hover: {
-                                    marker: {
-                                        enabled: false
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                headerFormat: '<b>{series.name}</b><br>',
-                                pointFormat: '{point.x} , {point.y}'
                             }
-                        }
-                    },
-                    series: chartData,
+                        },
+                        series: chartData,
 
-                    responsive: {
-                       rules: [{
-                          condition: {
-                              maxWidth: 500
-                          },
-                          chartOptions: {
-                              legend: {
-                                  align: 'center',
-                                  verticalAlign: 'top',
-                                  layout: 'horizontal'
+                        responsive: {
+                           rules: [{
+                              condition: {
+                                  maxWidth: 500
                               },
-                              yAxis: {
-
-                                  labels: {
-                                      align: 'left',
-
-                                       x: 0
-                                       // y: -5
+                              chartOptions: {
+                                  legend: {
+                                      align: 'center',
+                                      verticalAlign: 'top',
+                                      layout: 'horizontal'
                                   },
-                                  title: {
-                                      text: null
-                                  }
-                              },
-                              subtitle: {
-                                  text: null
-                              },
-                              credits: {
-                                  enabled: false
-                              }
-                          }
-                       }]
-                    }                      
-        });
-    } 
+                                  yAxis: {
 
-}
+                                      labels: {
+                                          align: 'left',
+
+                                           x: 0
+                                           //-- y: -5
+                                      },
+                                      title: {
+                                          text: null
+                                      }
+                                  },
+                                  subtitle: {
+                                      text: null
+                                  },
+                                  credits: {
+                                      enabled: false
+                                  }
+                              }
+                           }]
+                        }                      
+            });
+        } 
+
+    }
+
 //------------------------------------------------------------------------------//
 //------------------------- Celltype Chart Column ------------------------------//
 //------------------------------------------------------------------------------//
 
-// chartData Object { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
-drawCellTypesColumnChart = (chartData, cellTypeColors, xTitle) => {
+    /**
+     * Draw cell types column chart
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {object} chartData e.g. { Tumor: 21104, Immune: 28816, Stromal: 28934, Others: 26460 }
+     * @param {Array} cellTypeColors 
+     * @param {string} xTitle                    
+     */         
 
-    if(chartOptions.animation) {
-      chartOptions.animation = {duration: chartOptions.animationDuration};
-    } 
+    drawCellTypesColumnChart = (chartData, cellTypeColors, xTitle) => {
 
-    if(chartOptions.defaultLibrary == "highcharts") {
+        if(chartOptions.animation) {
+          chartOptions.animation = {duration: chartOptions.animationDuration};
+        } 
 
-          Highcharts.setOptions({
-              plotOptions: {
-                  series: {
-                      animation: chartOptions.animation,
-                      // borderColor: '#303030'
-                      borderWidth: 0  // bar border, default is 1 and white
+        if(chartOptions.defaultLibrary == "highcharts") {
+
+              Highcharts.setOptions({
+                  plotOptions: {
+                      series: {
+                          animation: chartOptions.animation,
+                          //-- borderColor: '#303030'
+                          borderWidth: 0  // bar border, default is 1 and white
+                      }
                   }
-              }
-          });   
+              });   
 
 
-          // --cellTypeColors is Object: { Tumor: "#ff4846", Immune: "#61c346", Stromal: "#5dd1ff", Others: "#6244d9" }
-          // -- OR
-          // --cellTypeColors is Object: { 10011: "#ff4846", 10101: "#61c346", ... }
+              // --cellTypeColors is Object: { Tumor: "#ff4846", Immune: "#61c346", Stromal: "#5dd1ff", Others: "#6244d9" }
+              // -- OR
+              // --cellTypeColors is Object: { 10011: "#ff4846", 10101: "#61c346", ... }
 
-          let seriesToPlot = [];
- 
-          Object.keys(chartData).forEach(basicClass => {    // basicClass is [ "Tumor", "Immune", "Stromal", "Others" ];      
-               seriesToPlot.push({name: basicClass, data: [chartData[basicClass]],  color: cellTypeColors[basicClass]});
-          });     
+              let seriesToPlot = [];
+     
+              Object.keys(chartData).forEach(basicClass => {    // basicClass is [ "Tumor", "Immune", "Stromal", "Others" ];      
+                   seriesToPlot.push({name: basicClass, data: [chartData[basicClass]],  color: cellTypeColors[basicClass]});
+              });     
 
- 
+     
 
-        chartOptions.container = Highcharts.chart('chartContainer', {
+            chartOptions.container = Highcharts.chart('chartContainer', {
 
-                    chart: {
-                        type: 'column',
-                        backgroundColor: chartOptions.backgroundColor,
-                        height: '70%',
-                    },
-                    title: {
-                        text: ''
-                    },
-                    legend: {
-                        align: 'center',  // left, right
-                        verticalAlign: 'top',  // top, middle or bottom
-                        layout: 'horizontal',  //horizontal , proximate, vertical
-                        itemStyle: {
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }
-                    },   
-
-                    xAxis: {
-                        categories: [xTitle],
-                        crosshair: true,
-                        labels: {
-                              rotation: 0,
-                              style: {
-                                  color: chartOptions.xAxisTicksColor,
-                                  fontWeight: chartOptions.axisFontWeight
-                              }
-                        }                        
-                    },
-
-                    yAxis: {
-                        min: 0,
-                        gridLineWidth: 0,                        
-                        title: {
-                            text: '(#Cells)'
+                        chart: {
+                            type: 'column',
+                            backgroundColor: chartOptions.backgroundColor,
+                            height: '70%',
                         },
-                        labels: {
-                              style: {
-                                  color: chartOptions.yAxisTicksColor,
-                                  fontWeight: chartOptions.axisFontWeight
-                              } 
-                        }                         
-                    },
-                    tooltip: {
-                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0; color:black"><b>{point.y:.1f} </b></td></tr>',
-                        footerFormat: '</table>',
-                        shared: true,
-                        useHTML: true
-                    },
-                    plotOptions: {
-                        column: {
-                            pointPadding: 0.2,
-                            borderWidth: 0
-                        }
-                    },
-                    series: seriesToPlot,
-                    exporting: { // to show/hide chart context menu on the right
-                       enabled: true
-                    }, 
+                        title: {
+                            text: ''
+                        },
+                        legend: {
+                            align: 'center',  //-- left, right
+                            verticalAlign: 'top',  //--top, middle or bottom
+                            layout: 'horizontal',  //-- horizontal , proximate, vertical
+                            itemStyle: {
+                                color: 'white',
+                                fontWeight: 'bold'
+                            }
+                        },   
 
-                    responsive: {
-                       rules: [{
-                          condition: {
-                              maxWidth: 500
-                          },
-                          chartOptions: {
-                              legend: {
-                                  align: 'center',
-                                  verticalAlign: 'top',
-                                  layout: 'horizontal'
-                              },
-                              yAxis: {
-
-                                  labels: {
-                                      align: 'left',
-
-                                       x: 0
-                                       // y: -5
-                                  },
-                                  title: {
-                                      text: null
+                        xAxis: {
+                            categories: [xTitle],
+                            crosshair: true,
+                            labels: {
+                                  rotation: 0,
+                                  style: {
+                                      color: chartOptions.xAxisTicksColor,
+                                      fontWeight: chartOptions.axisFontWeight
                                   }
-                              },
-                              subtitle: {
-                                  text: null
-                              },
-                              credits: {
-                                  enabled: false
-                              }
-                          }
-                       }]
-                    }                                       
+                            }                        
+                        },
 
-        });          
-    }  
-}
+                        yAxis: {
+                            min: 0,
+                            gridLineWidth: 0,                        
+                            title: {
+                                text: '(#Cells)'
+                            },
+                            labels: {
+                                  style: {
+                                      color: chartOptions.yAxisTicksColor,
+                                      fontWeight: chartOptions.axisFontWeight
+                                  } 
+                            }                         
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                '<td style="padding:0; color:black"><b>{point.y:.1f} </b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: seriesToPlot,
+                        exporting: { // to show/hide chart context menu on the right
+                           enabled: true
+                        }, 
+
+                        responsive: {
+                           rules: [{
+                              condition: {
+                                  maxWidth: 500
+                              },
+                              chartOptions: {
+                                  legend: {
+                                      align: 'center',
+                                      verticalAlign: 'top',
+                                      layout: 'horizontal'
+                                  },
+                                  yAxis: {
+
+                                      labels: {
+                                          align: 'left',
+
+                                           x: 0
+                                           //-- y: -5
+                                      },
+                                      title: {
+                                          text: null
+                                      }
+                                  },
+                                  subtitle: {
+                                      text: null
+                                  },
+                                  credits: {
+                                      enabled: false
+                                  }
+                              }
+                           }]
+                        }                                       
+            });          
+        }  
+    }
 
 //---------------------- CellType Chart 3D Pie  ----------------------------//
+
 // drawCellTypes3dPieChart = (chartData) => {
 
 //     if(chartOptions.animation) {
@@ -11502,116 +11801,131 @@ drawCellTypesColumnChart = (chartData, cellTypeColors, xTitle) => {
 //     }  
 // }
 
+
+//------------------------------------------------------------------------------//
 //---------------------- Phenotype Chart Column 3d  ----------------------------//
-drawCellPhenotypes3dColumnChart = (chartData) => {
+//------------------------------------------------------------------------------//    
 
-    if(chartOptions.animation) {
-      chartOptions.animation = {duration: chartOptions.animationDuration};
-    } 
+    /**
+     * Draw cell phenotypes 3D column chart
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData e.g.  [{name: '10011', data: 70,  color: "red"}, {...}, ...);
+     *         
+     */       
 
-    if(chartOptions.defaultLibrary == "highcharts") {
+    drawCellPhenotypes3dColumnChart = (chartData) => {
 
-          Highcharts.setOptions({
-              plotOptions: {
-                  series: {
-                      animation: chartOptions.animation,
-                      // borderColor: '#303030'
-                      borderWidth: 0  // bar border, default is 1 and white
+        if(chartOptions.animation) {
+          chartOptions.animation = {duration: chartOptions.animationDuration};
+        } 
+
+        if(chartOptions.defaultLibrary == "highcharts") {
+
+              Highcharts.setOptions({
+                  plotOptions: {
+                      series: {
+                          animation: chartOptions.animation,
+                          //-- borderColor: '#303030'
+                          borderWidth: 0  // bar border, default is 1 and white
+                      }
                   }
-              }
-          });   
+              });   
 
-            //e.g allValidPhenotypes.push({binary: binaryMarkersString, validCells: allValidCells, 
-            //                           totalValidCellsNum: allValidCells.length, phenotypeColor: null });
+              //-- e.g allValidPhenotypes.push({binary: binaryMarkersString, validCells: allValidCells, 
+              //--                           totalValidCellsNum: allValidCells.length, phenotypeColor: null });
 
-          // let seriesToPlot = [];
+              //-- let seriesToPlot = [];
 
-          // for(let i = 0; i < chartData.length; i++) {
-          //      seriesToPlot.push({name: chartData[i].binary, data: [chartData[i].totalValidCellsNum*100/getTotalTilesNum()],  color: chartData[i].phenotypeColor});
-          // }     
+              //-- for(let i = 0; i < chartData.length; i++) {
+              //--      seriesToPlot.push({name: chartData[i].binary, data: [chartData[i].totalValidCellsNum*100/getTotalTilesNum()],  color: chartData[i].phenotypeColor});
+              //-- }     
 
-          // console.log( " series To plot : ", seriesToPlot)   
+              //-- console.log( " series To plot : ", seriesToPlot)   
 
-          chartOptions.container = Highcharts.chart('chartContainer', {
+              chartOptions.container = Highcharts.chart('chartContainer', {
 
-                    chart: {
-                        type: 'column',
-                        backgroundColor: chartOptions.backgroundColor,
-                        height: '80%',
-                        options3d: {
-                            enabled: true,
-                            alpha: 10,
-                            beta: 25,
-                            depth: 70
-                        }                        
-                    },
-                    title: {
-                        text: ''
-                    },
-                    legend: {
-                        align: 'center',  // left, right
-                        verticalAlign: 'top',  // top, middle or bottom
-                        layout: 'horizontal',  //horizontal , proximate, vertical
-                        enabled:false,
-                        itemStyle: {
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }
-                    },  
-
-                    plotOptions: {
-                        column: {
-                            depth: 45
-                        }
-                    },  
-                                        
-                    xAxis: {
-                        categories: ['Phenotypes'],
-                        crosshair: true,
-                        labels: {
-                            skew3d: true,
-                            style: {
-                                color: chartOptions.xAxisTicksColor,
-                                fontWeight: chartOptions.axisFontWeight,                              
-                                fontSize: '16px'
-                            }
-                        }                        
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: '(%)',
-                           style: {
-                              color: chartOptions.yAxisTicksColor,
-                              fontWeight: chartOptions.axisFontWeight
-                          }                            
+                        chart: {
+                            type: 'column',
+                            backgroundColor: chartOptions.backgroundColor,
+                            height: '80%',
+                            options3d: {
+                                enabled: true,
+                                alpha: 10,
+                                beta: 25,
+                                depth: 70
+                            }                        
                         },
-                        labels: {
-                            style: {
-                                color: chartOptions.yAxisTicksColor,
-                                fontWeight: chartOptions.axisFontWeight
+                        title: {
+                            text: ''
+                        },
+                        legend: {
+                            align: 'center',  //-- left, right
+                            verticalAlign: 'top',  //--top, middle or bottom
+                            layout: 'horizontal',  //-- horizontal , proximate, vertical
+                            enabled:false,
+                            itemStyle: {
+                                color: 'white',
+                                fontWeight: 'bold'
                             }
-                       }  
-                    },
-                    // tooltip: {
-                    //     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    //     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    //         '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                    //     footerFormat: '</table>',
-                    //     shared: true,
-                    //     useHTML: true
-                    // },
-                    plotOptions: {
-                        column: {
-                            pointPadding: 0.2,
-                            borderWidth: 0
-                        }
-                    },
-                    series: chartData
+                        },  
 
-        });          
-    }  
-}
+                        plotOptions: {
+                            column: {
+                                depth: 45
+                            }
+                        },  
+                                            
+                        xAxis: {
+                            categories: ['Phenotypes'],
+                            crosshair: true,
+                            labels: {
+                                skew3d: true,
+                                style: {
+                                    color: chartOptions.xAxisTicksColor,
+                                    fontWeight: chartOptions.axisFontWeight,                              
+                                    fontSize: '16px'
+                                }
+                            }                        
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: '(%)',
+                               style: {
+                                  color: chartOptions.yAxisTicksColor,
+                                  fontWeight: chartOptions.axisFontWeight
+                              }                            
+                            },
+                            labels: {
+                                style: {
+                                    color: chartOptions.yAxisTicksColor,
+                                    fontWeight: chartOptions.axisFontWeight
+                                }
+                           }  
+                        },
+                        //-- tooltip: {
+                        //--     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        //--     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        //--         '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                        //--     footerFormat: '</table>',
+                        //--     shared: true,
+                        //--     useHTML: true
+                        //-- },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: chartData
+
+            });          
+        }  
+    }
 
 //---------------------- Phenotype Chart Column  ----------------------------//
 // drawCellPhenotypesColumnChart = (chartData) => {
@@ -11841,8 +12155,21 @@ drawCellPhenotypes3dColumnChart = (chartData) => {
 // }
 
 
+//-----------------------------------------------------------//
+//------------------------- BoxPlot -------------------------//
+//-----------------------------------------------------------//
 
-//---------------------- BoxPlot ----------------------------//
+    /**
+     * Draw markers boxplot chart
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {Array} chartData array of objects e.g.  [{name: '10011', data: 70,  color: "red"}, {...}, ...);
+     *         
+     */    
+
 drawMarkersBoxPlotChart = (chartData) => {
 
     if(chartOptions.animation) {
@@ -11855,7 +12182,7 @@ drawMarkersBoxPlotChart = (chartData) => {
               plotOptions: {
                   series: {
                       animation: chartOptions.animation,
-                      // borderColor: '#303030'
+                      //-- borderColor: '#303030'
                       borderWidth: 0  // bar border, default is 1 and white
                   }
               }
@@ -11887,8 +12214,8 @@ drawMarkersBoxPlotChart = (chartData) => {
 
 
                   xAxis: {
-                      //lineColor: '#FF0000',
-                      //categories: ['CD45', 'IBA1', 'KERATIN', 'ASMA', 'DNA'],
+                      //-- lineColor: '#FF0000',
+                      //-- categories: ['CD45', 'IBA1', 'KERATIN', 'ASMA', 'DNA'],
                       categories: chartData.channelNames,
                       labels: {
                           rotation: -45,
@@ -11906,8 +12233,8 @@ drawMarkersBoxPlotChart = (chartData) => {
                       max: chartOptions.histogram.rangeValues.max,
                       min: chartOptions.histogram.rangeValues.min,
                       tickInterval: chartOptions.histogram.rangeValues.stepSize,
-                      // lineColor: '#FF0000',
-                      // lineWidth: 1,                  
+                      //-- lineColor: '#FF0000',
+                      //-- lineWidth: 1,                  
                       title: {
                           text: 'Intensity' // null
                       },
@@ -11917,13 +12244,13 @@ drawMarkersBoxPlotChart = (chartData) => {
                               fontWeight: chartOptions.axisFontWeight
                           } 
                       }  
-                       // top: '0',
-                       // height: '50px',
-                      // tickInterval: 100,
-                      // offset: 0                          
+                       //-- top: '0',
+                       //-- height: '50px',
+                       //-- tickInterval: 100,
+                       //-- offset: 0                          
                   },
 
-                  // series: seriesToPlot,
+                  //-- series: seriesToPlot,
                   series: [
                    {
                       name: '',
@@ -11950,7 +12277,7 @@ drawMarkersBoxPlotChart = (chartData) => {
                                       align: 'left',
 
                                        x: 0
-                                       // y: -5
+                                       //-- y: -5
                                   },
                                   title: {
                                       text: null
@@ -11969,293 +12296,322 @@ drawMarkersBoxPlotChart = (chartData) => {
 
 
 //---------------------------------------------------------//
-//  chartData = { labels: [], mean: [], max: [], std: []};
- drawMarkersHistogramChart = (chartData, logFlag = false) => {
+//--------------------- Histogram -------------------------//
+//---------------------------------------------------------//
 
-    if(chartOptions.animation) {
-      chartOptions.animation = {duration: chartOptions.animationDuration};
-    } 
+    /**
+     * Draw markers histogram chart
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {object} chartData e.g. { labels: [], mean: [], max: [], std: []};
+     * @param {bool} logFlag 
+     *
+     */  
 
-    if(chartOptions.defaultLibrary == "highcharts") {
+     drawMarkersHistogramChart = (chartData, logFlag = false) => {
 
-          Highcharts.setOptions({
-              plotOptions: {
-                  series: {
-                      animation: chartOptions.animation,
-                      // borderColor: '#303030'
-                      borderWidth: 0  // bar border, default is 1 and white
-                  }
-              }
-          });   
+        if(chartOptions.animation) {
+          chartOptions.animation = {duration: chartOptions.animationDuration};
+        } 
 
+        if(chartOptions.defaultLibrary == "highcharts") {
 
-          let yMaxRange =  chartOptions.histogram.rangeValues.max;
-          let yTickInterval = chartOptions.histogram.rangeValues.stepSize;
-          let yAxisText =  'Not-log';
-          // If yAxis values in log10 is true
-          if(logFlag) {          
-            yMaxRange = Math.ceil(Math.log1p(chartOptions.histogram.rangeValues.max));
-            yTickInterval = Math.ceil( Math.log1p(chartOptions.histogram.rangeValues.stepSize));
-            yAxisText = 'log';
-          }  
-
-          let seriesToPlot = [];
-
-          for(let i = 0; i < chartOptions.histogram.keys.length; i++) {
-              let feature = chartOptions.histogram.keys[i]; // feature: mean, max, std
-              // if Y axis needs to be in log
-              seriesToPlot.push({name: feature, color: chartOptions.histogram.bgColor[i], data: chartData[feature] });
-          }        
-
-          // console.log("series ", seriesToPlot);
-
-          if(logFlag) { 
-                seriesToPlot.forEach(entry =>{
-                     entry.data = entry.data.map(value => { 
-                            return Math.log1p(value); 
-                      });
-                })
-          }
-         
-          // console.log("series ", seriesToPlot)
-
-
-          chartOptions.container = Highcharts.chart('chartContainer', {
-
-              chart: {
-                  type: 'column',
-                  backgroundColor: chartOptions.backgroundColor,
-                  height: '70%'
-              },
-
-              title: {
-                  text: ''
-              },
-
-              // subtitle: {
-              //     text: 'Resize the frame or click buttons to change appearance'
-              // },
-
-              legend: {
-                  align: 'center',  // left, right
-                  verticalAlign: 'top',  // top, middle or bottom
-                  layout: 'horizontal',  //horizontal , proximate, vertical
-                  itemStyle: {
-                      color: 'white',
-                      fontWeight: 'bold'
-                  }
-              },
-
-              xAxis: {
-                  //lineColor: '#FF0000',
-                  //categories: ['CD45', 'IBA1', 'KERATIN', 'ASMA', 'DNA'],
-                  categories: chartData.channelNames,
-                  labels: {
-                      rotation: -45,
-                      x: -10,
-                      style: {
-                          color: chartOptions.xAxisTicksColor,
-                          fontWeight: chartOptions.axisFontWeight
+              Highcharts.setOptions({
+                  plotOptions: {
+                      series: {
+                          animation: chartOptions.animation,
+                          //-- borderColor: '#303030'
+                          borderWidth: 0  // bar border, default is 1 and white
                       }
                   }
-              },
+              });   
 
-              yAxis: {
-                  allowDecimals: false,
-                  gridLineWidth: 0,
-                  // max: chartOptions.histogram.rangeValues.max,
-                  max: yMaxRange,
-                  min: chartOptions.histogram.rangeValues.min,
-                  tickInterval: yTickInterval,
-                  // tickInterval: chartOptions.histogram.rangeValues.stepSize,
-                  // lineColor: '#FF0000',
-                  // lineWidth: 1,                  
-                  title: {
-                      text: yAxisText
+
+              let yMaxRange =  chartOptions.histogram.rangeValues.max;
+              let yTickInterval = chartOptions.histogram.rangeValues.stepSize;
+              let yAxisText =  'Not-log';
+              // If yAxis values in log10 is true
+              if(logFlag) {          
+                yMaxRange = Math.ceil(Math.log1p(chartOptions.histogram.rangeValues.max));
+                yTickInterval = Math.ceil( Math.log1p(chartOptions.histogram.rangeValues.stepSize));
+                yAxisText = 'log';
+              }  
+
+              let seriesToPlot = [];
+
+              for(let i = 0; i < chartOptions.histogram.keys.length; i++) {
+                  let feature = chartOptions.histogram.keys[i]; // feature: mean, max, std
+                  // if Y axis needs to be in log
+                  seriesToPlot.push({name: feature, color: chartOptions.histogram.bgColor[i], data: chartData[feature] });
+              }        
+
+              //-- console.log("series ", seriesToPlot);
+
+              if(logFlag) { 
+                    seriesToPlot.forEach(entry =>{
+                         entry.data = entry.data.map(value => { 
+                                return Math.log1p(value); 
+                          });
+                    })
+              }
+             
+              //-- console.log("series ", seriesToPlot)
+
+
+              chartOptions.container = Highcharts.chart('chartContainer', {
+
+                  chart: {
+                      type: 'column',
+                      backgroundColor: chartOptions.backgroundColor,
+                      height: '70%'
                   },
-                  labels: {
-                      style: {
-                          color: chartOptions.yAxisTicksColor,
-                          fontWeight: chartOptions.axisFontWeight
-                      } 
-                  }  
-                   // top: '0',
-                   // height: '50px',
-                  // tickInterval: 100,
-                  // offset: 0                          
-              },
 
-              series: seriesToPlot,
-              // series: [{
-              //     name: chartOptions.histogram.keys[0],
-              //     data: [10, 40, 30, 40, 30],
-              //     color: chartOptions.histogram.bgColor[0]
-              // }, {
-              //     name: chartOptions.histogram.keys[1],
-              //     data: [60, 40, 100, 40, 100],
-              //     color: chartOptions.histogram.bgColor[1]
-              // }, {
-              //     name: chartOptions.histogram.keys[2],
-              //     data: [80, 40, 30, 40, 30],
-              //     color: chartOptions.histogram.bgColor[2]
-              // }],
+                  title: {
+                      text: ''
+                  },
 
-              exporting: { // to show/hide chart context menu on the right
-                  enabled: true
-              },
+                  //-- subtitle: {
+                  //--     text: 'Resize the frame or click buttons to change appearance'
+                  //-- },
 
+                  legend: {
+                      align: 'center',  //-- left, right
+                      verticalAlign: 'top',  //-- top, middle or bottom
+                      layout: 'horizontal',  //--horizontal , proximate, vertical
+                      itemStyle: {
+                          color: 'white',
+                          fontWeight: 'bold'
+                      }
+                  },
 
-              responsive: {
-                  rules: [{
-                      condition: {
-                          maxWidth: 500
-                      },
-                      chartOptions: {
-                          legend: {
-                              align: 'center',
-                              verticalAlign: 'top',
-                              layout: 'horizontal'
-                          },
-                          yAxis: {
-
-                              labels: {
-                                  align: 'left',
-
-                                   x: 0
-                                   // y: -5
-                              },
-                              title: {
-                                  text: null
-                              }
-                          },
-                          subtitle: {
-                              text: null
-                          },
-                          credits: {
-                              enabled: false
+                  xAxis: {
+                      //-- lineColor: '#FF0000',
+                      //-- categories: ['CD45', 'IBA1', 'KERATIN', 'ASMA', 'DNA'],
+                      categories: chartData.channelNames,
+                      labels: {
+                          rotation: -45,
+                          x: -10,
+                          style: {
+                              color: chartOptions.xAxisTicksColor,
+                              fontWeight: chartOptions.axisFontWeight
                           }
                       }
-                  }]
-              }
+                  },
 
-
-          });          
-
-
-
-    }  
-
-    if(chartOptions.defaultLibrary == "chartjs") {
-            let ctx = document.getElementById("chartDrawCanvas").getContext("2d");
-            // ctx.globalAlpha = 0.9;      
-            let options = {
-                barValueSpacing: 20,
-                legend: {
-                    labels: {  // Mean, Max and Std
-                        fontColor: chartOptions.labelsColor
-                        //fontSize: 18
-                    }
-                },  
-                animation: chartOptions.animation,        
-                // animation: { // in case true
-                //     duration: 500,
-                // },          
-                scales: {
-                  yAxes: [{
-                    ticks: {
-                      fontColor: chartOptions.yAxisTicksColor,
+                  yAxis: {
+                      allowDecimals: false,
+                      gridLineWidth: 0,
+                      //-- max: chartOptions.histogram.rangeValues.max,
+                      max: yMaxRange,
                       min: chartOptions.histogram.rangeValues.min,
-                      max: chartOptions.histogram.rangeValues.max,
-                      stepSize: chartOptions.histogram.rangeValues.stepSize
+                      tickInterval: yTickInterval,
+                      //-- tickInterval: chartOptions.histogram.rangeValues.stepSize,
+                      //-- lineColor: '#FF0000',
+                      //-- lineWidth: 1,                  
+                      title: {
+                          text: yAxisText
+                      },
+                      labels: {
+                          style: {
+                              color: chartOptions.yAxisTicksColor,
+                              fontWeight: chartOptions.axisFontWeight
+                          } 
+                      }  
+                       //-- top: '0',
+                       //-- height: '50px',
+                       //-- tickInterval: 100,
+                       //-- offset: 0                          
+                  },
+
+                  series: seriesToPlot,
+                  //-- series: [{
+                  //--     name: chartOptions.histogram.keys[0],
+                  //--     data: [10, 40, 30, 40, 30],
+                  //--     color: chartOptions.histogram.bgColor[0]
+                  //-- }, {
+                  //--     name: chartOptions.histogram.keys[1],
+                  //--     data: [60, 40, 100, 40, 100],
+                  //--     color: chartOptions.histogram.bgColor[1]
+                  //-- }, {
+                  //--     name: chartOptions.histogram.keys[2],
+                  //--     data: [80, 40, 30, 40, 30],
+                  //--     color: chartOptions.histogram.bgColor[2]
+                  //-- }],
+
+                  exporting: { // to show/hide chart context menu on the right
+                      enabled: true
+                  },
+
+
+                  responsive: {
+                      rules: [{
+                          condition: {
+                              maxWidth: 500
+                          },
+                          chartOptions: {
+                              legend: {
+                                  align: 'center',
+                                  verticalAlign: 'top',
+                                  layout: 'horizontal'
+                              },
+                              yAxis: {
+
+                                  labels: {
+                                      align: 'left',
+
+                                       x: 0
+                                       //-- y: -5
+                                  },
+                                  title: {
+                                      text: null
+                                  }
+                              },
+                              subtitle: {
+                                  text: null
+                              },
+                              credits: {
+                                  enabled: false
+                              }
+                          }
+                      }]
+                  }
+
+
+              });          
+
+        }  
+
+        if(chartOptions.defaultLibrary == "chartjs") {
+                let ctx = document.getElementById("chartDrawCanvas").getContext("2d");
+                //-- ctx.globalAlpha = 0.9;      
+                let options = {
+                    barValueSpacing: 20,
+                    legend: {
+                        labels: {  // Mean, Max and Std
+                            fontColor: chartOptions.labelsColor
+                            //--fontSize: 18
+                        }
+                    },  
+                    animation: chartOptions.animation,        
+                    //-- animation: { // in case true
+                    //--     duration: 500,
+                    //-- },          
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          fontColor: chartOptions.yAxisTicksColor,
+                          min: chartOptions.histogram.rangeValues.min,
+                          max: chartOptions.histogram.rangeValues.max,
+                          stepSize: chartOptions.histogram.rangeValues.stepSize
+                        }
+                      }],
+                      xAxes: [{
+                        ticks: {
+                          fontColor: chartOptions.xAxisTicksColor
+                        }
+                      }]      
                     }
-                  }],
-                  xAxes: [{
-                    ticks: {
-                      fontColor: chartOptions.xAxisTicksColor
-                    }
-                  }]      
+                  }
+
+                let datasets = [];
+
+                for(let i = 0; i < chartOptions.histogram.keys.length; i++) {
+                    let feature = chartOptions.histogram.keys[i]; // feature: mean, max, std
+                    datasets.push({label: feature, backgroundColor: chartOptions.histogram.bgColor[i], data: chartData[feature] });
+                    //-- chartOptions.noValuesDataset.push({label: feature, backgroundColor: chartOptions.histogram.bgColor[i], data: [] });
                 }
-              }
 
-            let datasets = [];
+                let data = {
+                  labels: chartData.channelNames,   // ["DNA", "CD45", ..]
+                  datasets: datasets
+                  //-- datasets: [{
+                  //--   label: "Mean",
+                  //--   backgroundColor: 'rgba(42, 180, 192, 1)',
+                  //--   data: chartData["mean"]
+                  //-- }, {
+                  //--   label: "Max",
+                  //--   backgroundColor: 'rgba(76, 135, 185, 1)',
+                  //--   data: chartData["max"]
+                  //-- }, {
+                  //--   label: "Std",
+                  //--   backgroundColor: 'rgba(243, 82, 58, 1)',
+                  //--   data: chartData["std"]
+                  //-- }]
+                };
 
-            for(let i = 0; i < chartOptions.histogram.keys.length; i++) {
-                let feature = chartOptions.histogram.keys[i]; // feature: mean, max, std
-                datasets.push({label: feature, backgroundColor: chartOptions.histogram.bgColor[i], data: chartData[feature] });
-                // chartOptions.noValuesDataset.push({label: feature, backgroundColor: chartOptions.histogram.bgColor[i], data: [] });
-            }
+                if(!chartOptions.canvas){ // to fix chart bars disturbance when hover on CHNL PLOTS
+                    chartOptions.canvas = new Chart(ctx, {
+                      type: 'bar',
+                      data: data,
+                      options: options
+                    });
+                } else { 
+                   chartOptions.canvas.data = data;
+                   chartOptions.canvas.update();
 
-            let data = {
-              labels: chartData.channelNames,   //["DNA", "CD45", ..]
-              datasets: datasets
-              // datasets: [{
-              //   label: "Mean",
-              //   backgroundColor: 'rgba(42, 180, 192, 1)',
-              //   data: chartData["mean"]
-              // }, {
-              //   label: "Max",
-              //   backgroundColor: 'rgba(76, 135, 185, 1)',
-              //   data: chartData["max"]
-              // }, {
-              //   label: "Std",
-              //   backgroundColor: 'rgba(243, 82, 58, 1)',
-              //   data: chartData["std"]
-              // }]
-            };
-
-            if(!chartOptions.canvas){ // to fix chart bars disturbance when hover on CHNL PLOTS
-                chartOptions.canvas = new Chart(ctx, {
-                  type: 'bar',
-                  data: data,
-                  options: options
-                });
-            } else { 
-               chartOptions.canvas.data = data;
-               chartOptions.canvas.update();
-
-            }
+                }
+        }
     }
-}
 
-plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, obj, logFlag = false) => { //logFlag -> yAxis data log1p
-     let features = [];
- 
-     if( isFeaturesLoaded() ) {
-           let tile = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(obj).attr('id'));
-           features = tile.features;
-           let chartData = {channelNames: []}; // channelNames will have frame names
+//----------------------------------------------------------------------------//
 
-           for(let i = 0; i < featureKeys.length; i++) {
-               chartData[featureKeys[i]] = [];
-            }
+    /**
+     * Plot tile markers histogram
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0 
+     * @param {number} left_value
+     * @param {number} top_value
+     * @param {number} width_value
+     * @param {number} height_value
+     * @param {object} obj                    
+     * @param {bool} logFlag 
+     *
+     */ 
 
-           //  chartData = { labels: [], mean: [], max: [], std: []};
-           for(let n = 0; n < features.length; n++) {
-                chartData.channelNames.push(features[n].Frame);
+    plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, obj, logFlag = false) => { // logFlag -> yAxis data log1p
+         let features = [];
+     
+         if( isFeaturesLoaded() ) {
+               let tile = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(obj).attr('id'));
+               features = tile.features;
+               let chartData = {channelNames: []}; // channelNames will have frame names
 
-                for(let i = 0; i < featureKeys.length; i++) { 
-                   chartData[featureKeys[i]].push(features[n][featureKeys[i]]);
+               for(let i = 0; i < featureKeys.length; i++) {
+                   chartData[featureKeys[i]] = [];
                 }
-           }
-           
-           // console.log("chartData : ", chartData)
-           drawMarkersHistogramChart(chartData, logFlag);
 
-           if(! isPanelActive("chPlotsPanel") && chartOptions.isFirstAppear) {    
-              togglePanel(chPlotsPanel);
-              chartOptions.isFirstAppear = false;
-           } 
-           
-      } else {
+               //--  chartData = { labels: [], mean: [], max: [], std: []};
+               for(let n = 0; n < features.length; n++) {
+                    chartData.channelNames.push(features[n].Frame);
 
-            if( isPanelActive("chPlotsPanel") ){    
-                destroyChart();
-                togglePanel(chPlotsPanel);
-                triggerHint("No features found, create features from Features menu","info", 5000);
-             }          
+                    for(let i = 0; i < featureKeys.length; i++) { 
+                       chartData[featureKeys[i]].push(features[n][featureKeys[i]]);
+                    }
+               }
+               
+               //-- console.log("chartData : ", chartData)
+               drawMarkersHistogramChart(chartData, logFlag);
 
-     }         
-}
+               if(! isPanelActive("chPlotsPanel") && chartOptions.isFirstAppear) {    
+                  togglePanel(chPlotsPanel);
+                  chartOptions.isFirstAppear = false;
+               } 
+               
+          } else {
+
+                if( isPanelActive("chPlotsPanel") ) {    
+                    destroyChart();
+                    togglePanel(chPlotsPanel);
+                    triggerHint("No features found, create features from Features menu","info", 5000);
+                 }          
+         }         
+    }
 
 
 // plotTileMarkersHistogram_V0 = (left_value, top_value, width_value, height_value, obj) => {
@@ -12263,10 +12619,7 @@ plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, ob
 //      if( allTilesFeatures.length == 0) 
 //       {
 //           let featureDataToPlot = getTileProp(left_value, top_value, width_value, height_value);
-          
 //           featureDataToPlot.push(temp)
-              
-
 //       } else {
 //                let tile = findObjectByKeyValue(allTilesFeatures, 'id', d3.select(obj).attr('id'));
 //                let chartData = {channelNames: []}; // channelNames will have frame names
@@ -12275,7 +12628,7 @@ plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, ob
 //                    chartData[featureKeys[i]] = [];
 //                 }
 
-//                //  chartData = { labels: [], mean: [], max: [], std: []};
+//                //--  chartData = { labels: [], mean: [], max: [], std: []};
 //                for(let n = 0; n < tile.features.length; n++){
 
 //                     chartData.channelNames.push(tile.features[n].Frame);
@@ -12284,146 +12637,196 @@ plotTileMarkersHistogram = (left_value, top_value, width_value, height_value, ob
 //                        chartData[featureKeys[i]].push(tile.features[n][featureKeys[i]]);
 //                     }
                     
-//                     // chartData.meanData.push(tile.features[n].mean);
-//                     // chartData.maxData.push(tile.features[n].max);
-//                     // chartData.stdData.push(tile.features[n].std);
+//                     //-- chartData.meanData.push(tile.features[n].mean);
+//                     //-- chartData.maxData.push(tile.features[n].max);
+//                     //-- chartData.stdData.push(tile.features[n].std);
 //                }
 
-
-
 //                drawMarkersHistogramChart(chartData);
-
 //       }
-
-
 // }
 
-//  This function can be used with Boxplot option (plotFlag = true ) and Phenotypes option (plotFlag = false)
-calculateMarkerBoxplots = (plotFlag = true) => {
-    webix.message("Wait Markers boxplot data to be calculated");
-    triggerHint("Wait Markers boxplot data to be calculated","info", 10000);
-    
-    let boxplotData;
-
-    if(Opts.isBoxplotChannelBased) {
-         boxplotData = createChannelsStatisticalData();
-
-        if(boxplotData == "Failed") {
-             boxplotData = [];
-             triggerHint("Calculate makers boxplots Failed, image channel can not convert to gray.. ", "error", 5000);
-             return 0;
-        } 
-
-        if(boxplotData == "chNormFailed") {
-             boxplotData = [];
-             triggerHint("Image normalization " + "<b><font color='red'>Failed</font></b>" + " due to insufficient Memory.  ", "error", 10000);
-             console.log("Image normalization Failed due to insufficient Memory, please  try without Image Normalization" );                   
-             return 0;
-        }         
 
 
-    } else { // if it is cell based
-        boxplotData = createMarkerCellsStatisticalData();
-    }
+    /**
+     *  This function can be used with Boxplot option (plotFlag = true ) and Phenotypes option (plotFlag = false)
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0                
+     * @param {bool} plotFlag 
+     *
+     */ 
 
-    if(boxplotData.length ) {
-        setGrpChannelsStatisticalData(boxplotData);
-        webix.message("Markers boxplot data calculated successfully");
-        if(plotFlag){// if calculateMarkerBoxplots used with Phenotypes, the plotFlag will be false
-           plotMarkersBoxPlots();
+    calculateMarkerBoxplots = (plotFlag = true) => {
+        webix.message("Wait Markers boxplot data to be calculated");
+        triggerHint("Wait Markers boxplot data to be calculated","info", 10000);
+        
+        let boxplotData;
+
+        if(Opts.isBoxplotChannelBased) {
+             boxplotData = createChannelsStatisticalData();
+
+            if(boxplotData == "Failed") {
+                 boxplotData = [];
+                 triggerHint("Calculate makers boxplots Failed, image channel can not convert to gray.. ", "error", 5000);
+                 return 0;
+            } 
+
+            if(boxplotData == "chNormFailed") {
+                 boxplotData = [];
+                 triggerHint("Image normalization " + "<b><font color='red'>Failed</font></b>" + " due to insufficient Memory.  ", "error", 10000);
+                 console.log("Image normalization Failed due to insufficient Memory, please  try without Image Normalization" );                   
+                 return 0;
+            }         
+
+
+        } else { // if it is cell based
+            boxplotData = createMarkerCellsStatisticalData();
         }
+
+        if(boxplotData.length ) {
+            setGrpChannelsStatisticalData(boxplotData);
+            webix.message("Markers boxplot data calculated successfully");
+            if(plotFlag){// if calculateMarkerBoxplots used with Phenotypes, the plotFlag will be false
+               plotMarkersBoxPlots();
+            }
+        }
+
     }
 
-}
 
-// Can be used for channel based statisticals and cell based statistical
-setGrpChannelsStatisticalData = (data) => {
-       grpChannelsStatisticalData = data;
-}
+    /**
+     *  This function can be used for channel based statisticals and cell based statistical
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0                
+     * @param {} data 
+     *
+     */ 
 
-// Can be used for channel based statisticals and cell based statistical
-getGrpChannelsStatisticalData = () => {
-     return  grpChannelsStatisticalData.length ? grpChannelsStatisticalData : null;
-}
+    setGrpChannelsStatisticalData = (data) => {
+           grpChannelsStatisticalData = data;
+    }
 
-// Can be used for channel based statisticals and cell based statistical
-isGrpChannelsStatisticalDataAvailable =() => {
-     return  grpChannelsStatisticalData.length ? true : false;
+    
+    /**
+     *  This function can be used for channel based statisticals and cell based statistical
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0                
+     * @returns {} 
+     *
+     */
 
-         
-}
+    getGrpChannelsStatisticalData = () => {
+         return  grpChannelsStatisticalData.length ? grpChannelsStatisticalData : null;
+    }
 
-// Can be used for channel based statisticals and cell based statistical
-resetGrpChannelsStatisticalData = () => {
-       grpChannelsStatisticalData = [];
-}
+   
+    /**
+     *  This function can be used for channel based statisticals and cell based statistical
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0                
+     * @returns {} 
+     *
+     */    
 
-// TEST = () => {                 <<<<<<<<<<<<<<<<<<<<<<-----------
-//       let test = []
-//        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/TEST", function(response) {
-//              test = JSON.parse(response);
-//       });
-//      return test != "notExist" ? test : [] ;
-// }
+    isGrpChannelsStatisticalDataAvailable =() => {
+         return  grpChannelsStatisticalData.length ? true : false;
 
-//  calculate channel mean, max, min, std, median, q1, q3 
-createChannelsStatisticalData = () => {
-       let groupData = []; 
-       let curGroup = getSelectedGroup();
-       let numOfFrames = curGroup.Channels.length;
-       let apiUrl = getHostApi();
-       let apiKey = getApiKey(); 
-       let itemId = getSelectedItemId();
+             
+    }
 
-       // For boxplot data file and location
-       let boxplotFileName = getGrpBoxplotFileName();
-       let boxplotFolder = getGrpBoxplotLocalPath();
+    // Can be used for channel based statisticals and cell based statistical
+    /**
+     *  This function can be used with Boxplot option (plotFlag = true ) and Phenotypes option (plotFlag = false)
+     *
+     * @function
+     * @memberof HistoJS
+     * @since 1.0.0
+     * @version 1.0.0                
+     * @param {bool} plotFlag 
+     *
+     */     
+    resetGrpChannelsStatisticalData = () => {
+           grpChannelsStatisticalData = [];
+    }
+
+    // TEST = () => {                 <<<<<<<<<<<<<<<<<<<<<<-----------
+    //       let test = []
+    //        webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/TEST", function(response) {
+    //              test = JSON.parse(response);
+    //       });
+    //      return test != "notExist" ? test : [] ;
+    // }
+
+    //  calculate channel mean, max, min, std, median, q1, q3 
+    createChannelsStatisticalData = () => {
+           let groupData = []; 
+           let curGroup = getSelectedGroup();
+           let numOfFrames = curGroup.Channels.length;
+           let apiUrl = getHostApi();
+           let apiKey = getApiKey(); 
+           let itemId = getSelectedItemId();
+
+           // For boxplot data file and location
+           let boxplotFileName = getGrpBoxplotFileName();
+           let boxplotFolder = getGrpBoxplotLocalPath();
 
 
-       // check if image normalize not needed with creating features, should be excluded with Channels Statistical Data also
-       if(Opts.isBoxplotChNormalizeRequired) {
-           if(! Opts.isChannelNormalizeRequired) {  //--if isChannelNormalizeRequired is false
-              Opts.isBoxplotChNormalizeRequired = "";  //-- "" is equvalent to false with flask
-           } else {
-              //-- if isChannelNormalizeRequired is true
-              //-- check again for DSA meta settings
+           // check if image normalize not needed with creating features, should be excluded with Channels Statistical Data also
+           if(Opts.isBoxplotChNormalizeRequired) {
+               if(! Opts.isChannelNormalizeRequired) {  //--if isChannelNormalizeRequired is false
+                  Opts.isBoxplotChNormalizeRequired = "";  //-- "" is equvalent to false with flask
+               } else {
+                  //-- if isChannelNormalizeRequired is true
+                  //-- check again for DSA meta settings
 
-              let metaKey = "settings";
-              // -- e.g.: {"imageNorm": false };
-              let settings = getItemMetadataKeyValue(metaKey);
+                  let metaKey = "settings";
+                  // -- e.g.: {"imageNorm": false };
+                  let settings = getItemMetadataKeyValue(metaKey);
 
-              if(settings == null) { // settings var  exists only if settings["imageNorm"] = false
-                  Opts.isBoxplotChNormalizeRequired = true;
-              } else if(settings["imageNorm"]) {
-                  Opts.isBoxplotChNormalizeRequired = true;
-              } else {
-                  Opts.isBoxplotChNormalizeRequired = "";
-              }             
+                  if(settings == null) { // settings var  exists only if settings["imageNorm"] = false
+                      Opts.isBoxplotChNormalizeRequired = true;
+                  } else if(settings["imageNorm"]) {
+                      Opts.isBoxplotChNormalizeRequired = true;
+                  } else {
+                      Opts.isBoxplotChNormalizeRequired = "";
+                  }             
+
+               }
 
            }
 
-       }
+           let boxplotData = [];
 
-       let boxplotData = [];
+           for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
+              groupData.push({ "OSDLayer": k, "frameName": curGroup.Channels[k], "frameNum": curGroup.Numbers[k]});
+           }
+         
+           webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createChannelsStatisticalData","baseUrl=" + apiUrl + 
+            "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) + 
+            "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + "&isChannelNormalizeRequired=" + Opts.isBoxplotChNormalizeRequired + 
+            "&boxplot_file=" + boxplotFileName + "&boxplot_folder=" + boxplotFolder, function(response) {
 
-       for(let k = 0; k < numOfFrames; k++) {  //top frame has k = numOfFrames-1
-          groupData.push({ "OSDLayer": k, "frameName": curGroup.Channels[k], "frameNum": curGroup.Numbers[k]});
-       }
-     
-       webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort +  "/createChannelsStatisticalData","baseUrl=" + apiUrl + 
-        "&apiKey=" + apiKey + "&itemId=" + itemId + "&grp_data=" + JSON.stringify(groupData) + 
-        "&neglect_zero=" + Opts.boxplotForAboveZeroPixels + "&isChannelNormalizeRequired=" + Opts.isBoxplotChNormalizeRequired + 
-        "&boxplot_file=" + boxplotFileName + "&boxplot_folder=" + boxplotFolder, function(response) {
+                 boxplotData = JSON.parse(response);
+          });
 
-             boxplotData = JSON.parse(response);
-      });
+        // boxplot sample data e.g. {Frame: 'CD45',   OSDLayer: 0,   channelNum: 22,   max: 255.0,   mean: 5.174311939678205, 
+        //                           median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}
 
-    // boxplot sample data e.g. {Frame: 'CD45',   OSDLayer: 0,   channelNum: 22,   max: 255.0,   mean: 5.174311939678205, 
-    //                           median: 3.0,   min: 0.0, q1: 1.0,   q3: 8.0,   std: 5.5190755543079115}
+         return boxplotData;
 
-     return boxplotData;
-
-}
+    }
 
 
 
@@ -12981,6 +13384,14 @@ initBoundariesFeatures = () => {
         let re = new RegExp('.{1,' + size + '}', 'g');
         return string.match(re);
   }  
+
+  /**
+   * For future use..
+   * 
+   * @function
+   * @todo Write the doc.
+   * @todo Implement this function.
+   */ 
 
   estimateFeaturesCreationTime = () => {
     // For future use
