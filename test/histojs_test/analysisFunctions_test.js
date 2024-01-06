@@ -156,10 +156,4 @@ describe("Main Analysis Functions", function () {
     });
   });  
 
-  // describe('#isValidFeaturesData()', function () {
-  //   it('return if features data size is equal total cell num', function () {
-  //      expect( isValidFeaturesData([]) ).to.be.false;
-  //   });
-  // });         
-
 });  
