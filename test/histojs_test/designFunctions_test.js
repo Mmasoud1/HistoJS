@@ -95,7 +95,6 @@ describe("Main Design Phase Functions", function () {
     });
   });
 
-
   describe('#isLetter()', function () {
     it('return true or false  ', function () {
        expect( isLetter("A") ).to.be.true;
@@ -116,7 +115,6 @@ describe("Main Design Phase Functions", function () {
     });
   }); 
 
-
   describe('#getArrayKeyValues()', function () {
     it('return array of objects key values ', function () {
        expect(getArrayKeyValues([{ color: "FFFFFF", contrast_Max: 35000},
@@ -125,12 +123,96 @@ describe("Main Design Phase Functions", function () {
     });
   });    
 
-
  describe('#getNewGrpPath()', function () {
     it('return new group of channels path', function () {
        expect(getNewGrpPath([{ channel_name: "DNA 1", channel_number: 0},
                                   {channel_name: "A488 background", channel_number: 0}])
              ).to.be.a("string");
+    });
+  }); 
+
+ describe('#getScreenCenter()', function () {
+    it('return screen center', function () {
+       expect( getScreenCenter() ).to.be.an("array");
+    });
+  }); 
+
+ describe('#isJsES6VerSupported()', function () {
+    it('return if ES6 supported', function () {
+       expect( isJsES6VerSupported() ).to.be.a("boolean");
+    });
+  });  
+
+ describe('#getScreenWidth()', function () {
+    it('return screen width', function () {
+       expect( getScreenWidth() ).to.be.a("number");
+    });
+  }); 
+
+ describe('#getScreenHeight()', function () {
+    it('return screen height', function () {
+       expect( getScreenHeight() ).to.be.a("number");
+    });
+  }); 
+
+ describe('#getScreenWidthRatio()', function () {
+    it('return screen width ratio', function () {
+       expect( getScreenWidthRatio() ).to.be.a("number");
+    });
+  }); 
+
+ describe('#getScreenHeightRatio()', function () {
+    it('return screen height ratio', function () {
+       expect( getScreenHeightRatio() ).to.be.a("number");
+    });
+  });     
+
+
+ describe('#getH()', function () {
+    it('return screen height ratio', function () {
+       expect( getH(1) ).to.be.a("number");
+    });
+  });
+
+ describe('#getW()', function () {
+    it('return screen width ratio', function () {
+       expect( getW(1) ).to.be.a("number");
+    });
+  });
+
+ describe('#getVW()', function () {
+    it('return screen width in vw ', function () {
+       expect( getVW(1) ).to.be.a("number");
+    });
+  }); 
+
+ describe('#isScreenLogoActiveOnScreen()', function () {
+    it('return if Screen Logo is active', function () {
+       expect( isScreenLogoActiveOnScreen() ).to.be.a("boolean");
+    });
+  }); 
+
+ describe('#isHostAvailable()', function () {
+    it('return if DSA Host server is available', function () {
+       expect( isHostAvailable("https://styx.neurology.emory.edu/girder/api/v1/")  ).to.be.a("boolean");
+    });
+  }); 
+
+ describe('#getRgbObject()', function () {
+    it('return rgb object from rgb string', function () {
+       expect( getRgbObject( "rgb(255,0,0)" ) ).to.be.eql({ r: 255, g: 0, b: 0 });
+    });
+  }); 
+
+ describe('#getHslObject()', function () {
+    it('return hsl object from hsl string', function () {
+       expect( getHslObject( "hsl(180,100%,50%)" )).to.be.eql({ h: 180, s: 100, l: 50 });
+    });
+  }); 
+
+ describe('#rgbObj2Str()', function () {
+    it('return rgb object as string', function () {
+       expect( rgbObj2Str( { r: 255, g: 0, b: 0 } ) ).to.be.eql("rgb(255,0,0)");
     });
   }); 
 

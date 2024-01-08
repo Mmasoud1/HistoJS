@@ -3309,10 +3309,10 @@ cellPhenotypes = (callback) => {
 */   
 
 createCellPhenotypesColorsArray = (numOfValidPhenotypes) => {
-    let colorStep=Math.floor(360/numOfValidPhenotypes); // 360 is HSL max hue
-    let saturation=100;
-    let lightness=50;
-    let initHue=0;
+    let colorStep = Math.floor(360 / numOfValidPhenotypes); // 360 is HSL max hue
+    let saturation = 100;
+    let lightness = 50;
+    let initHue = 0;
     let phenotypesColorsArray = [];
     for(let n = 0; n < numOfValidPhenotypes; n++){
         let phenotypeColorRgb = HSLToRGB(n * colorStep, saturation, lightness);
