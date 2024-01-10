@@ -6142,9 +6142,9 @@
    * @memberof HistoJS
    * @since 1.0.0
    * @version 1.0.0 
-   * @param {object} sourceParams
-   * @param {string} hostApi   
-   * @returns {promise}
+   * @param {object} sourceParams - e.g. { username: "someName" ,  password: "somePass" }
+   * @param {string} hostApi - e.g. "https://styx.neurology.emory.edu/girder/api/v1/" 
+   * @returns {object}  e.g. { promise: {…}, .... }
    */ 
 
   dsaLogin = (sourceParams, hostApi) => {
@@ -6189,6 +6189,15 @@
         });
   }
 
+    /**
+   * Event fires on before Ajax
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @todo complete
+   */   
+
   webix.attachEvent("onBeforeAjax", (mode, url, data, request, headers, files, promise) => {
       let toSearchInUrl = "cdn.webix.com";
       let searchedInUrl = url.search(toSearchInUrl);
@@ -6198,10 +6207,30 @@
       }
   });                                            
 
+  /**
+   * Set token into URL
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} token  e.g. "3lQyO1b5R8XQg8TiCBtsTzCuP75SVZfl5ZkOeGb6xZPqaug9dF8bG6LUmE0Xa7VT"
+   * @param {string} symbol  e.g. "?"
+   * @returns {string}  e.g. "?token=3lQyO1b5R8XQg8TiCBtsTzCuP75SVZfl5ZkOeGb6xZPqaug9dF8bG6LUmE0Xa7VT"
+   */   
+
    setTokenIntoUrl = (token, symbol) => {
        return token ? `${symbol}token=${token}` : "";
    }
 
+  /**
+   * Login to DSA server
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object}  params e.g. { username: "someName" ,  password: "somePass" };
+   * @returns {object}  e.g. { promise: {…}, .... }
+   */  
    login = (params) => {
         let hostApi = getHostApi();
 
@@ -6213,6 +6242,13 @@
         });
   }
 
+  /**
+   * Logout DSA host
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */  
   logout = () => {
      dsaLogout().then(() => {
       webix.storage.local.remove(`${"user" + "-"}${getHostIndex()}`);
@@ -6220,6 +6256,14 @@
     });
   }
 
+  /**
+   * Get token  
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "3lQyO1b5R8XQg8TiCBtsTzCuP75SVZfl5ZkOeGb6xZPqaug9dF8bG6LUmE0Xa7VT"
+   */  
   getToken = () => {
     const authToken = webix.storage.local.get(`${"authToken" + "-"}${getHostIndex()}`);
 
@@ -6230,29 +6274,66 @@
     return authToken.token;
   }
 
+  /**
+   * Get User info
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {object} e.g. bject { _accessLevel: 2, _id: "5d9fd4e87bc2409bd20a359f", _modelType: "user", admin: true, 
+   *                                 created: "2019-10-11T01:03:36.067000+00:00", email: "mmasoud2@outlook.com", 
+   *                                 emailVerified: false, firstName: "Mohamed", groupInvites: [], groups: [], … }
+   */  
 
-  getUserInfo = () => {
-    return webix.storage.local.get(`${"user" + "-"}${getHostIndex()}`);
-  }
+    getUserInfo = () => {
+      return webix.storage.local.get(`${"user" + "-"}${getHostIndex()}`);
+    }
 
-  getUserId = () => {
-    let userInfo = getUserInfo();
-    return userInfo ? userInfo._id : null;
-  }
+  /**
+   * Get User id
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string} e.g. "5d9fd4e87bc2409bd20a359f"
+   */  
 
-  isLoggedIn = () => {
-    return getToken() && getUserInfo() ? true : false;
-  } 
+    getUserId = () => {
+      let userInfo = getUserInfo();
+      return userInfo ? userInfo._id : null;
+    }
+
+  /**
+   * Check if login to DSA host server
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}
+   */  
+
+   isLoggedIn = () => {
+     return getToken() && getUserInfo() ? true : false;
+   } 
   
+  /**
+   * Remove host credentials
+   *    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {number} hostIndex
+   * @param {string} hostApi
+   */  
 
-  removeHostCredentials = (hostIndex, hostApi) => {
-     webix.ajax().del(hostApi + `/user/authentication`)
-        .catch(parseError)
-        .then( result => {});
+   removeHostCredentials = (hostIndex, hostApi) => {
+      webix.ajax().del(hostApi + `/user/authentication`)
+         .catch(parseError)
+         .then( result => {});
 
-      webix.storage.local.remove(`${"user" + "-"}${hostIndex}`);
-      webix.storage.local.remove(`${"authToken" + "-"}${hostIndex}`);
-  } 
+       webix.storage.local.remove(`${"user" + "-"}${hostIndex}`);
+       webix.storage.local.remove(`${"authToken" + "-"}${hostIndex}`);
+   } 
 
 //----------------- Get-Set Host functions  -----------------------------//
 

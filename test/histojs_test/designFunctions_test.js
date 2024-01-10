@@ -277,4 +277,28 @@ describe("Main Design Phase Functions", function () {
     });
   }); 
 
+ describe('#setTokenIntoUrl()', function () {
+    it('return token into URL', function () {
+       expect( setTokenIntoUrl("ZPqaug9dF8bG6LUmE0Xa7VT", "?") ).to.be.eql("?token=ZPqaug9dF8bG6LUmE0Xa7VT");
+    });
+  }); 
+
+ describe('#getToken()', function () {
+    it('return token', function () {
+       expect( getToken() ).to.be.oneOf(["string", null]);
+    });
+  }); 
+
+ describe('#getUserId()', function () {
+    it('return user id on DSA', function () {
+       expect( getUserId() ).to.be.oneOf(["string", null]);
+    });
+  }); 
+
+ describe('#isLoggedIn()', function () {
+    it('return if login to DSA host', function () {
+       expect( isLoggedIn() ).to.be.oneOf([true, false]);
+    });
+  });         
+
 });
