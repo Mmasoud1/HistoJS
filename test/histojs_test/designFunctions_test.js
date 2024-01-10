@@ -216,5 +216,65 @@ describe("Main Design Phase Functions", function () {
     });
   }); 
 
+ describe('#createContrastMaxArray()', function () {
+    it('return contrast max array', function () {
+       expect( createContrastMaxArray( ["FFFFFF", "FF0000", "0000FF"] ) ).to.be.eql( [35000, 25000, 60000] );
+    });
+  }); 
+
+ describe('#createContrastMinArray()', function () {
+    it('return contrast min array', function () {
+       expect( createContrastMinArray( ["FFFFFF", "FF0000", "0000FF"] ) ).to.be.eql( [500, 1000, 500] );
+    });
+  }); 
+
+ describe('#mapColorSimilarity()', function () {
+    it('return nearest similar color', function () {
+       expect( mapColorSimilarity("FF0000") ).to.be.eql( {color: "FF0000", contrast_Max: 25000, contrast_Min: 1000} );
+    });
+  }); 
+
+ describe('#rgbColorsDist()', function () {
+    it('return rgb colors distance', function () {
+       expect( rgbColorsDist( {r: 255, g: 0, b: 0}, {r: 127, g: 0, b: 0}) ).to.be.eql(128);
+    });
+  }); 
+
+ describe('#createGrpColorsArray()', function () {
+    it('return group colors array', function () {
+       expect( createGrpColorsArray(4) ).to.be.eql(["ff0000", "80ff00", "00ffff", "8000ff"]);
+    });
+  });  
+
+ describe('#getItemRootName()', function () {
+    it('return item root name', function () {
+       expect( getItemRootName("LUNG-3-PR_40X")).to.be.eql("LUNG");
+    });
+  }); 
+
+
+ describe('#optionsListDefaultValues()', function () {
+    it('return options list default values', function () {
+       expect( optionsListDefaultValues() ).to.be.eql([{ optionId: "optionId.AutoLogin", optionValue: true }]);
+    });
+  }); 
+
+ describe('#fetchCachedOptionsList()', function () {
+    it('return Options list from local storage variable', function () {
+       expect( fetchCachedOptionsList() ).to.be.eql([{ optionId: "optionId.AutoLogin", optionValue: true }]);
+    });
+  }); 
+
+ describe('#interfaceListDefaultValues()', function () {
+    it('return Interface list default values', function () {
+       expect( interfaceListDefaultValues() ).to.be.an("array");
+    });
+  }); 
+
+ describe('#isItemSelected()', function () {
+    it('return if item selected', function () {
+       expect( isItemSelected() ).to.be.a("boolean");
+    });
+  }); 
 
 });

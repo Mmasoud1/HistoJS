@@ -608,7 +608,7 @@
     */    
 
     enforcedTriggerHint = ( hintMessage = "", messageType = 'info') => { 
-       var defer = $.Deferred();
+       let defer = $.Deferred();
 
        switch(messageType) {
           case 'info':
@@ -939,7 +939,7 @@
     */ 
 
     showScreenLogo = () => {
-        screenLogoElem =  document.getElementById("screenLogo");
+        let screenLogoElem =  document.getElementById("screenLogo");
         screenLogoElem.className = "screen-logo";
         screenLogoElem.style.display = 'block';
     }
@@ -984,7 +984,7 @@
     *
     */ 
     removeScreenLogo = () => {
-        screenLogoElem =  document.getElementById("screenLogo");
+        let screenLogoElem =  document.getElementById("screenLogo");
 
         if(screenLogoElem) { // if it is not removed before 
            screenLogoElem.parentNode.removeChild(screenLogo);
@@ -1019,7 +1019,7 @@
     */      
 
     viewerZoomIn = () => {
-         var zoomValue = viewer.viewport.getZoom();
+         let zoomValue = viewer.viewport.getZoom();
 
          if((zoomValue*2) < viewer.viewport.getMaxZoom()) {
             viewerZoomTo(zoomValue * 2);
@@ -1039,7 +1039,7 @@
     */     
 
     viewerZoomOut = () => {
-         var zoomValue = viewer.viewport.getZoom();
+         let zoomValue = viewer.viewport.getZoom();
 
          if((zoomValue / 2) > viewer.viewport.getMinZoom() ) {
             viewerZoomTo(zoomValue / 2);
@@ -1077,7 +1077,7 @@
     */ 
 
     initialZoom = () => {
-         var zoomValue = viewer.viewport.getHomeZoom();
+         let zoomValue = viewer.viewport.getHomeZoom();
 
          if( (zoomValue * 2) < viewer.viewport.getMaxZoom() ) {
             viewerZoomTo( zoomValue * 2 );
@@ -1137,8 +1137,8 @@
     *
     */ 
     goToRemoteItem = () => {
-        var hostUrl = getHostUrl();
-        var item = getSelectedItem();
+        let hostUrl = getHostUrl();
+        let item = getSelectedItem();
         window.open(hostUrl + "/#item/" + item._id); 
     }
 
@@ -1157,7 +1157,7 @@
         if( !getActiveForm() ) {
             if(tempSceneSelections.length) {
               document.getElementById("grpName").value  = suggestNewGrplabel(tempSceneSelections); 
-              var grpForm = document.getElementById("grpLabelForm");
+              let grpForm = document.getElementById("grpLabelForm");
               grpForm.classList.remove("formflashanimation");
               grpForm.style.display = "block";
               getElementCenterOnScreen(grpForm);
@@ -1262,12 +1262,12 @@
    */   
 
    refineGrpChName = (channelName) => {
-      var refinedLabel = channelName;
+      let refinedLabel = channelName;
 
       if(channelName.includes(" ")) {
           if(channelName.split(" ")[1].length > 2) {
             if (!channelName.split(" ")[1].slice(0,1).match(/\d+/g)) { //Is first char after white space not integer
-                   var secondLabel = channelName.split(" ")[1].slice(0,2)  // secondLabel is the label after the space
+                   let secondLabel = channelName.split(" ")[1].slice(0,2)  // secondLabel is the label after the space
                    refinedLabel = channelName.split(" ")[0] + " " + secondLabel;
             }
           }
@@ -1296,9 +1296,9 @@
    */
 
     suggestNewGrplabel = (selectedChannels) => {
-        var grplabel = "";
+        let grplabel = "";
 
-        for (var index = 0; index < selectedChannels.length; index++)
+        for (let index = 0; index < selectedChannels.length; index++)
           {
              if( (grplabel.length + refineGrpChName(selectedChannels[index].channel_name).length )< currentItemInfo.maxGroupLabelLen) {
                  grplabel = grplabel + refineGrpChName(selectedChannels[index].channel_name);
@@ -1370,6 +1370,8 @@
 
    /**
    * Add new group of channels to right panel of the design UI. 
+   * tempSceneSelections is array of objects of selected channels of the new group
+   * tempSceneSelections e.g. [{ channel_name: "DAPI", channel_number: 0 }, { channel_name: "DAPI5", channel_number: 16 }]
    *
    * @function    
    * @memberof HistoJS
@@ -1380,11 +1382,11 @@
     addNewGrpBtn = () => {
         if( document.getElementById("grpName").value != "") {
             document.getElementById("grpLabelForm").style.display = "none";
-            let grpEntryColorArray = tempSceneSelections.length<=colorContrastMap.length? getArrayKeyValues(colorContrastMap, "color").splice(0, tempSceneSelections.length ) : createGrpColorsArray(tempSceneSelections.length);
+            let grpEntryColorArray = tempSceneSelections.length <= colorContrastMap.length ? getArrayKeyValues(colorContrastMap, "color").splice(0, tempSceneSelections.length ) : createGrpColorsArray(tempSceneSelections.length);
 
-            let grpEntryContrastMax = tempSceneSelections.length<=colorContrastMap.length? getArrayKeyValues(colorContrastMap, "contrast_Max").splice(0, tempSceneSelections.length ) : createContrastMaxArray(grpEntryColorArray);
+            let grpEntryContrastMax = tempSceneSelections.length <= colorContrastMap.length ? getArrayKeyValues(colorContrastMap, "contrast_Max").splice(0, tempSceneSelections.length ) : createContrastMaxArray(grpEntryColorArray);
 
-            let grpEntryContrastMin = tempSceneSelections.length<=colorContrastMap.length? getArrayKeyValues(colorContrastMap, "contrast_Min").splice(0, tempSceneSelections.length ) : createContrastMinArray(grpEntryColorArray) ;
+            let grpEntryContrastMin = tempSceneSelections.length <= colorContrastMap.length ? getArrayKeyValues(colorContrastMap, "contrast_Min").splice(0, tempSceneSelections.length ) : createContrastMinArray(grpEntryColorArray) ;
        
             let grpEntryMaxContrastMax = Array(tempSceneSelections.length).fill( document.getElementById("maxContrastRange").max );
 
@@ -2238,6 +2240,7 @@
 
    /**
    * Delete a group of channels deleted from the right group panel
+   *
    * @function    
    * @memberof HistoJS
    * @since 1.0.0
@@ -2320,7 +2323,7 @@
    */  
 
     closeGrpForm = () => {
-        var grpForm = document.getElementById("grpLabelForm");
+        let grpForm = document.getElementById("grpLabelForm");
 
         if (grpForm.style.display === "block") {
            document.getElementById("grpName").value = "";
@@ -2342,7 +2345,7 @@
 
     clearGrpBarRight = () => {
         if(!(document.getElementById("grpListViewBar").innerHTML === "")){
-             var node = document.getElementById("grpListViewBarBtn");
+             let node = document.getElementById("grpListViewBarBtn");
              document.getElementById("grpListViewBar").innerHTML = ""
              document.getElementById("grpListViewBar").append(node)
              showPanel("chColorContrastPanel", false) 
@@ -2629,7 +2632,7 @@
    */
 
     getTileSource = (hostApi, itemId) => {
-        let tile=[];
+        let tile = [];
         webix.ajax().sync().get(hostApi + "/item/" + itemId + "/tiles", (data) => {
           tile = JSON.parse(data);
           tile['maxLevel'] = tile['levels'] - 1;
@@ -2852,10 +2855,10 @@
    * @param {object} elem
    */ 
     appendEmptyNode = (elem) => {
-        var nodeUl = document.createElement("UL");
-        nodeUl.classList.add("nested")
-        var nodeLi = document.createElement("LI");
-        var textnode = document.createTextNode("Empty");
+        let nodeUl = document.createElement("UL");
+        nodeUl.classList.add("nested");
+        let nodeLi = document.createElement("LI");
+        let textnode = document.createTextNode("Empty");
         nodeLi.appendChild(textnode);
         nodeUl.appendChild(nodeLi);
         elem.appendChild(nodeUl); 
@@ -2897,21 +2900,21 @@
    * @param {object} curLiElem
    */ 
     onSelectedTreeFolder = (curLiElem) => {
-      var hostAPI = getHostApi();
-      var folderId = curLiElem.id.split('_')[1];
-      var nodes = "";
-      var folderDetails = getFolderDetails(hostAPI, folderId);   // e.g  "nFolders": 0,  "nItems": 1
+      let hostAPI = getHostApi();
+      let folderId = curLiElem.id.split('_')[1];
+      let nodes = "";
+      let folderDetails = getFolderDetails(hostAPI, folderId);   // e.g  "nFolders": 0,  "nItems": 1
 
       if((folderDetails.nItems || folderDetails.nFolders)) {     
           nodes += '<ul class="nested">';
 
           if(folderDetails.nFolders) {
-              var subFoldersList = getFoldersList(hostAPI, folderId, parentType = "folder");
+              let subFoldersList = getFoldersList(hostAPI, folderId, parentType = "folder");
               nodes += createTreeByBranchClick(subFoldersList);  // Recursive call till finish all subfolders within the parent folder/collection. 
           }
 
           if(folderDetails.nItems) {
-              var subItemsList = getFolderItemsList(hostAPI, folderId);
+              let subItemsList = getFolderItemsList(hostAPI, folderId);
               nodes += createTreeByBranchClick(subItemsList);  
           }
 
@@ -3045,16 +3048,16 @@
 
     renderTreeView = (collectionIndex) => {
           //-- change tree top label --//
-          var collectList = currentHostCollectSelectionStates.collectionList;
-          var collectionName = collectList[collectionIndex].name;
+          let collectList = currentHostCollectSelectionStates.collectionList;
+          let collectionName = collectList[collectionIndex].name;
 
           if(!Opts.creatItemTreeByBranch) {
              document.getElementById("collectionTreeName").innerHTML = '<i style="font-size:1.4vw"  class="w3-xxlarge w3-spin fa fa-refresh" ></i> '+ '&nbsp&nbsp' + collectionName;
            }
 
           //-- Render the tree -- //
-          var collectionFolders = currentHostCollectSelectionStates.foldersList;
-          var nodes = "";
+          let collectionFolders = currentHostCollectSelectionStates.foldersList;
+          let nodes = "";
 
           if(Opts.creatItemTreeByBranch) {
              nodes = createTreeByBranchClick(collectionFolders);
@@ -3164,10 +3167,10 @@
       lastHostCollectSelectionStates.hostChanged = false;
 
 
-      var collectList = currentHostCollectSelectionStates.collectionList;
-      var hostAPI = getHostApi();
-      var collectionId = collectList[collectionIndex]._id;
-      var collectionFolders = getFoldersList(hostAPI, collectionId)
+      let collectList = currentHostCollectSelectionStates.collectionList;
+      let hostAPI = getHostApi();
+      let collectionId = collectList[collectionIndex]._id;
+      let collectionFolders = getFoldersList(hostAPI, collectionId)
       currentHostCollectSelectionStates.foldersList = collectionFolders
       resetLastTreeItemSelection()
       renderTreeView(collectionIndex)
@@ -3214,7 +3217,7 @@
     onSelectedHost = (hostIndex) => {
           let curHostObjEntry = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString());
           setHostObjEntry(curHostObjEntry); // save current selected host info to currentHostCollectSelectionStates.hostObject
-          var hostAPI = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
+          let hostAPI = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
           setHostIndex(hostIndex);  
           if(lastHostCollectSelectionStates.hostIndex != hostIndex){
             if(lastHostCollectSelectionStates.hostIndex != null){
@@ -3254,8 +3257,8 @@
     * @example
     * 
     * getRgbObject( "rgb(255,0,0)" )
-    * => { r: 255, g: 0, b: 0 }
     *
+    * => { r: 255, g: 0, b: 0 }
     */ 
     getRgbObject = (rgbString) => {
          let RGB = {};
@@ -3279,7 +3282,7 @@
 
   
     /**
-    * To get hsl values  
+    * Convert hsl string to hsl object
     *
     * @since 1.0.0
     * @param {string} hslString- The hsl string.
@@ -3287,13 +3290,14 @@
     * @example
     * 
     * getHslObject( "hsl(180,100%,50%)" )
-    * => Object { h: 180, s: 100, l: 50 }
     *
-    */     
+    * => Object { h: 180, s: 100, l: 50 }
+    */ 
+
     getHslObject = (hslString) => {   // hsl is a string such that :  "hsl(180,100%,50%)"
         let HslObj = {};
         hslArray = hslString.replace(/[^\d,]/g, '').split(',');
-        // hslArray= [ "180", "100", "50" ]
+        //-- hslArray= [ "180", "100", "50" ]
         let hslKeys = ["h","s","l"];
 
         HslObj = hslKeys.reduce((obj, key, index) => ({ ...obj, [key]:parseInt(hslArray[index]) }), {});
@@ -3311,8 +3315,8 @@
     * @example
     * 
     * rgbObj2Str( { r: 255, g: 0, b: 0 } )
-    * => "rgb(255,0,0)"
     *
+    * => "rgb(255,0,0)"
     */  
 
     rgbObj2Str = (RGB) => {
@@ -3320,20 +3324,53 @@
     }
 
 
+   /**
+   * Create contrast max array
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Array} grpColorArray  e.g. Array(3) ["FFFFFF", "FF0000", "0000FF"]
+   * @returns {Array}
+   * @example
+   *
+   * createContrastMaxArray( ["FFFFFF", "FF0000", "0000FF"] )
+   *
+   * => Array(3) [35000, 25000, 60000]
+   */
+
     createContrastMaxArray = (grpColorArray) => {
-        var contastMaxArray = [];
-        grpColorArray.forEach( clr =>{ 
-            var similarColorEntry = mapColorSimilarity(clr);
+        let contastMaxArray = [];
+
+        grpColorArray.forEach( clr => { 
+            let similarColorEntry = mapColorSimilarity(clr);
             contastMaxArray.push(similarColorEntry.contrast_Max);
         });
 
         return contastMaxArray;
     }
 
+   /**
+   * Create contrast min array
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Array} grpColorArray  e.g. Array(3) ["FFFFFF", "FF0000", "0000FF"]
+   * @returns {Array}
+   * @example
+   *
+   * createContrastMinArray( ["FFFFFF", "FF0000", "0000FF"] )
+   *
+   * => Array(3) [500, 1000, 500]
+   */
+
     createContrastMinArray = (grpColorArray) => {
-        var contastMinArray = [];
-        grpColorArray.forEach( clr =>{ 
-            var similarColorEntry = mapColorSimilarity(clr);
+        let contastMinArray = [];
+        grpColorArray.forEach( clr => { 
+            let similarColorEntry = mapColorSimilarity(clr);
             contastMinArray.push(similarColorEntry.contrast_Min);
         });
 
@@ -3341,45 +3378,110 @@
     }
 
 
-    mapColorSimilarity = (curChColor) => { // Use this function to find closed color to current auto colored channel from colorContrastMap
-        var similarity = Infinity;
-        var similarColorIndex;
-        var curChColorRgb = hexToRgb(curChColor);  
+   /**
+   * Use this function to find closed color to current auto colored channel from colorContrastMap
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} curChColor  e.g. "FF0000"
+   * @returns {object}
+   * @example
+   *
+   * mapColorSimilarity("FF0000")
+   *
+   * =>  Object { color: "FF0000", contrast_Max: 25000, contrast_Min: 1000 }
+   */
+
+    mapColorSimilarity = (curChColor) => { 
+        let similarity = Infinity;
+        let similarColorIndex;
+        let curChColorRgb = hexToRgb(curChColor);  
+
         colorContrastMap.forEach( (entry, index) => { 
-            var colorMapRgb = hexToRgb(entry.color);
-            var dist = rgbColorsDist(curChColorRgb, colorMapRgb);
+            let colorMapRgb = hexToRgb(entry.color);
+            let dist = rgbColorsDist(curChColorRgb, colorMapRgb);
 
             if(similarity > dist) { 
                  similarity = dist;
                  similarColorIndex = index;
-              }
+            }
         });
 
         return colorContrastMap[similarColorIndex]
     }
 
+   /**
+   * Get the distance between two rgb colors
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} rgb1  e.g. {r: 255, g: 0, b: 0}
+   * @param {object} rgb2  e.g. {r: 127, g: 0, b: 127}   
+   * @returns {number}
+   * @example
+   *
+   * rgbColorsDist( {r: 255, g: 0, b: 0}, {r: 127, g: 0, b: 0})
+   *
+   * =>  128 
+   */
+
     rgbColorsDist = (rgb1, rgb2) => {
-       var dist = Math.sqrt(Math.pow(rgb1.r - rgb2.r, 2) + Math.pow(rgb1.g - rgb2.g, 2) + Math.pow(rgb1.b - rgb2.b, 2));
+       let dist = Math.sqrt(Math.pow(rgb1.r - rgb2.r, 2) + Math.pow(rgb1.g - rgb2.g, 2) + Math.pow(rgb1.b - rgb2.b, 2));
        return dist;
      
     }
 
+
+   /**
+   * Creat group colors array
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {number} numOfFrames 
+   * @returns {Array}
+   * @example
+   *
+   * createGrpColorsArray(4)
+   *
+   * =>   Array(4) ["ff0000", "80ff00", "00ffff", "8000ff"]
+   */
+
     createGrpColorsArray = (numOfFrames) => {
-        var colorStep=Math.floor(360/numOfFrames); // 360 is HSL max hue
-        var saturation=100;
-        var lightness=50;
-        var initHue=0;
-        var colorsArray = [];
+        let colorStep = Math.floor(360 / numOfFrames); // 360 is HSL max hue
+        let saturation = 100;
+        let lightness = 50;
+        let initHue = 0;
+        let colorsArray = [];
         for(let n = 0; n < numOfFrames; n++){
-            var frameColorRgb = HSLToRGB(n * colorStep, saturation, lightness);
-            colorsArray.push(RGBtoHEX(frameColorRgb));
+            let frameColorRgb = HSLToRGB(n * colorStep, saturation, lightness);
+            colorsArray.push( RGBtoHEX(frameColorRgb) );
         }
 
         return colorsArray;
     }
 
-    // compositeFlag = false, shows layers without composite
-    reloadOSD = (curGroup, compositeFlag = true, compositeType = Opts.defaultCompositeOperation) => {
+
+   /**
+   * Reload OSD channels
+   * compositeFlag = false, shows layers without composite
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} curGroup e.g. Object { Channels: (3) […], Colors: (3) […], Contrast_Max: (3) […], Contrast_Min: (3) […], Format: "jpg", 
+   *                        Max_Contrast_Max: (3) […], Max_Contrast_Min: (3) […], Name: "PD1+/CD45+/CD68", Numbers: (3) […], Path: "15___PD1---22___CD45---26___CD68" }
+   * @param {bool} compositeFlag 
+   * @param {string} compositeType - e.g. "lighter"      
+   */   
+
+    reloadOSD = ( curGroup, compositeFlag = true, compositeType = Opts.defaultCompositeOperation ) => {
         let hostAPI = getHostApi();
         let item = getSelectedItem();
         let counter = 1;
@@ -3393,15 +3495,16 @@
           let frameNum = curGroup.Numbers[k];
           let palette1 = "rgb(0,0,0)";
           let palette2 = rgbObj2Str( hexToRgb(curGroup.Colors[k]) );
+
           //Check if the default of min/max are set... also want to add a dynamic widget here
           if (curGroup.Contrast_Min[k]) {
                min = curGroup.Contrast_Min[k];
           }
-          // else { var min = 500; }
+          //-- else { var min = 500; }
           if (curGroup.Contrast_Max[k]) {
                max = curGroup.Contrast_Max[k];
           }
-          // else { max = 30000; }
+          //-- else { max = 30000; }
           viewer.addTiledImage({
             tileSource: getOMETileSourceColored( hostAPI, item._id, frameNum, palette1, palette2, min, max),
             opacity: 1,
@@ -3419,6 +3522,18 @@
     }
 
 
+   /**
+   * composite OSD channels
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} curGroup e.g. Object { Channels: (3) […], Colors: (3) […], Contrast_Max: (3) […], Contrast_Min: (3) […], Format: "jpg", 
+   *                        Max_Contrast_Max: (3) […], Max_Contrast_Min: (3) […], Name: "PD1+/CD45+/CD68", Numbers: (3) […], Path: "15___PD1---22___CD45---26___CD68" }
+   * @param {string} compositeType - e.g. "lighter"      
+   */   
+
     compositeFrames = (curGroup, compositeType) => {
         let numOfFrames = curGroup.Channels.length;
         let topFrameIndex = numOfFrames - 1;
@@ -3434,16 +3549,27 @@
         }
     }
 
-  ///////////////////////////////////////////////
- //------- Host and Collection initialion ----//
-///////////////////////////////////////////////
+      ///////////////////////////////////////////////
+     //------- Host and Collection initialion ----//
+    ///////////////////////////////////////////////
+
+   /**
+   * Init collections list
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} hostAPI
+   * @param {number} hostIndex
+   */      
 
     initCollectionsList = (hostAPI, hostIndex) => { 
-        var nodes="";
-        document.getElementById("collectionsTitle").innerHTML="Collections:";    
-        var collectList = getCollectionsList(hostAPI);
+        let nodes = "";
+        document.getElementById("collectionsTitle").innerHTML = "Collections:";    
+        let collectList = getCollectionsList(hostAPI);
         currentHostCollectSelectionStates.collectionList = collectList;
-        document.getElementById("collectionsList").innerHTML=""; 
+        document.getElementById("collectionsList").innerHTML = ""; 
 
         collectList.forEach( (collection, idx) => { 
            nodes +=  '<li style="background-color: none" id="colLi'+ hostIndex +'-'+ idx +'">';
@@ -3456,6 +3582,17 @@
         document.getElementById("collectionsList").innerHTML += nodes;
     } 
 
+
+   /**
+   * Init Host list on the right panel
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} hostAPI
+   * @param {number} hostIndex
+   */ 
 
     initHostList = () => { 
         let nodes = "";
@@ -3474,21 +3611,30 @@
         document.getElementById("hostsList").innerHTML += nodes;
     }  
 
-  //////////////////////////////////// 
- //------- Channel  initiation ----//
-////////////////////////////////////
+      //////////////////////////////////// 
+     //------- Channel  initiation ----//
+    ////////////////////////////////////
 
+   /**
+   * Event fires on channel checkbox click during creating groups
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {number} channelIndex
+   */ 
 
     onChannelCheckboxClick = (channelIndex) => {
        let item =  getSelectedItem();
-       var omeSceneDescription = item.meta.omeSceneDescription;
-       console.log("channel index :", channelIndex);
+       let omeSceneDescription = item.meta.omeSceneDescription;
+       // console.log("channel index :", channelIndex);
        let channelEntry = findObjectByKeyValue(omeSceneDescription, 'channel_number', channelIndex)
        if(!tempSceneSelections.length) {
              tempSceneSelections.push( channelEntry);
              document.getElementById("ChannelCheckboxId"+channelIndex).innerHTML = '<i class="fa fa-check-square" >&nbsp&nbsp</i>';
        } else {
-            var checkExistRecord = findObjectByKeyValue(tempSceneSelections, 'channel_number', channelIndex);
+            let checkExistRecord = findObjectByKeyValue(tempSceneSelections, 'channel_number', channelIndex);
 
             if(checkExistRecord) {
               // if exist and clicked --> remove 
@@ -3504,10 +3650,29 @@
     }
 
 
-     // e.g.:  https://styx.neurology.emory.edu/girder/api/v1/item/617866014874d4ffdf714700/tiles/zxy/0/0/0?edge=crop&frame=1&style={"min":1,"max":100,"palette":["rgb(0,0,0)","rgb(204,240,0)"]}
-    getOMETileSourceColored = (hostApi, _id, frame, palette1="rgb(0,0,0)", palette2="rgb(204,240,0)", min=100, max=65000) => {
+   /**
+   * Get OME tile source colored
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} hostAPI - e.g. "https://styx.neurology.emory.edu/girder/api/v1"
+   * @param {string} _id - e.g. "617866014874d4ffdf714700"
+   * @param {number} frame - e.g. 1
+   * @param {string} palette1 - e.g.  "rgb(0,0,0)"
+   * @param {string} palette2 - e.g.  "rgb(204,240,0)" 
+   * @param {number} min - e.g. 100
+   * @param {number} max - e.g. 65000
+   * @returns {object}
+   *
+   * e.g.:  https://styx.neurology.emory.edu/girder/api/v1/item/617866014874d4ffdf714700/tiles/zxy/0/0/0?edge=crop&frame=1&style={"min":1,"max":100,"palette":["rgb(0,0,0)","rgb(204,240,0)"]}
+   *
+   */ 
+
+    getOMETileSourceColored = (hostApi, _id, frame, palette1 = "rgb(0,0,0)", palette2 = "rgb(204,240,0)", min = 100, max = 65000) => {
        // palette1 format is  "%23000" or "rgb(0,0,0)"
-        var tile = [];
+        let tile = [];
         webix.ajax().sync().get(hostApi + "/item/" + _id + "/tiles", (data) => {
           tile = JSON.parse(data)
           tile['maxLevel'] = tile['levels'] - 1
@@ -3523,8 +3688,28 @@
     }
 
 
+   /**
+   * Get OME tile source 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} hostAPI - e.g. "https://styx.neurology.emory.edu/girder/api/v1"
+   * @param {string} _id - e.g. "617866014874d4ffdf714700"
+   * @param {number} frame - e.g. 1
+   * @returns {object}
+   * @example   
+   *
+   * getOMETileSource("https://styx.neurology.emory.edu/girder/api/v1", "617866014874d4ffdf714700", 1)
+   *
+   * => Object { IndexRange: {…}, IndexStride: {…}, bandCount: 1, channelmap: {…}, channels: (8) […], dtype: "uint8",
+   *             frames: (8) […], levels: 7, height: 40320, maxLevel: 6, minLevel: 0, sizeX: 30720, sizeY: 40320, 
+   *             tileHeight: 1024, tileWidth: 1024, width: 30720, … }
+   */ 
+
     getOMETileSource = (hostApi, _id, frame) => {
-          var tile=[];
+          let tile = [];
           webix.ajax().sync().get(hostApi+"/item/" + _id + "/tiles", (data) => {
                 tile = JSON.parse(data)
                 tile['maxLevel'] = tile['levels'] - 1
@@ -3540,6 +3725,16 @@
      }
 
 
+   /**
+   * Event fires when channel selected
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {number} channelIndex - e.g. 1
+   */ 
+
     onSelectedChannel = (channelIndex) => {
                channelStates.currentIndex = channelIndex;  
                if(channelStates.lastIndex != channelIndex) {
@@ -3549,7 +3744,7 @@
                       document.getElementById("ChannelFont" + channelStates.lastIndex).style.color = Opts.defaultElemFontColor;  
                   }
 
-              document.getElementById("Channel"+channelIndex).style.backgroundColor= Opts.selectedElemBgColor;
+              document.getElementById("Channel"+channelIndex).style.backgroundColor = Opts.selectedElemBgColor;
               document.getElementById("ChannelFont"+channelIndex).style.color = Opts.selectedElemFontColor;
               channelStates.lastIndex = channelIndex;
 
@@ -3577,6 +3772,23 @@
           }
     } 
 
+
+   /**
+   * Get item root name
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} itemName  
+   * @returns {string}
+   * @example
+   *
+   *  getItemRootName("LUNG-3-PR_40X")
+   *
+   * => "LUNG"
+   */ 
+
     getItemRootName = (itemName) => {
          let ItemRootName = itemName.split('.')[0];
          ItemRootName = ItemRootName.split('-')[0];
@@ -3584,6 +3796,18 @@
 
          return ItemRootName;
     }
+
+
+   /**
+   * init channel list
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {Array} omeChannels - array of objects e.g. Array(44) [{channel_name: "DAPI", channel_number: 0 }, … ] 
+   * @param {string} itemName e.g. "LUNG-3-PR_40X"  extension ome.tif splitted in calling function
+   */ 
 
     initChannelList = (omeChannels, itemName) => { 
         let nodes = "";
@@ -3605,16 +3829,26 @@
     }  
 
 
-
+  //-------------------------------------------------//
   //---------- Detect Collision between divs --------//
+  //-------------------------------------------------//
 
+  /**
+   * Show bar extension
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} barId - e.g. "itemTreeViewBar"
+   */ 
 
   showBarExtension = (barId) => {
       let nodes = "";
       let panelId = barId.split("Bar")[0]; 
       let btnId = barId + "Btn";
-      nodes += '<a href="javascript:void(0)" style ="font-size: 1.2vw; outline: none" id='+btnId+ ' onclick="togglePanel('+panelId+')"> <i class="fa fa-chevron-circle-left" aria-hidden="true"></i></a> '      
 
+      nodes += '<a href="javascript:void(0)" style ="font-size: 1.2vw; outline: none" id='+btnId+ ' onclick="togglePanel('+panelId+')"> <i class="fa fa-chevron-circle-left" aria-hidden="true"></i></a> '      
 
       nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="viewerZoomHome()"><i class="fa fa-home"></i></a>'
       nodes += '<a href="javascript:void(0)" style ="outline:none;" onclick="viewerZoomIn()"><i class="fa fa-search-plus"></i></a>'
@@ -3634,16 +3868,35 @@
       document.getElementById(barId).innerHTML = nodes;
   }
   
-
+  /**
+   * Show basic bar
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} barId - e.g. "itemTreeViewBar"
+   */ 
   showBarBasic = (barId) => {
       destroyBar(barId);
       showBar(barId);
   }
   
+  /**
+   * Init bar
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} barId - e.g. "itemTreeViewBar"
+   */ 
+
   initBar = (barId) => {
       let nodes = "";
       let panelId = barId.split("Bar")[0]; 
       let btnId = barId + "Btn";
+
       nodes += '<a href="javascript:void(0)" style ="font-size: 1.2vw; outline: none" id='+btnId+ ' onclick="togglePanel('+panelId+')"> <i class="fa fa-chevron-circle-left" aria-hidden="true"></i></a> '
 
       if(barId === "channelListViewBar") {
@@ -3659,7 +3912,19 @@
       document.getElementById(barId).innerHTML = nodes;
   }
 
-  //Function to toggle special bars such as  "channel plots" bars which has to show bars for specific operations e.g. Tumor-Immune-Stromal
+  
+  /**
+   * Function to toggle special bars such as  "channel plots" bars which has to show bars for specific operations:  
+   * e.g. Tumor-Immune-Stromal
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} panelId  
+   * @param {bool} showBarFlag     
+   */   
+
   showSpecialBar = (panelId, showBarFlag = true) => {
       let specialBarId = panelId + "SpecialBar";
 
@@ -3680,6 +3945,18 @@
             }  
        } 
   }  
+
+
+  /**
+   * Function to toggle bars 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} panelId  
+   * @param {bool} showPanelFlag     
+   */  
 
   showBar = (panelId, showPanelFlag = true) => {
       let barId = panelId + "Bar";
@@ -3708,15 +3985,26 @@
                            }  
                  }  
        } 
-
-                
   } 
+
+  /**
+   * Function to remove bar 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} barId  
+   */  
 
   destroyBar = (barId) => {
       document.getElementById(barId).innerHTML = "";
   }    
 
- // showPanel V1 - old version - to be delected
+
+  /**
+   * @deprecated 
+   */    
   showPanel_V1 = (panelId, showPanelFlag = true) => {
 
       if(showPanelFlag) {
@@ -3739,7 +4027,17 @@
       showBar(panelId, showPanelFlag);
   } 
 
- // showPanel V2
+  /**
+   * Function to show panel
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} panelId e.g.  "infoPanel" or "chPlotsPanel"
+   * @param {bool} showPanelFlag     
+   */  
+
   showPanel = (panelId, showPanelFlag = true) => {
 
          if(showPanelFlag) {
@@ -3795,38 +4093,75 @@
              
   }   
 
-  // function isPanelRightSide(panelId){
-  //     let panel = document.getElementById(panelId)
-  //     let rightPos = parseInt(window.getComputedStyle(panel, null).getPropertyValue("right").split("vw")[0])
-  //     let leftPos  = parseInt(window.getComputedStyle(panel, null).getPropertyValue("left").split("vw")[0])
-  //     return  (rightPos < leftPos)||(leftPos>(screen.width/2))?  true : false; 
-  //  }
+  //-- function isPanelRightSide(panelId){
+  //--     let panel = document.getElementById(panelId)
+  //--     let rightPos = parseInt(window.getComputedStyle(panel, null).getPropertyValue("right").split("vw")[0])
+  //--     let leftPos  = parseInt(window.getComputedStyle(panel, null).getPropertyValue("left").split("vw")[0])
+  //--     return  (rightPos < leftPos)||(leftPos>(screen.width/2))?  true : false; 
+  //--  }
 
-  // For future use
-  isElemMiddleOnScreen = (elemId) => {
-      let elem = document.getElementById(elemId);
-      let leftPos = elem.getBoundingClientRect().left;
-      let rightPos  = elem.getBoundingClientRect().right;
-      return ((leftPos+rightPos) / 2 > screen.width * 2 / 5) && ((leftPos+rightPos) / 2 < screen.width * 3 / 5) ?  true : false; 
-   }
+  
+    /**
+    * For future use 
+    *
+    * @todo Write the doc.
+    * @todo Implement this function.    
+    *
+    */    
+    isElemMiddleOnScreen = (elemId) => {
+       let elem = document.getElementById(elemId);
+       let leftPos = elem.getBoundingClientRect().left;
+       let rightPos  = elem.getBoundingClientRect().right;
+       return ((leftPos+rightPos) / 2 > screen.width * 2 / 5) && ((leftPos+rightPos) / 2 < screen.width * 3 / 5) ?  true : false; 
+    }
+
+
+  /**
+   * Check if element right side on the screen
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} elemId  
+   * @returns {bool}   
+   *
+   * isElemRightSide("infoPanel")
+   *
+   * => true  
+   */ 
 
   isElemRightSide = (elemId) => {
       let elem = document.getElementById(elemId);
       let leftPos = elem.getBoundingClientRect().left;
       let rightPos  = elem.getBoundingClientRect().right;
-      return ((leftPos+rightPos) / 2 > screen.width / 2) ?  true : false;
+
+      return ( (leftPos + rightPos) / 2 > screen.width / 2) ? true : false;
 
    }   
 
+  //-- e.g. "coordinates" panel in Analysis layout      
+  //-- isMiddlePanelActive = (panelId) => {
+  //--       return  document.getElementById(panelId).style.display != "none" ? true : false;
+  //-- }      
 
 
-  // e.g. "coordinates" panel in Analysis layout      
-  // isMiddlePanelActive = (panelId) => {
-  //       return  document.getElementById(panelId).style.display != "none" ? true : false;
-  // }      
+  /**
+   * Check if panel is active (open) 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} panelId  e.g. "itemTreeView"
+   * @returns {bool}   
+   *
+   * isPanelActive("infoPanel")
+   *
+   * => true  
+   */ 
 
-
-  isPanelActive = (panelId) => {
+  isPanelActive = (panelId) => {  //
       let panel = document.getElementById(panelId);
 
            if(panelId === "coordinates" || panelId === "cellNavigator") {  // "coordinates" panel is a middle panel in Analysis layout  
@@ -3843,32 +4178,52 @@
           }
   }
 
+
+  /**
+   * Toggle panel 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {object} panel
+   */ 
+
   togglePanel = (panel) => {
-      if(isPanelActive(panel.id)) {
+      if( isPanelActive(panel.id) ) {
           showPanel(panel.id, false);
       } else {
           showPanel(panel.id, true);
       }
-
   }
 
-  // toggleMiddlePanel = (panel) => {
-  //     if(isMiddlePanelActive(panel.id)) {
-  //         showPanel(panel.id, false);
-  //     } else {
-  //         showPanel(panel.id, true);
-  //     }
+  //-- toggleMiddlePanel = (panel) => {
+  //--     if(isMiddlePanelActive(panel.id)) {
+  //--         showPanel(panel.id, false);
+  //--     } else {
+  //--         showPanel(panel.id, true);
+  //--     }
+  //-- }
 
-  // }
+
+  /**
+   * Open browse layout 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
 
   openBrowseLayout = () => {
        if( getSelectedItem() ){
             onCurTileSourceClick();
-        }
+       }
 
-        showPanel("itemTreeView");
-        showPanel("hostCollectView");
-        document.getElementById("onlineDemoBtn").style.color = "gray"; 
+       showPanel("itemTreeView");
+       showPanel("hostCollectView");
+       document.getElementById("onlineDemoBtn").style.color = "gray"; 
+
        if(getActiveLayout()){
          showBarExtension("itemTreeViewBar");
        }
@@ -3886,8 +4241,20 @@
        return  true;    
   }
 
+
+  /**
+   * Hide layout 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} layoutId   
+   */ 
+
   hideLayout = (layoutId) => {
         let allLayoutPanels = document.querySelectorAll('div[layout="'+layoutId+'"]');
+
         allLayoutPanels.forEach( panel => {
              showPanel(panel.id, false);
              if(document.getElementById(panel.id +"Bar")){ 
@@ -3896,20 +4263,33 @@
          })
 
         let allLayoutForms =  document.querySelectorAll('div[layout="'+layoutId+ " Form" +'"]');
+
         allLayoutForms.forEach( form => {
              if( isActiveForm(form.id) ) {
                   document.getElementById(form.id).style.display = "none";
                   resetActiveFormState();
              }
-         })        
-        // if( getActiveForm() ) {
-        //     let formId = getActiveForm().id;
+         }) 
 
-        //     resetActiveFormState();
-        // }
+        //-- if( getActiveForm() ) {
+        //--     let formId = getActiveForm().id;
+        //--     resetActiveFormState();
+        //-- }
   }
 
-  openLayout = (layoutId) => {
+
+
+  /**
+   * Open layout 
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} layoutId   
+   */ 
+
+    openLayout = (layoutId) => {
        if( !isLayoutActive(layoutId) ) {
 
            let functionName = "open" + layoutId + "Layout"; 
@@ -3917,7 +4297,6 @@
            let returnValue = callFunctionByName(functionName, param);
 
            if(returnValue) {
-
                if( getActiveLayout() ) {
                        hideLayout(getActiveLayout());
                }   
@@ -3925,10 +4304,21 @@
                setActiveLayout(layoutId);
             }
        }    
-  }
+    }
 
 
  //----------- Toolbar options --------------- //
+
+  /**
+   * Get layout right panel Id
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}
+   */ 
+
     getLayoutRightPanelId = () => {
       switch(getActiveLayout()){
                case "Browse":
@@ -3943,6 +4333,16 @@
 
     }
 
+
+  /**
+   * Get layout left panel Id
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}
+   */ 
     getLayoutLeftPanelId = () => {
       switch(getActiveLayout()){
                case "Browse":
@@ -3957,47 +4357,113 @@
 
     }
 
+
+  /**
+   * Get element top postion
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id
+   * @returns {number}
+   */ 
+
     getElemTopPos = (id) => {
        return  document.getElementById(id).getBoundingClientRect().top;
     } 
+
+  /**
+   * Get element left postion
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id
+   * @returns {number}
+   */ 
 
     getElemLeftPos = (id) => {
        return  document.getElementById(id).getBoundingClientRect().left;
     }
 
+  /**
+   * Get element bottom postion
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id
+   * @returns {number}
+   */ 
+
     getElemBottomPos = (id) => {
        return  document.getElementById(id).getBoundingClientRect().bottom;
     }     
+
+  /**
+   * Get element right postion
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id
+   * @returns {number}
+   */ 
 
     getElemRightPos = (id) => {
        return  document.getElementById(id).getBoundingClientRect().right;
     } 
 
 
+  /**
+   * check if menu panel overlap
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} dropMenuId
+   * @param {string} panelId   
+   * @returns {bool}
+   */ 
 
     isMenuPanelOverlap = (dropMenuId, panelId) => {
-         var sideElemId    =  document.getElementById(panelId+"Bar") ? panelId+"Bar" : panelId ;
-         var sideTopPos    =  getElemTopPos(sideElemId);  
-         var menuBottomPos =  getElemBottomPos(dropMenuId); 
+         let sideElemId    =  document.getElementById(panelId+"Bar") ? panelId+"Bar" : panelId ;
+         let sideTopPos    =  getElemTopPos(sideElemId);  
+         let menuBottomPos =  getElemBottomPos(dropMenuId); 
 
          if(isElemRightSide(dropMenuId)) {
-               var sideLefttPos   =  getElemLeftPos(sideElemId);  
-               var menuRighttPos  =  getElemRightPos(dropMenuId);     
+               let sideLefttPos   =  getElemLeftPos(sideElemId);  
+               let menuRighttPos  =  getElemRightPos(dropMenuId);     
                return (sideTopPos <= menuBottomPos) && (sideLefttPos <= menuRighttPos) ? true : false;             
          } else {
-               var sideRightPos  =  getElemRightPos(sideElemId);  
-               var menuLefttPos  =  getElemLeftPos(dropMenuId); 
+               let sideRightPos  =  getElemRightPos(sideElemId);  
+               let menuLefttPos  =  getElemLeftPos(dropMenuId); 
                return (sideTopPos <= menuBottomPos) && (sideRightPos >= menuLefttPos) ? true : false;             
          }             
 
     }
 
-    // function isElementsOverlap(el1, el2){
-    //    return (getElemTopPos(el1)  <= getElemBottomPos(el2) ) && (getElemRightPos(el1) >= getElemLeftPos(el2) ) ? true : false;
-    // }    
+    //-- function isElementsOverlap(el1, el2){
+    //--    return (getElemTopPos(el1)  <= getElemBottomPos(el2) ) && (getElemRightPos(el1) >= getElemLeftPos(el2) ) ? true : false;
+    //-- }    
+
+  /**
+   * nav manu mouse out
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
     navManuMouseOut = () => {
-      var panelId = getLayoutLeftPanelId();
+      let panelId = getLayoutLeftPanelId();
+
       if(panelId && !isPanelActive(panelId)){
           if(screenStatus.panelActiveState){
                 showPanel(panelId);
@@ -4005,47 +4471,121 @@
        }    
    } 
    
+
+  /**
+   * nav manu button clicked
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} dropMenuId
+   */ 
+
    navMenuBtnClicked = (dropMenuId) => {
-      if(isElemRightSide(dropMenuId)){
-         var panelId = getLayoutRightPanelId();      
-      }else{
-         var panelId = getLayoutLeftPanelId(); 
+      let panelId;
+      if( isElemRightSide(dropMenuId) ) {
+          panelId = getLayoutRightPanelId();      
+      } else {
+          panelId = getLayoutLeftPanelId(); 
       }
          
-      if(panelId && isPanelActive(panelId) && isMenuPanelOverlap(dropMenuId, panelId)){ 
+      if(panelId && isPanelActive(panelId) && isMenuPanelOverlap(dropMenuId, panelId)) { 
           screenStatus.panelActiveState = true;        
           showPanel(panelId, false);
-      }else{
+      } else {
          screenStatus.panelActiveState = false;  
       } 
    }  
 
+   //----------------------------------------------//
+   //-----------------View Manu -------------------//
+   //----------------------------------------------//
 
-   //-----------View Manu -------//
+    /**
+    * For future use 
+    *
+    * @todo Write the doc.
+    * @todo Implement this function.    
+    *
+    */  
+
      showHidePanels = () => {
        triggerHint("TO be coded")
      }
+
+    /**
+    * For future use 
+    *
+    * @todo Write the doc.
+    * @todo Implement this function.    
+    *
+    */       
      showHideCoordinates = () => {
        triggerHint("TO be coded")
      }
     
-    //----------Demo ------------//
-     demoDesignLayout = () => {
+   //----------------------------------------------//
+   //---------------------Demo---------------------//
+   //----------------------------------------------//
+
+  /**
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+    demoDesignLayout = () => {
       openLayout("Design")      
       document.getElementById("modeDropDownMenu").style.display=""
-    }    
-     demoModeMenuSelect = () => {
+    }  
+
+  /**
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+
+    demoModeMenuSelect = () => {
       document.getElementById("modeDropDownMenu").style.display="block"
     }
 
-     demoItemSelect = () => {
+  /**
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+
+    demoItemSelect = () => {
       document.getElementById("file_5e361da534679044bda81b16").click();
     }
+
+  /**
+   * 
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
     demoFolderSelect = () => {
       document.getElementById("folderFont_5e361c5c34679044bda81b11").click();
     }
 
+  /**
+   * Run demo 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
     runDemo = () => {
       if( !getActiveLayout() ) {
             let demo = [];
@@ -4083,55 +4623,124 @@
     }
 
 
-
-   advancedMode = () => {
-       triggerHint("Will be available with Version 2.0.0");
-   }
-
-   goToDsaServerPage = () => {
-       window.open("https://github.com/Mmasoud1/HistoJS/wiki/Local-DSA"); 
-   }
+  /**
+   * init demo form content 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
    initDemoFormContent = () => {
-      var node = ""
+      let node = ""
       node += "<video width='100%'  controls>  <source src='Demo/offlineDemo.mp4' type='video/mp4'></video>"
       document.getElementById("demoContent").innerHTML = node;
    }
+
+  /**
+   * Close demo form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
    closeDemoForm = () => {
         document.getElementById("demoForm").style.display = "none";
    }
 
+  /**
+   * Toggle offline demo form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
    toggleOfflineDemoForm = () => {
        initDemoFormContent();
-       var demoFormElem = document.getElementById("demoForm");
+       let demoFormElem = document.getElementById("demoForm");
+
        if(demoFormElem.style.display === "block") {
              demoFormElem.style.display = "none";
-        }     
-       else{
+             
+       } else {
              demoFormElem.style.display = "block";
              getElementCenterOnScreen(demoFormElem);
-           }  
+       }  
    }   
 
 
- // --------Toolbar Settings Form Tabs----------//
+    /**
+    * For future use 
+    *
+    * @todo Write the doc.
+    * @todo Implement this function.    
+    *
+    */  
+
+     advancedMode = () => {
+         triggerHint("Will be available with Version 2.0.0");
+     }
+
+  /**
+   * Go to DSA server setup page 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+   goToDsaServerPage = () => {
+       window.open("https://github.com/Mmasoud1/HistoJS/wiki/Local-DSA"); 
+   }
+
+
+   //----------------------------------------------//
+   // -----------------Settings Form --------------//
+   //----------------------------------------------//
+
+  /**
+   * Page reload
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
     pageReload = () => {
        window.location.reload();
     }
 
 
-   openSettingsTab = (tabName, elm, color) => {
-        var tabContent = document.getElementsByClassName("tabcontent");
+  /**
+   * Open settings tab
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} tabName
+   * @param {object} elm
+   * @param {string} color
+   */ 
 
-        // for (let i = 0; i < tabcontent.length; i++) {
+    openSettingsTab = (tabName, elm, color) => {
+        let tabContent = document.getElementsByClassName("tabcontent");
+
+        //-- for (let i = 0; i < tabcontent.length; i++) {
         for(let content of tabContent) { 
            content.style.display = "none";
         }
 
-        var tabLinks = document.getElementsByClassName("tablink");
+        let tabLinks = document.getElementsByClassName("tablink");
 
-        // for (let i = 0; i < tablinks.length; i++) {
+        //-- for (let i = 0; i < tablinks.length; i++) {
         for(let link of tabLinks){  
             link.style.backgroundColor = "";
         }
@@ -4140,8 +4749,20 @@
         elm.style.backgroundColor = color;
     }
 
-    //--- Check Path  availability----------//
-   UrlExists = (url, cb) =>{
+
+
+  /**
+   * URL exists
+   * Check Path  availability
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} url
+   * @param {function} cb callback
+   */ 
+
+    UrlExists = (url, cb) =>{
       jQuery.ajax({
           url:      url,
           type:     'GET',
@@ -4151,12 +4772,21 @@
                  cb.apply(this, [xhr.status]);
           }
       });
-   }
+    }
 
 
-   openSettingsForm = () => { 
-       if(!getActiveForm()){
-          var form = document.getElementById("settingsForm")
+  /**
+   * Open Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+    openSettingsForm = () => { 
+       if(!getActiveForm()) {
+          let form = document.getElementById("settingsForm");
           form.classList.remove("formflashanimation"); 
           form.style.display = "block";
           initSettingsFormServerList();
@@ -4167,26 +4797,46 @@
           document.getElementById("defaultOpenSettingsTab").click();
           setActiveForm(form);
 
-          if(isScreenLogoActive()){
+          if(isScreenLogoActive()) {
              hideScreenLogo();          
           }   
         } else {
             getActiveForm().classList.toggle("formflashanimation");
         }    
-   }
+    }
 
-  closeSettingsForm = () => {
-      let settingsForm = document.getElementById("settingsForm");
-      settingsForm.style.display = "none";      
-      cancelSettingsFormChanges();        
-      resetActiveFormState();
+  /**
+   * Close Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
-      if( isScreenLogoActive() ) { 
-          showScreenLogo();
-      }         
-  }
+    closeSettingsForm = () => {
+          let settingsForm = document.getElementById("settingsForm");
+          settingsForm.style.display = "none";      
+          cancelSettingsFormChanges();        
+          resetActiveFormState();
 
-  deleteServerFromSettings = (serverIndex) => {
+          if( isScreenLogoActive() ) { 
+              showScreenLogo();
+          }         
+    }
+
+
+  /**
+   * Delete DSA server from Settings from
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {number} serverIndex
+   */ 
+
+    deleteServerFromSettings = (serverIndex) => {
         let serverToRemove = Settings.dsaServers[serverIndex];
 
         if(parseInt(serverToRemove.id) == getHostIndex()) {
@@ -4197,34 +4847,82 @@
         removeArrayElem(Settings.dsaServers, serverToRemove);
         initSettingsFormServerList();
         flagServerChanges();
-   }
+    }
 
-  checkAutoLoginToRemovedServer = (callback) => {
+  /**
+   * check auto login to removed server
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {function} callback
+   */ 
+
+    checkAutoLoginToRemovedServer = (callback) => {
         if(tempServerRemoved.length) {
-
-          tempServerRemoved.forEach( server => {
+           tempServerRemoved.forEach( server => {
                removeHostCredentials(server.id , server.hostApi);
-          });
-
+           });
         }
 
         callback();
-  }
+    }
 
-   maintainCurHostSelection = (hostIndex) => {
+  /**
+   * maintain current host selection style 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {number} hostindex
+   */ 
+
+    maintainCurHostSelection = (hostIndex) => {
           document.getElementById("Host" + hostIndex).style.backgroundColor = Opts.selectedElemBgColor;
           document.getElementById("HostFont" + hostIndex).style.color = Opts.selectedElemFontColor;
-   }
+    }
+
+  /**
+   * Highligth list selection
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} listId
+   * @param {string} fontId   
+   */ 
 
    highlightListSelection = (listId, fontId) => {
           document.getElementById(listId).style.backgroundColor = Opts.selectedElemBgColor;
           document.getElementById(fontId).style.color = Opts.selectedElemFontColor;
    } 
 
+  /**
+   * Reset list selection
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} listId
+   * @param {string} fontId   
+   */ 
    resetListSelection = (listId, fontId) => {
          document.getElementById(listId).style.backgroundColor = Opts.defaultElemBgColor;
          document.getElementById(fontId).style.color = Opts.defaultElemFontColor; 
    } 
+
+  /**
+   * Confirm DSA servers list changes in Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */ 
 
    confirmServerListChangesInSettings = () => {
          cacheServerListLocal();
@@ -4242,9 +4940,27 @@
          })
     } 
 
+  /**
+   * Reset temp removed server list
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */ 
+
     resetTempRemovedServerList = () => {
           tempServerRemoved = [];
     }
+
+  /**
+   * Restor default server list for Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */ 
 
     restorDefaultServerListForSettings = () => {
          Settings.dsaServers = JSON.parse( JSON.stringify( DSA_SERVER_LIST ) ) ; // to copy obj without reference
@@ -4253,24 +4969,65 @@
          flagServerChanges();
     }     
 
+  /**
+   * cancel server list changes in Settings, press cancel button
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */ 
+
     cancelServerListChangesInSettings = () => {
          Settings.dsaServers = initServerList();
          initSettingsFormServerList();
          resetTempRemovedServerList();
     }   
 
+  /**
+   * cache  server list in local storage variable 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */ 
+
     cacheServerListLocal = () => {
           webix.storage.local.put("serverList",Settings.dsaServers);
     }      
+
+  /**
+   * Fetch server list in local storage variable 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {Array} e.g. Array(3) [{{ id: "1", value: "Girder", hostAPI: "http://dermannotator.org:8080/api/v1" }}, {…}, {…}]  
+   */ 
 
     fetchCachedServerList = () => {
           return webix.storage.local.get("serverList");
     }  
 
+
+  /**
+   * Check server duplication
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} newServerName
+   * @param {string} newServerPath
+   * @returns {bool} true : No duplication, false: there is duplication
+   */ 
+
     checkServerDuplication = (newServerName, newServerPath) => {
          // if there is a duplication, and user want to rename server name, must delecte the old one first and then add new server name
-         var duplicateNameIndex = findObjectByKeyValue(Settings.dsaServers, 'value', newServerName, 'INDEX');
-         var duplicatePathIndex = findObjectByKeyValue(Settings.dsaServers, 'hostAPI', newServerPath, 'INDEX');
+         let duplicateNameIndex = findObjectByKeyValue(Settings.dsaServers, 'value', newServerName, 'INDEX');
+         let duplicatePathIndex = findObjectByKeyValue(Settings.dsaServers, 'hostAPI', newServerPath, 'INDEX');
 
          if((duplicateNameIndex == null) && (duplicatePathIndex == null)) {
                return true;  // No duplication   
@@ -4279,9 +5036,19 @@
          }
    } 
 
+
+  /**
+   * Help assigning new Id to a new server added to the server list with Settings.dsaServers
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {number} idSeed e.g. 1
+   */ 
+
    getNewId = (idSeed, callback) => {
-       // Help assigning new Id to a new server added to the server list with Settings.dsaServers.
-       var newId = findObjectByKeyValue(Settings.dsaServers, 'id', idSeed.toString(), 'INDEX');
+       let newId = findObjectByKeyValue(Settings.dsaServers, 'id', idSeed.toString(), 'INDEX');
 
        if(newId == null){
              callback(idSeed.toString());  // No id duplication   
@@ -4291,9 +5058,19 @@
        }
    }   
 
+
+  /**
+   * Add server to Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
    addServerToSettings = () => {
-       var newServerName = document.getElementById("newServerNameText").value.trim();
-       var newServerPath = document.getElementById("newServerPathText").value.trim();
+       let newServerName = document.getElementById("newServerNameText").value.trim();
+       let newServerPath = document.getElementById("newServerPathText").value.trim();
 
        if((newServerName !== "") && (newServerPath !== "")) {
           if(checkServerDuplication(newServerName, newServerPath)){
@@ -4306,12 +5083,22 @@
                                     initSettingsFormServerList()
                                     flagServerChanges();
                                  }) 
-                            });
-          }else{
+                              });
+          } else {
                triggerHint("List Duplication Found","error", 3000)
           }
        }
    } 
+
+  /**
+   * Init server list from local stored variable or global parameter. 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @return {Array} array of objects for server list
+   */ 
 
    initServerList = () => {
         return fetchCachedServerList() !== null ? fetchCachedServerList(): JSON.parse( JSON.stringify( DSA_SERVER_LIST ) ) ; // to copy obj without reference
@@ -4319,9 +5106,17 @@
   }
  
 
+  /**
+   * Init server list tab in Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
     initSettingsFormServerList = () => { 
-        var serverNode = "";
+        let serverNode = "";
         serverNode += '<table style = "border-spacing: 0.25vw; font-size:0.7vw">'
         serverNode += '<colgroup> <col style="width:25%"><col style="width:70%"> <col style="width:5%"></colgroup>' 
         serverNode +=  '<tr >'
@@ -4333,8 +5128,8 @@
         serverNode +=  '</tr>' 
 
         Settings.dsaServers.forEach((server, idx) => {
-          var serverName = server.value; 
-          var serverPath = server.hostAPI;           
+          let serverName = server.value; 
+          let serverPath = server.hostAPI;           
 
           serverNode +=  '<tr >'
           serverNode +=    '<th style="text-align: left; border: 0.05vw solid black; padding: 0.45vh ">'
@@ -4382,25 +5177,65 @@
         document.getElementById("settingsFormServerList").innerHTML = serverNode;    
     }     
 
-  optionsListDefaultValues = () => {
-      var defaultOptions = [];
+
+  /**
+   * Options list default values
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {Array} i.e. array of object [{ optionId: "optionId.AutoLogin", optionValue: true }]
+   */ 
+
+    optionsListDefaultValues = () => {
+      let defaultOptions = [];
       defaultOptions.push({
                            optionId: "optionId.AutoLogin"  , optionValue: true}
                          );
       return defaultOptions;
-  }
+    }
 
-  confirmOptionsListChangesInSettings = () => {
+  /**
+   * Confirm event for the options list changes in Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+    confirmOptionsListChangesInSettings = () => {
        resetActiveFormState();
        cacheOptionsListLocal()
-  }
+    }
 
-  cancelOptionsListChangesInSettings = () => {
-       Settings.options= initOptionsList()
+  /**
+   * Cancel event for the options list changes in Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+    cancelOptionsListChangesInSettings = () => {
+       Settings.options = initOptionsList();
        initSettingsFormOptionsList();
-  } 
+    } 
 
-  queryElemValueAttribute = (elem) => {
+
+  /**
+   * Query elem value attribute
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} elem
+   * @returns {string}
+   */ 
+   queryElemValueAttribute = (elem) => {
        switch (elem.tagName){
              case "INPUT":
                 switch (elem.type){
@@ -4420,9 +5255,26 @@
              default:
                      return null;                    
        }   
-  }    
+    }    
 
-  queryElemTypeValue = (elem) => {
+
+   /**
+   * Query elem type value
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} elem
+   * @returns {bool| string| number}
+   * @example
+   *
+   * let elem = document.getElementById("optionId.AutoLogin")
+   * queryElemTypeValue(elem)
+   *
+   * => true
+   */            
+    queryElemTypeValue = (elem) => {
        switch (elem.tagName){
              case "INPUT":
                 switch (elem.type){
@@ -4441,19 +5293,29 @@
                      return elem.options[elem.selectedIndex].value;
              default:
                      return null;                    
-       }   
-  }  
+        }   
+    }  
 
-  optionChanged = (id) => {
-        var elem = document.getElementById(id);
-        var elemTag = elem.tagName;
-        var elemValue = queryElemTypeValue(elem);
+   /**
+   * Event fires when option changed at Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id
+   */   
+
+    optionChanged = (id) => {
+        let elem = document.getElementById(id);
+        let elemTag = elem.tagName;
+        let elemValue = queryElemTypeValue(elem);
       
         if ((elemValue != null) || (elemValue !== null)) {
-           var elemIndex = findObjectByKeyValue(Settings.options, 'optionId', id, 'INDEX');
+           let elemIndex = findObjectByKeyValue(Settings.options, 'optionId', id, 'INDEX');
 
            if(elemIndex != null) {
-                 var elemToRemove = Settings.options[elemIndex];
+                 let elemToRemove = Settings.options[elemIndex];
                  removeArrayElem(Settings.options, elemToRemove);
            } 
 
@@ -4469,47 +5331,99 @@
              // for debug mode 
              triggerHint(" Improper selection of option element", "error", 5000);
         }
-  }
+    }
 
-  isAutoLoginEnabled = () => {
-           var elemIndex = findObjectByKeyValue(Settings.options, 'optionId', "optionId.AutoLogin", 'INDEX')
+   /**
+   * check if autologin is enabled within the options at the Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool} 
+   */   
+    isAutoLoginEnabled = () => {
+           let elemIndex = findObjectByKeyValue(Settings.options, 'optionId', "optionId.AutoLogin", 'INDEX');
            return Settings.options[elemIndex].optionValue;
-  }
+    }
 
-  loadOptionListValues = () => {
-    var elem;
-    var elemValue;
-    Settings.options.forEach( option => {
-        elem = document.getElementById(option.optionId);
-        elemValue = option.optionValue;
-       
-        if(elem.tagName === "INPUT"){
-              elem[queryElemValueAttribute(elem)] = elemValue;
-         }     
-        if(elem.tagName === "SELECT"){
-              elem.options[option.selectedIndex][queryElemValueAttribute(elem)] = elemValue;
-         }     
-    });
+   /**
+   * Load option list values from options at Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */   
 
-  }
+    loadOptionListValues = () => {
+        let elem;
+        let elemValue;
+        Settings.options.forEach( option => {
+            elem = document.getElementById(option.optionId);
+            elemValue = option.optionValue;
+           
+            if(elem.tagName === "INPUT"){
+                  elem[queryElemValueAttribute(elem)] = elemValue;
+             }     
+            if(elem.tagName === "SELECT"){
+                  elem.options[option.selectedIndex][queryElemValueAttribute(elem)] = elemValue;
+             }     
+        });
+    }
 
-  cacheOptionsListLocal = () => {
+  /**
+   * cache  Options list in local storage variable 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */  
+    cacheOptionsListLocal = () => {
         webix.storage.local.put("optionsList",Settings.options);
-  }    
+    }    
 
-  fetchCachedOptionsList = () => {
+  /**
+   * Fetch Options list from local storage variable 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {Array} e.g. Array(1) [{ optionId: "optionId.AutoLogin", optionValue: true }]  
+   */ 
+
+    fetchCachedOptionsList = () => {
         return (webix.storage.local.get("optionsList")!= null) && Array.isArray(webix.storage.local.get("optionsList")) ? 
                            webix.storage.local.get("optionsList") : optionsListDefaultValues();
-  }  
+    }  
 
+  /**
+   * Init Options list  
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {Array} e.g. Array(1) [{ optionId: "optionId.AutoLogin", optionValue: true }]  
+   */ 
 
-   initOptionsList = () => {
+    initOptionsList = () => {
         return fetchCachedOptionsList();
-  }
+    }
 
+  /**
+   * Init Settings form options list  
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0  
+   */ 
 
-  initSettingsFormOptionsList = () => { 
-        var optionsNode = "";
+    initSettingsFormOptionsList = () => { 
+        let optionsNode = "";
         optionsNode += '<fieldset> <legend>Account:</legend>'       
         optionsNode += '<table id="optionsListTable" style = "border-spacing: 0.25vw; font-size:0.7vw">'
         optionsNode += '<colgroup> <col style="width:10%"><col style="width:90%"> </colgroup>' 
@@ -4534,8 +5448,20 @@
     }  
 
 
-//-------------- Interface Tab ------------//
-  interfaceListDefaultValues = () => {
+   //-------------- Interface Tab ------------//
+
+  /**
+   * Interface list default values at the Settings form 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0  
+   * @returns {Array} i.e. [{ interfaceId: "interfaceId.PanelsOpacity", interfaceValue: 0.5, rootVar: "--div-opacity" }, 
+   *                        { interfaceId: "interfaceId.FormsOpacity", interfaceValue: 0.5, rootVar: "--form-opacity" }]
+   */     
+
+    interfaceListDefaultValues = () => {
           let defaultInterfaceListValues = [];
           defaultInterfaceListValues.push(
                                        {interfaceId: "interfaceId.PanelsOpacity"  , interfaceValue: 0.5, rootVar: '--div-opacity' },
@@ -4543,36 +5469,71 @@
                                      );
 
           return defaultInterfaceListValues; 
-  }
+    }
 
-  updateInterface = (id = null) => {
-     if(id !== null) {
-            let interfaceEntry =  Settings.interface.filter(entry => entry.interfaceId === id);
-            document.documentElement.style.setProperty(interfaceEntry[0].rootVar, interfaceEntry[0].interfaceValue);
-     } else {
-            Settings.interface.forEach( entry => {
-              document.documentElement.style.setProperty(entry.rootVar, entry.interfaceValue);              
-            })
+  /**
+   * update Interface
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id 
+   */ 
 
-     }
-  }    
+    updateInterface = (id = null) => {
+         if(id !== null) {
+                let interfaceEntry =  Settings.interface.filter(entry => entry.interfaceId === id);
+                document.documentElement.style.setProperty(interfaceEntry[0].rootVar, interfaceEntry[0].interfaceValue);
+         } else {
+                Settings.interface.forEach( entry => {
+                  document.documentElement.style.setProperty(entry.rootVar, entry.interfaceValue);              
+                })
+         }
+    }    
 
-  confirmInterfaceListChangesInSettings = () => {
+  /**
+   * Confirm event for the interface list changes in Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+    confirmInterfaceListChangesInSettings = () => {
        resetActiveFormState();
        cacheInterfaceListValuesLocal();
-  }
+    }
 
-  cancelInterfaceListChangesInSettings = () => {
+  /**
+   * Cancel event for the interface list changes in Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+    cancelInterfaceListChangesInSettings = () => {
        Settings.interface = initInterfaceList();
        initSettingsFormInterfaceList();
        updateInterface();
-  } 
+    } 
 
+  /**
+   * Event fires when interface list changes in Settings
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} id
+   */ 
 
-  interfaceChanged = (id) => {
-        var elem = document.getElementById(id);
-        var elemTag = elem.tagName;
-        var elemValue = queryElemTypeValue(elem);
+    interfaceChanged = (id) => {
+        let elem = document.getElementById(id);
+        let elemTag = elem.tagName;
+        let elemValue = queryElemTypeValue(elem);
       
         if ((elemValue != null) || (elemValue !== null)) {
            Settings.interface.filter(entry => entry.interfaceId === id)[0]['interfaceValue'] = elemValue;
@@ -4582,11 +5543,20 @@
              // for debug mode 
              triggerHint(" Improper selection of interface element", "error", 5000)
         }
-  }
+    }
 
-  loadInterfaceListValues = () => {
-        var elem;
-        var elemValue;
+  /**
+   * Load interface list values from Settings form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+
+    loadInterfaceListValues = () => {
+        let elem;
+        let elemValue;
 
         Settings.interface.forEach( interface => {
             elem = document.getElementById(interface.interfaceId);
@@ -4600,26 +5570,63 @@
                   elem.options[interface.selectedIndex][queryElemValueAttribute(elem)] = elemValue;
              }     
         });
-  }
+    }
 
-  cacheInterfaceListValuesLocal = () => {
+
+  /**
+   * cache  Interface list in local storage variable 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0   
+   */  
+   
+    cacheInterfaceListValuesLocal = () => {
         webix.storage.local.put("interfaceList",Settings.interface);
-  }    
+    }    
 
-  fetchCachedInterfaceListValues = () => {
+  /**
+   * Fetch Interface list from local storage variable 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {Array} i.e. Array(2) [{ interfaceId: "interfaceId.PanelsOpacity", interfaceValue: 0.5, rootVar: "--div-opacity" },
+   *                                 { interfaceId: "interfaceId.FormsOpacity", interfaceValue: 0.5, rootVar: "--form-opacity" }]  
+   */
+
+    fetchCachedInterfaceListValues = () => {
         return (webix.storage.local.get("interfaceList")!= null) && Array.isArray(webix.storage.local.get("interfaceList")) ? 
                            webix.storage.local.get("interfaceList") : interfaceListDefaultValues();
-  }  
+    }  
 
-
-   initInterfaceList = () => {
+  /**
+   * Init Interface list 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {Array} i.e. Array(2) [{ interfaceId: "interfaceId.PanelsOpacity", interfaceValue: 0.5, rootVar: "--div-opacity" },
+   *                                 { interfaceId: "interfaceId.FormsOpacity", interfaceValue: 0.5, rootVar: "--form-opacity" }]  
+   */
+    initInterfaceList = () => {
         return fetchCachedInterfaceListValues();
-  }
+    }
 
 
-
+  /**
+   * Init Settings form interface list
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
     initSettingsFormInterfaceList = () => { 
-        var interfaceNode = "";
+        let interfaceNode = "";
         interfaceNode += '<fieldset> <legend>Opacity:</legend>'       
         interfaceNode += '<table id="interfaceListTable" style = "border-spacing: 0.25vw; font-size:0.7vw">'
         interfaceNode += '<colgroup> <col style="width:15%"><col style="width:85%"> </colgroup>' 
@@ -4655,142 +5662,266 @@
     } 
 
 
+  /**
+   * Confirm Settings form changes
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
 
+    confirmSettingsFormChanges = () => {
+         //-- let settingsForm = document.getElementById("settingsForm");
+         //-- settingsForm.style.display = "none";
+         if(isServerListChanged()) {      
+            confirmServerListChangesInSettings();     
+         } 
 
+         if(isOptionsListChanged()) {  
+            confirmOptionsListChangesInSettings();
+         } 
 
-  confirmSettingsFormChanges = () => {
-     //-- let settingsForm = document.getElementById("settingsForm");
-     //-- settingsForm.style.display = "none";
-     if(isServerListChanged()) {      
-        confirmServerListChangesInSettings();     
-     } 
-
-     if(isOptionsListChanged()) {  
-        confirmOptionsListChangesInSettings();
-     } 
-
-     if(isInterfaceListChanged()) {  
-        confirmInterfaceListChangesInSettings();      
-     } 
-     
-     closeSettingsForm();
-  }  
+         if(isInterfaceListChanged()) {  
+            confirmInterfaceListChangesInSettings();      
+         } 
+         
+         closeSettingsForm();
+    }  
  
-  cancelSettingsFormChanges = () => {
-     if(isServerListChanged()) {    
-        cancelServerListChangesInSettings();
-     }   
-     if(isOptionsListChanged()) {     
-        cancelOptionsListChangesInSettings();
-     }   
-     if(isInterfaceListChanged()) {     
-        cancelInterfaceListChangesInSettings();      
-     }   
-  }
+   /**
+   * Cancel Settings form changes
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+    cancelSettingsFormChanges = () => {
+         if(isServerListChanged()) {    
+            cancelServerListChangesInSettings();
+         }   
+         if(isOptionsListChanged()) {     
+            cancelOptionsListChangesInSettings();
+         }   
+         if(isInterfaceListChanged()) {     
+            cancelInterfaceListChangesInSettings();      
+         }   
+    }
 
-  initSettingsFormChangeStates = () => {
+   /**
+   * Init Settings form change states
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+
+    initSettingsFormChangeStates = () => {
            Settings.serverListChanges = false;
            Settings.optionsListChanges = false;
            Settings.interfaceListChanges = false;           
-  }
+    }
 
-  flagServerChanges = () =>{
-      Settings.serverListChanges  = true;
-  }
+   /**
+   * Set server list changes flag to true
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+    flagServerChanges = () =>{
+           Settings.serverListChanges  = true;
+    }
   
-  isServerListChanged = () =>{
-      return Settings.serverListChanges ;
-  }
+   /**
+   * Check if server list changed
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}
+   */
+    isServerListChanged = () =>{
+         return Settings.serverListChanges ;
+    }
 
-  flagOptionChanges = () =>{
-      Settings.optionsListChanges = true;
-  }
+   /**
+   * Set option changes flag to true
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+    flagOptionChanges = () =>{
+        Settings.optionsListChanges = true;
+    }
   
-  isOptionsListChanged = () =>{
-      return Settings.optionsListChanges;
-  }
+  /**
+   * Check if Options list changed
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}
+   */
+    isOptionsListChanged = () =>{
+         return Settings.optionsListChanges;
+    }
 
-  flagInterfaceChanges = () =>{
-      Settings.interfaceListChanges = true;
-  }
+   /**
+   * Set Interface list changes flag to true
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+    flagInterfaceChanges = () =>{
+        Settings.interfaceListChanges = true;
+    }
   
-  isInterfaceListChanged = () =>{
-      return Settings.interfaceListChanges;
-  }
+  /**
+   * Check if Interface list changed
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}
+   */  
+    isInterfaceListChanged = () =>{
+          return Settings.interfaceListChanges;
+    }
 
+    /**
+    * For future use 
+    *
+    * @todo Write the doc.
+    * @todo Implement this function.    
+    *
+    */  
+    homeMenu = () => {
+        triggerHint("To be coded later")
+    }
 
+  /**
+   * Opend Design layout
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */  
+    openDesignLayout = () => {
+          if( getSelectedItem() ) {  // item is loaded with OSD 
+              let item = getSelectedItem();
 
+              //-- if( (item.name.includes(".ome.tif") ) && (item.meta.omeSceneDescription != null)) {
+              if( isMultiPlexItem(item) ) {            
+                  if(hasOmeSceneDescription(item)){
+                      let itemName = item.name.split(".")[0];
+                      initChannelList(item.meta.omeSceneDescription, itemName);   
+                      initCurrentTileSource();
+                      showPanel("channelListView",true);
+                      showPanel("grpListView", true);
 
-  homeMenu = () => {
-     triggerHint("To be coded later")
-  }
+                      //-- if( ! isDAPIChannelSelected() ) {
+                      if( typeof currentItemInfo.omeDataset.DapiChannel  === 'undefined' || 
+                                         currentItemInfo.omeDataset.DapiChannel  == null || 
+                                           !currentItemInfo.omeDataset.DapiChannel.length ) {  
 
-
-
-
-  openDesignLayout = () => {
-      if( getSelectedItem() ) {  // item is loaded with OSD 
-          let item = getSelectedItem();
-
-          //-- if( (item.name.includes(".ome.tif") ) && (item.meta.omeSceneDescription != null)) {
-          if( isMultiPlexItem(item) ) {            
-              if(hasOmeSceneDescription(item)){
-                  let itemName = item.name.split(".")[0];
-                  initChannelList(item.meta.omeSceneDescription, itemName);   
-                  initCurrentTileSource();
-                  showPanel("channelListView",true);
-                  showPanel("grpListView", true);
-
-                  //-- if( ! isDAPIChannelSelected() ) {
-                  if( typeof currentItemInfo.omeDataset.DapiChannel  === 'undefined' || 
-                                     currentItemInfo.omeDataset.DapiChannel  == null || 
-                                       !currentItemInfo.omeDataset.DapiChannel.length ) {  
-
-                      // if DAPI before selected for same item, DAPI form will not show up
-                      openDAPIForm();
-                      triggerHint("Specify DAPI or DNA channel by clicking on channel list","info", 7000);
+                          // if DAPI before selected for same item, DAPI form will not show up
+                          openDAPIForm();
+                          triggerHint("Specify DAPI or DNA channel by clicking on channel list","info", 7000);
+                      } else {
+                          setSelectedDAPIChannelIndex(currentItemInfo.omeDataset.DapiChannel[0].channel_number)
+                      }
+                      return true;
                   } else {
-                      setSelectedDAPIChannelIndex(currentItemInfo.omeDataset.DapiChannel[0].channel_number)
-                  }
-                  return true;
+                     triggerHint(" No omeSceneDescription metadata", "error", 4000);
+                  } 
               } else {
-                 triggerHint(" No omeSceneDescription metadata", "error", 4000);
-              } 
-          } else {
-            triggerHint("Select OME File");            
-            return 0; 
-          }
-     } else {
-          triggerHint("Select OME File");
-          return 0;
-     }
-  }
+                triggerHint("Select OME File");            
+                return 0; 
+              }
+         } else {
+              triggerHint("Select OME File");
+              return 0;
+         }
+    }
 
- 
-  goToWikiDocs = () => {
-      window.open("https://github.com/Mmasoud1/HistoJS/wiki");
-  }
+   /**
+   * Go to Wiki docs
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
 
-  openExtFeedbackForm = () => {
-     //-- window.open("https://forms.gle/8ze2aamxJueWYQqV6"); 
-     window.open("https://docs.google.com/forms/d/e/1FAIpQLSdHuO--mG00sKydQpJ7sPpDmhcJ4ECdj-wAB1kwXQExh_nUSg/viewform?usp=sf_link");
-  }
+    goToWikiDocs = () => {
+         window.open("https://github.com/Mmasoud1/HistoJS/wiki");
+    }
 
-  openExtIssueForm = () => {
-     // --triggerHint("To be coded later")
-     window.open("https://github.com/Mmasoud1/HistoJS/issues")
-  }
-  openContactUsForm = () => {
-     triggerHint("To be coded later")
-  }
+   /**
+   * Open External feedback goolge form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+    openExtFeedbackForm = () => {
+        //-- window.open("https://forms.gle/8ze2aamxJueWYQqV6"); 
+        window.open("https://docs.google.com/forms/d/e/1FAIpQLSdHuO--mG00sKydQpJ7sPpDmhcJ4ECdj-wAB1kwXQExh_nUSg/viewform?usp=sf_link");
+    }
+
+   /**
+   * Open Github issue page
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+    openExtIssueForm = () => {
+        window.open("https://github.com/Mmasoud1/HistoJS/issues")
+    }
+
+    /**
+    * For future use 
+    *
+    * @todo Write the doc.
+    * @todo Implement this function.    
+    *
+    */  
+    openContactUsForm = () => {
+        triggerHint("To be coded later")
+    }
 
   //------- Login/logout Toolbar Button ---------// 
 
+  /**
+   * Open login form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */      
+
    openLoginForm = () => { 
      if(!getActiveForm()){ // if another active form is opened then esc
-        var hostIndex = getHostIndex();
+        let hostIndex = getHostIndex();
+
         if(hostIndex){ 
-          var loginForm = document.getElementById("loginForm")
+          let loginForm = document.getElementById("loginForm")
           loginForm.classList.remove("formflashanimation"); 
           loginForm.style.display = "block";
           document.getElementById("userNameId").style.borderColor = "black"
@@ -4808,28 +5939,45 @@
       }       
     }
 
-  closeLoginForm = () => {
-      var loginForm = document.getElementById("loginForm");
-      if (loginForm.style.display === "block") 
-      {
+  /**
+   * close login form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */  
+   closeLoginForm = () => {
+      let loginForm = document.getElementById("loginForm");
+
+      if (loginForm.style.display === "block") {
          document.getElementById("userNameId").value = null
          document.getElementById("passwordId").value = null
          loginForm.style.display = "none";
          resetActiveFormState();
+
           if(isScreenLogoActive()) { 
              showScreenLogo(); 
           }        
       }
     }
 
+  /**
+   * confirm button for login 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
   confirmLogin = () => {
-      var usr = document.getElementById("userNameId");
+      let usr = document.getElementById("userNameId");
 
       if (!usr.value.length){ 
           usr.style.borderColor = "red";
       }
       
-      var psw = document.getElementById("passwordId");
+      let psw = document.getElementById("passwordId");
 
       if (!psw.value.length) { 
           psw.style.borderColor = "red";
@@ -4850,30 +5998,68 @@
       }
   }  
 
-
+  /**
+   * Cancel button for login form
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
   cancelLogin = () => {
      closeLoginForm();
   }
 
+  /**
+   * Init logout toolbar button.
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
   initLogoutToolbarBtn = () => {
-     var lastName  = getUserInfo().lastName;
-     var logoutNode = ""; 
+     let lastName  = getUserInfo().lastName;
+     let logoutNode = ""; 
      logoutNode += '<a  style="position:absolute; right:4vw" href="javascript:void(0)" onclick="logoutCurHost()"><i style="font-size:0.7vw; padding: 0.42vh"    class="fa fa-sign-out"></i>' + lastName + '</a>'
      document.getElementById("login-out").innerHTML = logoutNode;        
   }
 
+  /**
+   * Init login toolbar button.
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
   initLoginToolbarBtn = () => {
-     var loginNode = ""; 
+     let loginNode = ""; 
      loginNode += '<a  style="position:absolute; right:4vw" href="javascript:void(0)" onclick="openLoginForm()"><i style="font-size:0.7vw; padding: 0.42vh"    class="fa fa-user-circle-o"></i>Login</a>'
      document.getElementById("login-out").innerHTML = loginNode;        
   }  
 
+  /**
+   * logout current host
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
   logoutCurHost = () => {
       logout()
       initLoginToolbarBtn();
   }
 
-
+  /**
+   * Auto login 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
   autoLogin = (callback) => {
      let hostIndex = getHostIndex();
      if(isAutoLoginEnabled()) {
@@ -4891,6 +6077,18 @@
      
      callback();        
   }    
+
+
+  /**
+   * Parse ajax error
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} xhr
+   * @returns {promise}
+   */ 
 
   parseError = (xhr) => {
       let message ;
@@ -4921,11 +6119,33 @@
       return Promise.reject(xhr);
   }
 
+  /**
+   * Parse ajax data
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} data
+   * @returns {object}
+   */ 
 
   _parseData = (data) => {
       return data ? data.json() : data;
   }  
 
+
+  /**
+   * DSA login 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} sourceParams
+   * @param {string} hostApi   
+   * @returns {promise}
+   */ 
 
   dsaLogin = (sourceParams, hostApi) => {
       const params = sourceParams ? {
@@ -4945,13 +6165,20 @@
                                   })
                          .get(hostApi + `/user/authentication${setTokenIntoUrl(getToken(), "?")}`)
                          .then(result => _parseData(result));
-                                      
-                                        
   }
 
 
+   /**
+   * Event fires on DSA logout 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */                                        
+
   dsaLogout = () => {
-      var hostApi = getHostApi();
+      let hostApi = getHostApi();
 
       return webix.ajax().del(hostApi + `/user/authentication`)
         .catch(parseError)
@@ -4976,7 +6203,8 @@
    }
 
    login = (params) => {
-        var hostApi = getHostApi()
+        let hostApi = getHostApi();
+
         return dsaLogin(params, hostApi).then( data => {
           webix.storage.local.put(`${"authToken" + "-"}${getHostIndex()}`, data.authToken);
           webix.storage.local.put(`${"user" + "-"}${getHostIndex()}`, data.user);
@@ -4994,9 +6222,11 @@
 
   getToken = () => {
     const authToken = webix.storage.local.get(`${"authToken" + "-"}${getHostIndex()}`);
+
     if (!authToken) {
       return null;
     }
+
     return authToken.token;
   }
 
@@ -5022,155 +6252,350 @@
 
       webix.storage.local.remove(`${"user" + "-"}${hostIndex}`);
       webix.storage.local.remove(`${"authToken" + "-"}${hostIndex}`);
-
   } 
 
 //----------------- Get-Set Host functions  -----------------------------//
+
+  /**
+   * Get current host API
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "https://styx.neurology.emory.edu/girder/api/v1/"  
+   */ 
+
     getHostApi = () => {
          return currentHostCollectSelectionStates.hostObject.hostAPI;
     }
 
+  /**
+   * Get current host object
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {object}  e.g. Object { id: "3", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }  
+   */ 
     getHostObjEntry = () => {
          return currentHostCollectSelectionStates.hostObject;
     }
 
+  /**
+   * Set host entry
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} hostEntry - e.g. { id: "1", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }  
+   */ 
     setHostObjEntry = (hostEntry) => {
           currentHostCollectSelectionStates.hostObject = hostEntry;
     }
 
+  /**
+   * Get current host index
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {number}  e.g. 3
+   */ 
     getHostIndex = () => {
          return currentHostCollectSelectionStates.hostIndex;
     }  
 
+  /**
+   * Set  host index
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {number } hostIndex  e.g. 1
+   */ 
 
     setHostIndex = ( hostIndex) => {
           currentHostCollectSelectionStates.hostIndex = hostIndex;
     }
 
+  /**
+   * Get current host name
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "Styx"
+   */ 
     getHostName = () => {
           return currentHostCollectSelectionStates.hostObject.value;
     }
 
+  /**
+   * Get current Host url
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "https://styx.neurology.emory.edu/girder"  
+   */ 
     getHostUrl = () => {
          return currentHostCollectSelectionStates.hostObject.hostAPI.split("/api")[0];
     }
 
+  /**
+   * check if local host
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}  
+   */ 
 
     isLocalHost = () => {
          return location.hostname === "localhost" || location.hostname === "127.0.0.1" ? true : false;
     }
 
+  /**
+   * check if histojs run on github
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}  
+   */ 
 
+    isRunOnGithub = () => {
+         return location.hostname.includes("github.io") ? true : false;
+    }
 //-----------------Item functions ----------------------------//
+  /**
+   * Check if item is selected
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {bool}
+   */     
 
-  isItemSelected = () => {
-      return currentHostCollectSelectionStates.item != null ? true : false;
-  } 
-  getSelectedItem = () => {
-      return isItemSelected() ? currentHostCollectSelectionStates.item : null;
-  } 
+    isItemSelected = () => {
+         return currentHostCollectSelectionStates.item != null ? true : false;
+    } 
 
-  getSelectedItemFolderId = () => {
-      return isItemSelected() ? currentHostCollectSelectionStates.item.folderId : null;
-  } 
+  /**
+   * Get selected item
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {object}  { _id: "658d3bd0a45554f5d9171dc4", _modelType: "item", baseParentId: "658d3b0ea45554f5d9171dbe", 
+                         baseParentType: "collection", copyOfItem: "603520d9660f1f265e415d99", created: "2023-12-28T09:11:44.428000+00:00", 
+                         creatorId: "5d9fd4e87bc2409bd20a359f", description: "", folderId: "658d3bd0a45554f5d9171dc0", largeImage: {…}, … }
+   */ 
+    getSelectedItem = () => {
+         return isItemSelected() ? currentHostCollectSelectionStates.item : null;
+    } 
 
-  setSelectedItem = (itemObj) => {
-      currentHostCollectSelectionStates.item = itemObj;
-  }  
+  /**
+   * Get selected item folder id
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "658d3bd0a45554f5d9171dc0"
+   */ 
+    getSelectedItemFolderId = () => {
+         return isItemSelected() ? currentHostCollectSelectionStates.item.folderId : null;
+    } 
 
-  resetSelectedItem = () => {
-      currentHostCollectSelectionStates.item = null;
-  }  
+  /**
+   * Set selected item
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} itemObj
+   */ 
+    setSelectedItem = (itemObj) => {
+         currentHostCollectSelectionStates.item = itemObj;
+    }  
 
-  getSelectedItemId = () => {
-      return isItemSelected() ? currentHostCollectSelectionStates.item._id : null;
-  } 
+  /**
+   * Reset selected item
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+    resetSelectedItem = () => {
+         currentHostCollectSelectionStates.item = null;
+    }  
 
-  getLastSelectedItemId = () => {
-      return lastHostCollectSelectionStates.itemId;  
-  } 
+  /**
+   * Get selected item id
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "658d3bd0a45554f5d9171dc4"
+   */ 
+    getSelectedItemId = () => {
+         return isItemSelected() ? currentHostCollectSelectionStates.item._id : null;
+    } 
 
-  setLastSelectedItemId = (itemId) => {
-      lastHostCollectSelectionStates.itemId = itemId;  
-  } 
+  /**
+   * Get last selected item id
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g. "658d3bd0a45554f5d9171dc4"
+   */ 
+    getLastSelectedItemId = () => {
+         return lastHostCollectSelectionStates.itemId;  
+    } 
 
-  resetLastSelectedItemId = () => {
-      lastHostCollectSelectionStates.itemId = null;  
-  }    
+  /**
+   * Set selected item id
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {string} itemId e.g. "658d3bd0a45554f5d9171dc4"
+   */ 
+    setLastSelectedItemId = (itemId) => {
+         lastHostCollectSelectionStates.itemId = itemId;  
+    } 
 
-  getItemName = () => {
-      return isItemSelected() ? currentHostCollectSelectionStates.item.name : null;
-  } 
+  /**
+   * Reset selected item id
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   */ 
+    resetLastSelectedItemId = () => {
+        lastHostCollectSelectionStates.itemId = null;  
+    }    
 
+  /**
+   * Get selected item name
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @returns {string}  e.g.  "LUNG-3-PR_40X.ome.tif"
+   */ 
+    getItemName = () => {
+         return isItemSelected() ? currentHostCollectSelectionStates.item.name : null;
+    } 
 
-  isMultiPlexItem = (item) => {
+  /**
+   * Check if the item is multiplex item ending with ome.tiff
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} item
+   * @returns {bool}  
+   */ 
+    isMultiPlexItem = (item) => {
+        return item.name.includes(Opts.multiPlexFileExtension) ? true : false;
 
-         return item.name.includes(Opts.multiPlexFileExtension) ? true : false;
+        //-- if((item.name.includes(Opts.multiPlexFileExtension)) && (item.meta.omeSceneDescription != null)) {
+        //--   return true;
+        //-- } else if( !item.name.includes(Opts.multiPlexFileExtension) ) {
+        //--   return false;
+        //-- } 
+    }
 
-        // if((item.name.includes(Opts.multiPlexFileExtension)) && (item.meta.omeSceneDescription != null)) {
-        //   return true;
-        // } else if( !item.name.includes(Opts.multiPlexFileExtension) ) {
-        //   return false;
-        // } 
-  }
+    
+  /**
+   * Check if the item has ome scence description. 
+   *
+   * @function    
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0 
+   * @param {object} item
+   * @returns {bool}  
+   */ 
+    hasOmeSceneDescription = (item) => {
+         if(item.name.includes(Opts.multiPlexFileExtension)){
+            return item.meta.omeSceneDescription != null ? true : false;
+         }
+         return false;   
+    }
 
-  hasOmeSceneDescription = (item) => {
-     if(item.name.includes(Opts.multiPlexFileExtension)){
-        return item.meta.omeSceneDescription != null ? true : false;
+    //-----------------Screen Status--------------------------------// 
+     isActiveForm = (elmId) => {
+        return screenStatus.activeForm === document.getElementById(elmId)? true : false;
      }
-     return false;   
-  }
 
-//-----------------Screen Status--------------------------------// 
- isActiveForm = (elmId) => {
-    return screenStatus.activeForm === document.getElementById(elmId)? true : false;
- }
+     setActiveForm = (elm) => {
+         screenStatus.activeForm = elm;
+     } 
 
- setActiveForm = (elm) => {
-     screenStatus.activeForm = elm;
- } 
+     getActiveForm = () => {
+         return screenStatus.activeForm ;
+     } 
+     
+     resetActiveFormState = () => {
+         screenStatus.activeForm = null;
+     }
 
- getActiveForm = () => {
-     return screenStatus.activeForm ;
- } 
- 
- resetActiveFormState = () => {
-     screenStatus.activeForm = null;
- }
+     setActiveMode = (elm) => {
+         screenStatus.activeMode = elm;
+     } 
 
- setActiveMode = (elm) => {
-     screenStatus.activeMode = elm;
- } 
+     getActiveMode = () => {
+         return screenStatus.activeMode ;
+     } 
+     
+     resetActiveModeState = () => {
+         screenStatus.activeMode = null;
+     }
 
- getActiveMode = () => {
-     return screenStatus.activeMode ;
- } 
- 
- resetActiveModeState = () => {
-     screenStatus.activeMode = null;
- }
+     getActiveLayout = () => {
+         return screenStatus.activeLayout ;
+     }
 
- getActiveLayout = () => {
-     return screenStatus.activeLayout ;
- }
+     setActiveLayout = (layoutId) => {
+         screenStatus.activeLayout = layoutId ;
+     } 
 
- setActiveLayout = (layoutId) => {
-     screenStatus.activeLayout = layoutId ;
- } 
+     isLayoutActive = (layoutId) => {
+        return screenStatus.activeLayout === layoutId? true : false;
+     }
 
- isLayoutActive = (layoutId) => {
-    return screenStatus.activeLayout === layoutId? true : false;
- }
-
- resetActiveLayout = () => {
-    return screenStatus.activeLayout = null;
- }
+     resetActiveLayout = () => {
+        return screenStatus.activeLayout = null;
+     }
 
 
- // is screenLogo active in memory ( not removed)
- isScreenLogoActive = () => {
-    return document.getElementById("screenLogo") ? true : false;
- }
+     // is screenLogo active in memory ( not removed)
+     isScreenLogoActive = () => {
+        return document.getElementById("screenLogo") ? true : false;
+     }
 
 
 
@@ -5370,13 +6795,13 @@
                          // check if the user has access to download the file
                          if( getApiKey() != null ) {
                               returnObj = readRemoteCsvFile( getCsvChannelMetaDataFileName() );
-                              // if(returnObj) {
-                              //      if( !returnObj[0].hasOwnProperty('channel_name') || !returnObj[0].hasOwnProperty('channel_number') ) {
-                              //         // trigerWizard () // 
-                              //      }
-                              // } else {
-                              //     triggerHint("Error reading remote " + getCsvChannelMetaDataFileName() + " CSV file" , "error", 5000); 
-                              // }
+                              //-- if(returnObj) {
+                              //--      if( !returnObj[0].hasOwnProperty('channel_name') || !returnObj[0].hasOwnProperty('channel_number') ) {
+                              //--         // trigerWizard () // 
+                              //--      }
+                              //-- } else {
+                              //--     triggerHint("Error reading remote " + getCsvChannelMetaDataFileName() + " CSV file" , "error", 5000); 
+                              //-- }
                           } else {
                               createApiKey();
                               // recall the function 
@@ -5388,7 +6813,7 @@
               } else { // No remote CSV file with same collection
                   triggerHint("No " + getCsvChannelMetaDataFileName() + " remote CSV file found" , "error", 5000); 
 
-                   // trigerWizard () // 
+                   // trigerWizard () // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<----------------------
               } 
          } else {
            triggerHint("Login to access the remote channels metadata CSV file ", "error", 5000);                
