@@ -6628,52 +6628,147 @@
     }
 
     //-----------------Screen Status--------------------------------// 
+
+   /**
+    * Check if form is active
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @param {string} elmId e.g. "DAPIChConfirmForm"
+    * @returns {bool} 
+    */      
      isActiveForm = (elmId) => {
         return screenStatus.activeForm === document.getElementById(elmId)? true : false;
      }
 
+   /**
+    * Set active form on screen
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @param {object} elm -  e.g. document.getElementById("DAPIChConfirmForm")
+    */   
      setActiveForm = (elm) => {
          screenStatus.activeForm = elm;
      } 
 
+   /**
+    * Get active form on screen
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @returns {object | null} e.g. < div id="DAPIChConfirmForm" class="form-container channelform" layout="Design Form" ... >
+    */
      getActiveForm = () => {
          return screenStatus.activeForm ;
      } 
      
+   /**
+    * Reset active form state
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */
      resetActiveFormState = () => {
          screenStatus.activeForm = null;
      }
 
+   /**
+    * Set active mode
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @param {object} elm
+    */
      setActiveMode = (elm) => {
          screenStatus.activeMode = elm;
      } 
 
+   /**
+    * Get active mode
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @returns {object}
+    */
      getActiveMode = () => {
          return screenStatus.activeMode ;
      } 
-     
+
+   /**
+    * Reset active mode state
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */     
      resetActiveModeState = () => {
          screenStatus.activeMode = null;
      }
 
+   /**
+    * Get active layout
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @returns {"string"}   e.g. "Browse", "Design", "Analysis"
+    */
      getActiveLayout = () => {
          return screenStatus.activeLayout ;
      }
+
+   /**
+    * Set active layout
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @param {"string"} layoutId - e.g. "Browse", "Design", "Analysis" 
+    */
 
      setActiveLayout = (layoutId) => {
          screenStatus.activeLayout = layoutId ;
      } 
 
+   /**
+    * Check if layout is active
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @param {"string"} layoutId - e.g. "Browse", "Design", "Analysis" 
+    * @returns {bool}
+    */
      isLayoutActive = (layoutId) => {
-        return screenStatus.activeLayout === layoutId? true : false;
+        return screenStatus.activeLayout === layoutId ? true : false;
      }
 
+   /**
+    * Reset active layout
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */
      resetActiveLayout = () => {
         return screenStatus.activeLayout = null;
      }
 
-
-     // is screenLogo active in memory ( not removed)
+   /**
+    * Is screen logo active in memory ( not removed)
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    * @returns {bool}
+    */     
      isScreenLogoActive = () => {
         return document.getElementById("screenLogo") ? true : false;
      }
@@ -6685,28 +6780,42 @@
 
 //------------------------Preload Settings-------------------//
 
+   /**
+    * Init screen logo on the screen
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */   
+
      docLoaded = () => {
          initScreenLogo();
-     // alert(window.screen.availHeight)   
-     // console.log(document.documentElement)
-     //try 
-     // window.innerHeight    // 1097  change with console change
-     // document.body.offsetHeight
-     // screen.height       // 1206
-     // document.documentElement.clientHeight   == window.innerHeight 
-     // document.body.clientHeight
-     // window.screen.availHeight  // 1179
+     //-- alert(window.screen.availHeight)   
+     //-- console.log(document.documentElement)
+     //-- try 
+     //-- window.innerHeight    // 1097  change with console change
+     //-- document.body.offsetHeight
+     //-- screen.height       // 1206
+     //-- document.documentElement.clientHeight   == window.innerHeight 
+     //-- document.body.clientHeight
+     //-- window.screen.availHeight  // 1179
  
-              // var allLayoutPanels = document.querySelectorAll('div[layout="'+layoutId+'"]')
-              // allLayoutPanels.forEach(function(panel) {
+              //-- var allLayoutPanels = document.querySelectorAll('div[layout="'+layoutId+'"]')
+              //-- allLayoutPanels.forEach(function(panel) {
        
-              //      if(document.getElementById(panel.id +"Bar")){ 
-              //         destroyBar(panel.id +"Bar")
-              //      }
-              //  })
-       
-
+              //--      if(document.getElementById(panel.id +"Bar")){ 
+              //--         destroyBar(panel.id +"Bar")
+              //--      }
+              //--  })
     }
+
+   /**
+    * Set screen logo active on screen when body tag load.
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */   
 
     docResized = () => {
          if(isScreenLogoActiveOnScreen()){
@@ -6714,129 +6823,210 @@
          }
     }
 
+
+   /**
+    * Event listener on screen load.
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */ 
+
     window.addEventListener('load', (event) => {
-        // alert(window.screen.availWidth);
+        //-- alert(window.screen.availWidth);
         document.documentElement.style.setProperty('--screen-curAvailWidth', window.screen.availWidth);
         document.documentElement.style.setProperty('--screen-curAvailHeigth', window.screen.availHeight);      
     });
 
+   /**
+    * Event listener on screen resize
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */ 
+
     window.addEventListener('resize', (event) => {
         if(getActiveForm())
            getElementCenterOnScreen(  getActiveForm()  )
-          // getActiveForm()   
+          //-- getActiveForm()   
     });    
 
-    // preloadFunc = () => {
-    // 
-    //     // alert(window.screen.availWidth);
-    //     document.documentElement.style.setProperty('--screen-curAvailWidth', window.screen.availWidth);
-    //     document.documentElement.style.setProperty('--screen-curAvailHeigth', window.screen.availHeight);
-    // }
-    // window.onpaint = preloadFunc();
+    //-- preloadFunc = () => {
+    //-- 
+    //--     // alert(window.screen.availWidth);
+    //--     document.documentElement.style.setProperty('--screen-curAvailWidth', window.screen.availWidth);
+    //--     document.documentElement.style.setProperty('--screen-curAvailHeigth', window.screen.availHeight);
+    //-- }
+    //-- window.onpaint = preloadFunc();
 
-    // windowResizeFunc = () => {
-    // 
-    //     // alert(window.screen.availWidth);
+    //-- windowResizeFunc = () => {
+    //-- 
+    //--     // alert(window.screen.availWidth);
 
-    // }
-    // window.onresize = windResizeFunc();
+    //-- }
+    //-- window.onresize = windResizeFunc();
 
-  // document.getElementsByClassName("navbar")[0].addEventListener('click', (event) => {    
- document.onclick = (event) => {
-     // console.log(" event target parentElement ", event.target.parentElement)
-     if (event.target.matches('.dropbtn') ) {
-         var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
-         if (dropdown.classList.contains('show')) {
-               dropdown.classList.remove('show');
-        }else{
-             dropdown.classList.toggle("show");
-             navMenuBtnClicked(dropdown.id)
-        }
-     } else if(event.target.parentElement && event.target.parentElement.matches('.dropdown-content') ) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        // var i;
-         for(let openDropdown of dropdowns)  {
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-     } 
 
-     if(Opts.isHintCloseOnMouseEvent) {
-      
-         if( (event.target.id != "hint") && 
-             (event.target.parentElement.id != "hint") &&
-             (event.target.id != "hintParagraph") && 
-             (event.target.parentElement.id != "hintParagraph") ) {
-                   // console.log("outside isPanelActive")    
-                  if( isPanelActive("hint") ) {
-                     if(Opts.isFirstClickEventAfterTrigger) {                      
-                        setTimeout(() => { closeHint(); }, Opts.defaultOpeningTime ); 
-                        Opts.isFirstClickEventAfterTrigger = false;  
-                        // console.log("inside timer")                   
-                     } else {  
-                             closeHint(); 
-                             //Opts.isFirstClickEventAfterTrigger = true;  
-                            }
-          
-                  }
-
-         }
-      }
-     // console.log(" clicked elem : ", event.target.id)
-     // console.log(" clicked elem parent : ", event.target.parentElement.id)
-     //else if(event.target.id != "hint")
-     /*else {
-          console.log("event.target.parentElement", event.target.parentElement)
-          if(event.target.matches('svg') ){
-            if(isScreenLogoActive()){
-              console.log(" yes matches svg")
-               event.stopPropagation();
+   /**
+    * Event listener on screen click
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */ 
+       
+    document.onclick = (event) => {
+    //-- document.getElementsByClassName("navbar")[0].addEventListener('click', (event) => {     
+         // console.log(" event target parentElement ", event.target.parentElement)
+         if (event.target.matches('.dropbtn') ) {
+             var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
+             if (dropdown.classList.contains('show')) {
+                   dropdown.classList.remove('show');
+            }else{
+                 dropdown.classList.toggle("show");
+                 navMenuBtnClicked(dropdown.id)
             }
+         } else if(event.target.parentElement && event.target.parentElement.matches('.dropdown-content') ) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            //-- var i;
+             for(let openDropdown of dropdowns)  {
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+         } 
+
+         if(Opts.isHintCloseOnMouseEvent) {
+          
+             if( (event.target.id != "hint") && 
+                 (event.target.parentElement.id != "hint") &&
+                 (event.target.id != "hintParagraph") && 
+                 (event.target.parentElement.id != "hintParagraph") ) {
+                       // console.log("outside isPanelActive")    
+                      if( isPanelActive("hint") ) {
+                         if(Opts.isFirstClickEventAfterTrigger) {                      
+                            setTimeout(() => { closeHint(); }, Opts.defaultOpeningTime ); 
+                            Opts.isFirstClickEventAfterTrigger = false;  
+                            // console.log("inside timer")                   
+                         } else {  
+                                 closeHint(); 
+                                 //--Opts.isFirstClickEventAfterTrigger = true;  
+                                }
+              
+                      }
+
+             }
           }
+         // console.log(" clicked elem : ", event.target.id)
+         // console.log(" clicked elem parent : ", event.target.parentElement.id)
+         //--else if(event.target.id != "hint")
+         
+         //-- else {
+         //--      console.log("event.target.parentElement", event.target.parentElement)
+         //--      if(event.target.matches('svg') ){
+         //--        if(isScreenLogoActive()){
+         //--          console.log(" yes matches svg")
+         //--           event.stopPropagation();
+         //--        }
+         //--      }
 
-     }   
-     */
-  }
+         //-- }   
+         //-- 
+    }
 
-
-  document.onmouseout = (event) => {
-     if (event.target.matches('.dropbtn') || event.target.matches('.dropdown-content')) {
-         var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
-         var dropbtn = event.target.parentElement.querySelector('.dropbtn')   
-         if (dropdown && dropdown.classList.contains('show')) {
-          $('#'+ dropdown.id ).mouseleave( () => {
-              if (!($('#'+ dropbtn.id +':hover').length != 0)){ 
-                  dropdown.classList.remove('show');
-                  navManuMouseOut()
-              }    
-          })
-          $('#'+ dropbtn.id ).mouseleave( () => {
-              if (!($('#'+ dropdown.id +':hover').length != 0)) {
-                  dropdown.classList.remove('show');
-                  navManuMouseOut()
-              }    
-          })        
-        }
-     }
-     //onmouseover="navMenuBtnClicked()" onmouseout="navManuMouseOut()"
-  }
+   /**
+    * Event listener on mouseout from screen element such as drop menus
+    *    
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0 
+    */ 
+    document.onmouseout = (event) => {
+         if (event.target.matches('.dropbtn') || event.target.matches('.dropdown-content')) {
+             var dropdown = event.target.parentElement.querySelector(".dropdown-content") 
+             var dropbtn = event.target.parentElement.querySelector('.dropbtn')   
+             if (dropdown && dropdown.classList.contains('show')) {
+              $('#'+ dropdown.id ).mouseleave( () => {
+                  if (!($('#'+ dropbtn.id +':hover').length != 0)){ 
+                      dropdown.classList.remove('show');
+                      navManuMouseOut()
+                  }    
+              })
+              $('#'+ dropbtn.id ).mouseleave( () => {
+                  if (!($('#'+ dropdown.id +':hover').length != 0)) {
+                      dropdown.classList.remove('show');
+                      navManuMouseOut()
+                  }    
+              })        
+            }
+         }
+         //--onmouseover="navMenuBtnClicked()" onmouseout="navManuMouseOut()"
+    }
 
 ////---------------------------------------------------------------------------------//////
-   // e.g. "boundaries/TONSIL-1_40X/"
-   getCsvChannelMetaDataLocalPath = () => {
-       return getItemName() ? ( Opts.dockerMountingDir  + 
+ 
+  /**
+   *  CSV channel meta data local path.
+   *  
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns {string}
+   * @example     
+   *
+   * getCsvChannelMetaDataLocalPath()
+   *
+   * =>  "boundaries/LUNG-3-PR_40X/" 
+   */  
+
+    getCsvChannelMetaDataLocalPath = () => {
+         return getItemName() ? ( Opts.dockerMountingDir  + 
                                   Opts.defaultBoundariesDir + "/" +
                                   getItemName().split(".")[0] + "/"
                                 ) : null;  
-   } 
+    }   
 
-   //  e.g "TONSIL-1_40X_channel_metadata.csv"
-   getCsvChannelMetaDataFileName = () => {
+
+   /**
+    *  Get CSV channel metadata file name
+    *  
+    * @function
+    * @memberof HistoJS
+    * @since 1.0.0
+    * @version 1.0.0
+    * @returns {string}
+    * @example     
+    *
+    * getCsvChannelMetaDataFileName()
+    *
+    * =>  "LUNG-3-PR_40X_channel_metadata.csv" 
+    * OR 
+    * => "TONSIL-1_40X_channel_metadata.csv"
+    */      
+
+    getCsvChannelMetaDataFileName = () => {
         return  getItemName().split(".")[0]  + "_channel_metadata.csv"
-   }  
+    }      
 
-  readRemoteCsvFile = (fileName) => { // fileName is the name on host  e.g "TONSIL-1_40X_cellMask.csv"
+  /**
+   *  Return the content of  CSV file  e.g. LUNG-3-PR_40X_channel_metadata.csv  as a JSON 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} fileName e.g. LUNG-3-PR_40X_channel_metadata.csv
+   * @returns {Object} 
+   * @example 
+   *
+   * readRemoteCsvFile("LUNG-3-PR_40X_channel_metadata.csv")
+   * 
+   * => Array(44) [ { channel_number: 0, channel_name: "DAPI" }, { channel_number: 1, channel_name: "A488background1" }, ... ]
+   *   
+   */    
+    readRemoteCsvFile = (fileName) => { // fileName is the name on host  e.g "TONSIL-1_40X_cellMask.csv"
          let csvToJson = {};
          let apiUrl = getHostApi();
          let requestUrl = "item/" + getRemoteFileId(fileName) + "/download?contentDisposition=attachment";
@@ -6846,12 +7036,24 @@
                                  apiKey + "&requestUrl=" + requestUrl, (result) => {
                                  csvToJson = JSON.parse(result);
                                               })
-        // console.log("csvToJson : ",csvToJson)   
         return csvToJson ? csvToJson : null;
-  }
+    }
 
+  
+  /**
+   * Upload channels metadata to DSA host 
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   * @param {string} channelMetaKey e.g.  "omeSceneDescription"
+   * @param {Array} channelMetadata e.g. Array(44) [ { channel_number: 0, channel_name: "DAPI" }, 
+   *                                                 { channel_number: 1, channel_name: "A488background1" }, ... ]
+   *
+   */      
 
-  uploadChannelsMetadata = (channelMetaKey, channelMetadata) => {
+    uploadChannelsMetadata = (channelMetaKey, channelMetadata) => {
       if( isLoggedIn() ) {
           let item = getSelectedItem();
           let hostAPI = getHostApi();
@@ -6861,10 +7063,20 @@
        } else {
             triggerHint("Login before upload");
        }   
-  }
+    }
+  
 
- loadCsvChannelMetadata = () => {
+  /**
+   * Load CSV channels metadata
+   * 
+   * @function
+   * @memberof HistoJS
+   * @since 1.0.0
+   * @version 1.0.0
+   *
+   */  
 
+    loadCsvChannelMetadata = () => {
           /// get remote boundary CSV file id from host is exist
           /// if Opts.searchEntirHostForResource is false, it will search for CSV file within the item remote folder only
           let returnObj = null;
@@ -6901,7 +7113,7 @@
          }   
 
          return returnObj;                 
-   }
+    }
 
 
 })();

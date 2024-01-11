@@ -665,30 +665,6 @@
 
    
 
- 
-    /**
-     *  CSV channel meta data local path.
-     *  
-     * @function
-     * @memberof HistoJS
-     * @since 1.0.0
-     * @version 1.0.0
-     * @returns {string}
-     * @example     
-     *
-     * getCsvChannelMetaDataLocalPath()
-     *
-     * =>  "boundaries/LUNG-3-PR_40X/" 
-     */  
-
-   getCsvChannelMetaDataLocalPath = () => {
-       return getItemName() ? ( Opts.dockerMountingDir  + 
-                                  Opts.defaultBoundariesDir + "/" +
-                                  getItemName().split(".")[0] + "/"
-                                ) : null;  
-   }   
-
-
     /**
      *  Get Item bourndaris file name
      *  
@@ -710,27 +686,6 @@
         return  getItemName().split(".")[0]  + "_cellMask.json"
    } 
 
-
-    /**
-     *  Get CSV channel metadata file name
-     *  
-     * @function
-     * @memberof HistoJS
-     * @since 1.0.0
-     * @version 1.0.0
-     * @returns {string}
-     * @example     
-     *
-     * getCsvChannelMetaDataFileName()
-     *
-     * =>  "LUNG-3-PR_40X_channel_metadata.csv" 
-     * OR 
-     * => "TONSIL-1_40X_channel_metadata.csv"
-     */      
-
-   getCsvChannelMetaDataFileName = () => {
-        return  getItemName().split(".")[0]  + "_channel_metadata.csv"
-   }    
 
 
     /**

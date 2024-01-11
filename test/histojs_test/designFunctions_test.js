@@ -301,4 +301,30 @@ describe("Main Design Phase Functions", function () {
     });
   });         
 
+ describe('#isActiveForm()', function () {
+    it('return if form is active', function () {
+       expect( isActiveForm("DAPIChConfirmForm") ).to.be.oneOf([true, false]);
+    });
+  });         
+
+ describe('#getActiveForm()', function () {
+    it('return active form on screen', function () {
+       expect( getActiveForm() ).to.be.oneOf(["object", null]);
+    });
+  });  
+
+ describe('#getActiveLayout()', function () {
+    it('return active layout on screen', function () {
+       expect( getActiveLayout() ).to.be.oneOf(["string", null]);
+    });
+  }); 
+
+ describe('#isLayoutActive()', function () {
+    it('return if layout is active', function () {
+       expect( isLayoutActive("Browse") ).to.be.oneOf([true, false]);
+    });
+  }); 
+
+
+
 });
