@@ -72,35 +72,47 @@
    * @since 1.0.0
    * @version 1.0.0
    * @category Array
-   * @param {Array} array The array to process.
+   * @param {Array} arr -  The array to process.
    * @param {*} element The value to inspect and remove.
    * @returns {Array} 
    * @example
    *
    * removeArrayElem(['a', 'b', 'c', 'd'], 'c')
    *  => ['a', 'b', 'd']
-   *
-   *  await removeArrayElemTFJS([1, 2, 3, 4], 3)
+   *---------------------------------------------*
+   *  await removeArrayElemTFJS( [1, 2, 3, 4], 3)
    *  => [1, 2, 4]
-   *  NOTE: TFJS version for numbers only
+   *
+   *  await removeArrayElemTFJS(['a', 'b', 'c', 'd'], 'c')
+   *  => ['a', 'b', 'd']
+   *---------------------------------------------*
+   *  await removeArrayElemTFJSV2( [1, 2, 3, 4], 3)
+   *  => [1, 2, 4]
+   *  NOTE: removeArrayElemTFJSV2 for numbers only
+   *
    */    
 
-    removeArrayElem = (array, element) => { 
-        const index = array.indexOf(element);
+    removeArrayElem = (arr, element) => { 
+        const index = arr.indexOf(element);
         if(index >= 0 ) {
-            array.splice(index, 1);
+            arr.splice(index, 1);
         }
     }
 
-    removeArrayElemTFJS = async (array, element) => {
-        const tensor = tf.tensor(array);
+    removeArrayElemTFJS = async(arr, element) => { 
+        return await tf.data.array(arr).filter(elm => elm !== element).toArray();
+    }      
+
+    
+    removeArrayElemTFJSV2 = async (arr, element) => {
+        const tensor = tf.tensor(arr);
         const mask = tf.notEqual(tensor, element);
         const result = await tf.booleanMaskAsync(tensor, mask); 
         return result.arraySync();
     }
 
-    removeArrayElem_v2 = (array, element) => { 
-        return array.filter(elm => elm !== element);
+    removeArrayElem_v2 = (arr, element) => { 
+        return arr.filter(elm => elm !== element);
     }  
 
 
@@ -258,6 +270,13 @@
    *                               {id:"spx-7", Type:"Immune"} ])
    *
    *  => Object { "spx-1": {id: "spx-1", Type: "Tumor"}, "spx-7": {id: "spx-7", Type: "Immune"} }
+   *
+   *
+   * await array2ObjWithHashKeyTFJS( "id", [ {id:"spx-1", Type:"Tumor"}, 
+   *                                         {id:"spx-7", Type:"Immune"} ])
+   *
+   *  => Object { "spx-1": {id: "spx-1", Type: "Tumor"}, "spx-7": {id: "spx-7", Type: "Immune"} }
+   *
    */ 
 
     array2ObjWithHashKey = (hashKey, arrayOfObjs) => {
@@ -269,12 +288,31 @@
                  convertedObject[ object[hashKey] ] = object; 
             });  
 
-            return   convertedObject;  
+            return convertedObject;  
+
         } else {
             triggerHint("Not a valid array of objects .. ") 
             return null; 
         }          
     }
+
+    array2ObjWithHashKeyTFJS = async(hashKey, arrayOfObjs) => {
+        if(Object.keys(arrayOfObjs).length) {
+            // create hash folarger arrayr the 
+            let convertedObject = {};
+
+            await tf.data.array(arrayOfObjs).forEachAsync(object => { 
+                 convertedObject[ object[hashKey] ] = object;
+            });   
+
+            return convertedObject;  
+
+        } else {
+            triggerHint("Not a valid array of objects .. ") 
+            return null; 
+        }          
+    }
+
 
 
   /**
@@ -336,27 +374,27 @@
    *
    * => [{ Type: "1", val: 1}, { Type: "2", val: 2}, { Type: "3", val: 3}, { Type: "4", val: 4}]
    *********************************************************************************************
-   * fastArraysConcatTFJS( [1, 1, 2, 3], [5, 2, 5])
+   * fastArraysConcatTFJSV2( [1, 1, 2, 3], [5, 2, 5])
    *
    * => [1, 1, 2, 3, 5, 2, 5]
    *
-   * NOTE: fastArraysConcatTFJS can not concate Array of objects. 
+   * NOTE: fastArraysConcatTFJSV2 can not concate Array of objects. 
    *
-   * fastArraysConcatTFJS( array1, array2)
+   * fastArraysConcatTFJSV2( array1, array2)
    *
    * =>  [ NaN, NaN, NaN, NaN ]
    **********************************************************************************************
-   * NOTE: fastArraysConcatTFJSData returns promise
+   * NOTE: fastArraysConcatTFJS returns promise
    *
-   * await fastArraysConcatTFJSData( [1, 1, 2, 3], [5, 2, 5])
+   * await fastArraysConcatTFJS( [1, 1, 2, 3], [5, 2, 5])
    * OR
-   * fastArraysConcatTFJSData([1, 1, 2, 3], [5, 2, 5]).then(function(res) { console.log(res) })
+   * fastArraysConcatTFJS([1, 1, 2, 3], [5, 2, 5]).then(function(res) { console.log(res) })
    *
    * => [1, 1, 2, 3, 5, 2, 5] 
    *
-   * await fastArraysConcatTFJSData( array1, array2)
+   * await fastArraysConcatTFJS( array1, array2)
    * OR
-   * fastArraysConcatTFJSData(array1,array2).then(function(res) { console.log(res) })
+   * fastArraysConcatTFJS(array1,array2).then(function(res) { console.log(res) })
    *
    * =>  [{ Type: "1", val: 1}, { Type: "2", val: 2}, { Type: "3", val: 3}, { Type: "4", val: 4}]
    */ 
@@ -366,18 +404,16 @@
     }
 
     fastArraysConcatTFJS = (array1, array2) => {
-        const tensor1 = tf.tensor1d(array1);  
-        const tensor2 = tf.tensor1d(array2); 
-        return tf.concat([tensor1, tensor2]).arraySync();        
-    }
-
-
-    fastArraysConcatTFJSData = (array1, array2) => {
         const dataArr1 = tf.data.array(array1);
         const dataArr2 = tf.data.array(array2);
         return dataArr1.concatenate(dataArr2).toArray();
     } 
 
+    fastArraysConcatTFJSV2 = (array1, array2) => {
+        const tensor1 = tf.tensor1d(array1);  
+        const tensor2 = tf.tensor1d(array2); 
+        return tf.concat([tensor1, tensor2]).arraySync();        
+    }
 
   /**
    * Find  if two arrays are identical. 

@@ -25,6 +25,14 @@ describe("Main Design Phase Functions", function () {
     });
   });
 
+  describe('#findObjectByKeyValueTFJS()', function () {
+     it('return array element', function () {
+         return findObjectByKeyValueTFJS( [{id: "1", value: "val1"}, {id: "2", value: "val2"}]  , 'id', "2").then(result => {
+             expect( result ).to.eql({id: "2", value: "val2"});
+         }); 
+     });     
+  });  
+
   describe('#removeArrayElem()', function () {
     it('return array after remove element', function () {
        let arr2Test = ['a', 'b', 'c', 'd'];
@@ -32,6 +40,14 @@ describe("Main Design Phase Functions", function () {
        expect(arr2Test).to.eql(['a', 'b', 'd']);
     });
   });
+
+  describe('#removeArrayElemTFJS()', function () {
+    it('return array after remove element', function () {
+         return removeArrayElemTFJS(['a', 'b', 'c', 'd'], 'c').then(result => {
+             expect( result ).to.eql(['a', 'b', 'd']);
+         }); 
+    });
+  });  
 
   describe('#insertArrayElem()', function () {
     it('return array after insert an element', function () {
@@ -61,6 +77,18 @@ describe("Main Design Phase Functions", function () {
     });
   });
 
+  describe('#mergeArrayOfObjByKeyTFJS()', function () {
+    it('return merged two arrays of objects by common key ', function () {
+         return mergeArrayOfObjByKeyTFJS( "id", [ {id:"spx-1", Type:"Tumor"}, 
+                                             {id:"spx-7", Type:"Immune"} ], 
+                                                         [{id : "spx-1", area: 250,  solidity: 0.95}, 
+                                                          {id : "spx-3", area: 150,  solidity: 0.85}, 
+                                                          {id : "spx-7", area: 100,  solidity: 0.80} ]).then(result => {
+             expect( result ).to.be.an('array');
+         });       
+    });
+  });  
+
   describe('#array2ObjWithHashKey()', function () {
     it('return a conversion of array of objects to object with hashing key', function () {
        expect(array2ObjWithHashKey( "id", [ {id:"spx-1", Type:"Tumor"}, 
@@ -69,17 +97,40 @@ describe("Main Design Phase Functions", function () {
     });
   });
 
+  describe('#array2ObjWithHashKeyTFJS()', function () {
+    it('return a conversion of array of objects to object with hashing key', function () {
+         return array2ObjWithHashKeyTFJS( "id", [ {id:"spx-1", Type:"Tumor"}, 
+                                            {id:"spx-7", Type:"Immune"} ]).then(result => {
+             expect( result ).to.eql({ "spx-1": {id: "spx-1", Type: "Tumor"}, "spx-7": {id: "spx-7", Type: "Immune"} });
+         });       
+    });
+  });  
+
   describe('#arrayUniqueValues()', function () {
     it('return unique values of array ', function () {
        expect( arrayUniqueValues( [1, 1, 2, 3, 2, 5]) ).to.eql([1, 2, 3, 5]);
     });
   });
 
+  describe('#arrayUniqueValuesTFJS()', function () {
+    it('return unique values of array ', function () {
+       expect( arrayUniqueValuesTFJS( [1, 1, 2, 3, 2, 5] ) ).to.eql([1, 2, 3, 5]);
+    });
+  });  
+
   describe('#fastArraysConcat()', function () {
     it('return  fast arrays concatenation ', function () {
        expect( fastArraysConcat( [1, 1, 2, 3], [5, 2, 5]) ).to.eql([1, 1, 2, 3, 5, 2, 5]);
     });
   });  
+
+  describe('#fastArraysConcatTFJS()', function () {
+    it('return  fast arrays concatenation ', function () {
+         return fastArraysConcatTFJS( [1, 1, 2, 3], [5, 2, 5]).then(result => {
+             expect( result ).to.eql([1, 1, 2, 3, 5, 2, 5]);
+         }); 
+    });
+  });   
 
   describe('#areArraysEquals()', function () {
     it('return if two arrays are identical ', function () {
