@@ -44,20 +44,26 @@
              {id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/"}]
    *
    * findObjectByKeyValue( dict, 'id', "2");
-   * // => Object { id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }
-   *
+   *  => Object { id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }
    *
    * findObjectByKeyValue( dict, 'id', "2", 'INDEX');
    *  => 1
-   *
+   * 
+   * await findObjectByKeyValueTFJS( dict, 'id', "2")
+   * => Object { id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }
    */ 
 
-    findObjectByKeyValue = (array, key, value, returnType='DATA') => {   
-        const obj = array.filter( entry => entry[key] === value)[0];
-        return obj ? ( returnType === 'DATA' ? obj : ( returnType === 'INDEX' ? array.indexOf(obj) : null )) : null;
+    findObjectByKeyValue = (arr, key, value, returnType = 'DATA') => {   
+        const obj = arr.filter( entry => entry[key] === value)[0];
+        return obj ? ( returnType === 'DATA' ? obj : ( returnType === 'INDEX' ? arr.indexOf(obj) : null )) : null;
     }    
 
-     
+    findObjectByKeyValueTFJS = async (arr, key, value) => {   
+        const result = await tf.data.array(arr).filter( entry => entry[key] === value).toArray();
+        return (result.length > 1) ? result : result.length ? result[0] : null;
+    }    
+
+ 
   /**
    * Remove element or record from array
    *
@@ -74,6 +80,9 @@
    * removeArrayElem(['a', 'b', 'c', 'd'], 'c')
    *  => ['a', 'b', 'd']
    *
+   *  await removeArrayElemTFJS([1, 2, 3, 4], 3)
+   *  => [1, 2, 4]
+   *  NOTE: TFJS version for numbers only
    */    
 
     removeArrayElem = (array, element) => { 
@@ -82,6 +91,17 @@
             array.splice(index, 1);
         }
     }
+
+    removeArrayElemTFJS = async (array, element) => {
+        const tensor = tf.tensor(array);
+        const mask = tf.notEqual(tensor, element);
+        const result = await tf.booleanMaskAsync(tensor, mask); 
+        return result.arraySync();
+    }
+
+    removeArrayElem_v2 = (array, element) => { 
+        return array.filter(elm => elm !== element);
+    }  
 
 
  /**
@@ -143,11 +163,22 @@
    * @returns {Array} arrOfObj2 - The second array of objects to be merged.
    * @example
    *
-   * mergeArrayOfObjByKey( "id", [ {id:"spx-1", Type:"Tumor"}, 
-   *                               {id:"spx-7", Type:"Immune"} ], 
+   *   mergeArrayOfObjByKey( "id", [ {id:"spx-1", Type:"Tumor" }, 
+   *                                 {id:"spx-7", Type:"Immune"} ], 
    *                                                            [{id : "spx-1", area: 250,  solidity: 0.95}, 
    *                                                             {id : "spx-3", area: 150,  solidity: 0.85}, 
    *                                                             {id : "spx-7", area: 100,  solidity: 0.80} ])
+   *
+   * => [{ id: "spx-1", Type:"Tumor", area: 250, solidity: 0.95 }, 
+   *     { id: "spx-7", Type: "immune", area: 100, solidity: 0.80 }]
+   *
+   *
+   * await mergeArrayOfObjByKeyTFJS( "id", [ {id:"spx-1", Type:"Tumor" }, 
+   *                                         {id:"spx-7", Type:"Immune"} ], 
+   *                                                            [{id : "spx-1", area: 250,  solidity: 0.95}, 
+   *                                                             {id : "spx-3", area: 150,  solidity: 0.85}, 
+   *                                                             {id : "spx-7", area: 100,  solidity: 0.80} ])
+   *
    * => [{ id: "spx-1", Type:"Tumor", area: 250, solidity: 0.95 }, 
    *     { id: "spx-7", Type: "immune", area: 100, solidity: 0.80 }]
    *
@@ -167,18 +198,47 @@
         // Create hash for the larger array
         let largerArrHashByKey = {};
 
-        largerArrayOfObjs.forEach((object, idx) => { 
+        largerArrayOfObjs.forEach(object => { 
              largerArrHashByKey[ object[objKey] ] = object; 
-        });     
+        });
 
         // Merge both arrays of objects
         let mergedArrayOfObjs = [];
 
-        smallerArrayOfObjs.forEach((object, idx) => { 
+        smallerArrayOfObjs.forEach(object => { 
            mergedArrayOfObjs.push({ ...object, ...largerArrHashByKey[ object[objKey] ]});
         });   
 
-        return     mergedArrayOfObjs; 
+        return mergedArrayOfObjs; 
+    }
+
+
+    mergeArrayOfObjByKeyTFJS = async(objKey, arrOfObj1, arrOfObj2) => {
+        let largerArrayOfObjs, smallerArrayOfObjs;
+
+        if( arrOfObj1.length < arrOfObj2.length) {
+            largerArrayOfObjs = arrOfObj2;
+            smallerArrayOfObjs = arrOfObj1;
+        } else {
+            largerArrayOfObjs = arrOfObj1;
+            smallerArrayOfObjs = arrOfObj2;            
+        }
+
+        // Create hash for the larger array
+        let largerArrHashByKey = {};
+
+        await tf.data.array(largerArrayOfObjs).forEachAsync(object => { 
+             largerArrHashByKey[ object[objKey] ] = object; 
+        });                
+
+        // Merge both arrays of objects
+        let mergedArrayOfObjs = [];
+
+        await tf.data.array(smallerArrayOfObjs).forEachAsync(object => { 
+           mergedArrayOfObjs.push({ ...object, ...largerArrHashByKey[ object[objKey] ]});
+        });   
+
+        return mergedArrayOfObjs; 
     }
 
   /**
@@ -232,14 +292,23 @@
    * arrayUniqueValues( [1, 1, 2, 3, 2, 5])
    *
    * => [1, 2, 3, 5]
+   *
+   * arrayUniqueValuesTFJS( [1, 1, 2, 3, 2, 5])
+   *
+   * => [1, 2, 3, 5]
    */ 
 
     arrayUniqueValues = (array) => {
-
         return array.filter((value, index, self) => {
           return self.indexOf(value) === index;
         });     
-        
+    }
+
+
+    arrayUniqueValuesTFJS = (array) => {
+        const tensor = tf.tensor(array);  
+        const {values, indices} =  tf.unique(tensor);
+        return values.arraySync();
     }
 
 
@@ -253,17 +322,61 @@
    * @category Array
    * @param {Array} array1 - The array of values.
    * @param {Array} array2 - The array of values.
-   * @returns {Array} array of concatenation
+   * @returns {Array | promise} array of concatenation, fastArraysConcatTFJSData fun returns promise
    * @example
+   *
+   * array1 = [{ Type: "1", val: 1}, { Type: "2", val: 2}]
+   * array2 = [{ Type: "3", val: 3}, { Type: "4", val: 4}] 
    *
    * fastArraysConcat( [1, 1, 2, 3], [5, 2, 5])
    *
    * => [1, 1, 2, 3, 5, 2, 5]
+   *
+   * fastArraysConcat( array1, array2)
+   *
+   * => [{ Type: "1", val: 1}, { Type: "2", val: 2}, { Type: "3", val: 3}, { Type: "4", val: 4}]
+   *********************************************************************************************
+   * fastArraysConcatTFJS( [1, 1, 2, 3], [5, 2, 5])
+   *
+   * => [1, 1, 2, 3, 5, 2, 5]
+   *
+   * NOTE: fastArraysConcatTFJS can not concate Array of objects. 
+   *
+   * fastArraysConcatTFJS( array1, array2)
+   *
+   * =>  [ NaN, NaN, NaN, NaN ]
+   **********************************************************************************************
+   * NOTE: fastArraysConcatTFJSData returns promise
+   *
+   * await fastArraysConcatTFJSData( [1, 1, 2, 3], [5, 2, 5])
+   * OR
+   * fastArraysConcatTFJSData([1, 1, 2, 3], [5, 2, 5]).then(function(res) { console.log(res) })
+   *
+   * => [1, 1, 2, 3, 5, 2, 5] 
+   *
+   * await fastArraysConcatTFJSData( array1, array2)
+   * OR
+   * fastArraysConcatTFJSData(array1,array2).then(function(res) { console.log(res) })
+   *
+   * =>  [{ Type: "1", val: 1}, { Type: "2", val: 2}, { Type: "3", val: 3}, { Type: "4", val: 4}]
    */ 
 
     fastArraysConcat = (array1, array2) => {
         return [...array1, ... array2];
     }
+
+    fastArraysConcatTFJS = (array1, array2) => {
+        const tensor1 = tf.tensor1d(array1);  
+        const tensor2 = tf.tensor1d(array2); 
+        return tf.concat([tensor1, tensor2]).arraySync();        
+    }
+
+
+    fastArraysConcatTFJSData = (array1, array2) => {
+        const dataArr1 = tf.data.array(array1);
+        const dataArr2 = tf.data.array(array2);
+        return dataArr1.concatenate(dataArr2).toArray();
+    } 
 
 
   /**
