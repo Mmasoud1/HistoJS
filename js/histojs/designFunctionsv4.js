@@ -40,28 +40,39 @@
    * @returns {object | number} 
    * @example
    *
-   * dict = [{id: "1", value: "Girder", hostAPI: "http://dermannotator.org:8080/api/v1" },
-             {id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/"}]
+   * dict = [ {id: "1", value: "Girder"}, {id: "2", value: "Styx"} ]
    *
    * findObjectByKeyValue( dict, 'id', "2");
-   *  => Object { id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }
+   *  => Object { id: "2", value: "Styx" }
    *
    * findObjectByKeyValue( dict, 'id', "2", 'INDEX');
    *  => 1
-   * 
+   *
+   * findObjectByKeyValue( allTilesFeaturesAndClassification, 'id', "spx-105401");
+   *
+   * => Object { label: 105401, features: (5) […], area: 152, eccentricity: 0.28, orientation: 138, perimeter: 46.74,
+   *          extent: 0.63, solidity: 0.96, major_axis_length: 14.37, minor_axis_length: 13.78, … }
+   *---------------------------------------------------------------*
    * await findObjectByKeyValueTFJS( dict, 'id', "2")
-   * => Object { id: "2", value: "Styx", hostAPI: "https://styx.neurology.emory.edu/girder/api/v1/" }
+   * => Object { id: "2", value: "Styx" }
+   *
+   * await findObjectByKeyValueTFJS( allTilesFeaturesAndClassification, 'id', "spx-105401")
+   * => Object { label: 105401, features: (5) […], area: 152, eccentricity: 0.28, orientation: 138, perimeter: 46.74, 
+   *             extent: 0.63, solidity: 0.96, major_axis_length: 14.37, minor_axis_length: 13.78, … }
+   *
+   * NOTE: findObjectByKeyValueTFJS slower than findObjectByKeyValue.
    */ 
 
-    findObjectByKeyValue = (arr, key, value, returnType = 'DATA') => {   
+    findObjectByKeyValue = (arr, key, value, returnType = 'DATA') => { //fast   
         const obj = arr.filter( entry => entry[key] === value)[0];
         return obj ? ( returnType === 'DATA' ? obj : ( returnType === 'INDEX' ? arr.indexOf(obj) : null )) : null;
     }    
 
-    findObjectByKeyValueTFJS = async (arr, key, value) => {   
+
+    findObjectByKeyValueTFJS = async (arr, key, value) => { //slow
         const result = await tf.data.array(arr).filter( entry => entry[key] === value).toArray();
         return (result.length > 1) ? result : result.length ? result[0] : null;
-    }    
+    }   
 
  
   /**
@@ -77,18 +88,24 @@
    * @returns {Array} 
    * @example
    *
+   * arrOfObjs = [{ Type: "1", val: 1}, { Type: "2", val: 2}]
+   *
    * removeArrayElem(['a', 'b', 'c', 'd'], 'c')
    *  => ['a', 'b', 'd']
+   *
+   * removeArrayElem(arrOfObjs, arrOfObjs[1])
+   *
+   * => [{ Type: "1", val: 1}]
    *---------------------------------------------*
    *  await removeArrayElemTFJS( [1, 2, 3, 4], 3)
    *  => [1, 2, 4]
    *
    *  await removeArrayElemTFJS(['a', 'b', 'c', 'd'], 'c')
    *  => ['a', 'b', 'd']
-   *---------------------------------------------*
-   *  await removeArrayElemTFJSV2( [1, 2, 3, 4], 3)
-   *  => [1, 2, 4]
-   *  NOTE: removeArrayElemTFJSV2 for numbers only
+   *
+   *  await removeArrayElemTFJS(arrOfObjs, arrOfObjs[1])
+   *
+   *  =>  [{ Type: "1", val: 1 }]
    *
    */    
 
@@ -100,10 +117,13 @@
     }
 
     removeArrayElemTFJS = async(arr, element) => { 
-        return await tf.data.array(arr).filter(elm => elm !== element).toArray();
+        return await tf.data.array(arr).filter(elm => !areArraysEquals(elm, element)).toArray();
     }      
 
-    
+   /**
+    * @deprecated 
+    * NOTE: removeArrayElemTFJSV2 for numbers only
+    */    
     removeArrayElemTFJSV2 = async (arr, element) => {
         const tensor = tf.tensor(arr);
         const mask = tf.notEqual(tensor, element);
@@ -111,6 +131,10 @@
         return result.arraySync();
     }
 
+   /**
+    * @deprecated 
+    * NOTE: removeArrayElem_v2 for numbers only
+    */   
     removeArrayElem_v2 = (arr, element) => { 
         return arr.filter(elm => elm !== element);
     }  
@@ -184,7 +208,7 @@
    * => [{ id: "spx-1", Type:"Tumor", area: 250, solidity: 0.95 }, 
    *     { id: "spx-7", Type: "immune", area: 100, solidity: 0.80 }]
    *
-   *
+   *----------------------------------------------------------------------*
    * await mergeArrayOfObjByKeyTFJS( "id", [ {id:"spx-1", Type:"Tumor" }, 
    *                                         {id:"spx-7", Type:"Immune"} ], 
    *                                                            [{id : "spx-1", area: 250,  solidity: 0.95}, 
@@ -193,10 +217,21 @@
    *
    * => [{ id: "spx-1", Type:"Tumor", area: 250, solidity: 0.95 }, 
    *     { id: "spx-7", Type: "immune", area: 100, solidity: 0.80 }]
+   *----------------------------------------------------------------------*
+   * NOTE: mergeArrayOfObjByKeyTFJS slower than mergeArrayOfObjByKey.
    *
+   * In Tumor-Immune-Stromal:
+   * allTilesFeaturesAndClassification = mergeArrayOfObjByKey('id', cellBasicClassification, allTilesFeatures)
+   *
+   * allTilesFeaturesAndClassificationByTFJS = await mergeArrayOfObjByKeyTFJS('id', cellBasicClassification, allTilesFeatures)
+   *
+   * Verify results:  
+   *   areArraysEquals( allTilesFeaturesAndClassificationByTFJS, allTilesFeaturesAndClassification)
+   *   => true
    */ 
 
-    mergeArrayOfObjByKey = (objKey, arrOfObj1, arrOfObj2) => {
+    mergeArrayOfObjByKey = (objKey, arrOfObj1, arrOfObj2) => { //fast
+        //Fast
         let largerArrayOfObjs, smallerArrayOfObjs;
 
         if( arrOfObj1.length < arrOfObj2.length) {
@@ -225,7 +260,8 @@
     }
 
 
-    mergeArrayOfObjByKeyTFJS = async(objKey, arrOfObj1, arrOfObj2) => {
+    mergeArrayOfObjByKeyTFJS = async(objKey, arrOfObj1, arrOfObj2) => { //slow
+        //Slow
         let largerArrayOfObjs, smallerArrayOfObjs;
 
         if( arrOfObj1.length < arrOfObj2.length) {
@@ -276,10 +312,21 @@
    *                                         {id:"spx-7", Type:"Immune"} ])
    *
    *  => Object { "spx-1": {id: "spx-1", Type: "Tumor"}, "spx-7": {id: "spx-7", Type: "Immune"} }
+   *----------------------------------------------------------------------*
+   * NOTE: array2ObjWithHashKeyTFJS slower than array2ObjWithHashKey.
    *
+   * In Tumor-Immune-Stromal:
+   * allCellObjects = array2ObjWithHashKey("id", allTilesFeaturesAndClassification)
+   *
+   * allCellObjectsByTFJS = await array2ObjWithHashKeyTFJS("id", allTilesFeaturesAndClassification)
+   *
+   * Verify results:  
+   *   areArraysEquals( allCellObjectsByTFJS, allCellObjects)
+   *   => true
    */ 
 
-    array2ObjWithHashKey = (hashKey, arrayOfObjs) => {
+    array2ObjWithHashKey = (hashKey, arrayOfObjs) => { //fast
+        //Fast
         if(Object.keys(arrayOfObjs).length) {
             // create hash folarger arrayr the 
             let convertedObject = {};
@@ -296,7 +343,9 @@
         }          
     }
 
-    array2ObjWithHashKeyTFJS = async(hashKey, arrayOfObjs) => {
+
+    array2ObjWithHashKeyTFJS = async(hashKey, arrayOfObjs) => { //slow
+        //Slow
         if(Object.keys(arrayOfObjs).length) {
             // create hash folarger arrayr the 
             let convertedObject = {};
@@ -453,9 +502,17 @@
    * @returns {Array} 
    * @example
    *
+   * array1 = [{ Type: "1", val: 1}, { Type: "2", val: 2}, { Type: "3", val: 3}, { Type: "4", val: 4}]
+   *
    * chunkArray( [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 3 )
    *
    * => [ [ 1, 2, 3, 4, 5, 6 ], [ 7, 8, 9, 10, 11, 12 ], [ 13, 14, 15, 16, 17 ] ]
+   *
+   * chunkArray( array1, 2 )
+   *
+   * => [ [ { Type: "1", val: 1}, { Type: "2", val: 2} ], 
+   *      [ { Type: "3", val: 3}, { Type: "4", val: 4} ] ]
+   *
    */ 
 
      chunkArray = (array, numOfchunks) => {
@@ -3363,10 +3420,10 @@
    * @param {number} hostIndex
    */  
 
-    onSelectedHost = (hostIndex) => {
-          let curHostObjEntry = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString());
+    onSelectedHost = async(hostIndex) => {
+          let curHostObjEntry = await findObjectByKeyValueTFJS(Settings.dsaServers, 'id', hostIndex.toString());
           setHostObjEntry(curHostObjEntry); // save current selected host info to currentHostCollectSelectionStates.hostObject
-          let hostAPI = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
+          let hostAPI = await findObjectByKeyValueTFJS(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
           setHostIndex(hostIndex);  
           if(lastHostCollectSelectionStates.hostIndex != hostIndex){
             if(lastHostCollectSelectionStates.hostIndex != null){
@@ -3774,16 +3831,16 @@
    * @param {number} channelIndex
    */ 
 
-    onChannelCheckboxClick = (channelIndex) => {
+    onChannelCheckboxClick = async(channelIndex) => {
        let item =  getSelectedItem();
        let omeSceneDescription = item.meta.omeSceneDescription;
        // console.log("channel index :", channelIndex);
-       let channelEntry = findObjectByKeyValue(omeSceneDescription, 'channel_number', channelIndex)
+       let channelEntry = await findObjectByKeyValueTFJS(omeSceneDescription, 'channel_number', channelIndex)
        if(!tempSceneSelections.length) {
              tempSceneSelections.push( channelEntry);
              document.getElementById("ChannelCheckboxId"+channelIndex).innerHTML = '<i class="fa fa-check-square" >&nbsp&nbsp</i>';
        } else {
-            let checkExistRecord = findObjectByKeyValue(tempSceneSelections, 'channel_number', channelIndex);
+            let checkExistRecord = await findObjectByKeyValueTFJS(tempSceneSelections, 'channel_number', channelIndex);
 
             if(checkExistRecord) {
               // if exist and clicked --> remove 
