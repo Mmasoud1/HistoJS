@@ -3421,6 +3421,42 @@
    */  
 
     onSelectedHost = (hostIndex) => {
+          findObjectByKeyValueTFJS(Settings.dsaServers, 'id', hostIndex.toString()).then(function(hostResult) { 
+                let curHostObjEntry =  hostResult;
+                setHostObjEntry(curHostObjEntry); // save current selected host info to currentHostCollectSelectionStates.hostObject
+
+                findObjectByKeyValueTFJS(Settings.dsaServers, 'id', hostIndex.toString()).then(function(hostApiResult) { 
+                      let hostAPI = hostApiResult.hostAPI
+                      setHostIndex(hostIndex);  
+                      if(lastHostCollectSelectionStates.hostIndex != hostIndex){
+                        if(lastHostCollectSelectionStates.hostIndex != null){
+                            lastHostCollectSelectionStates.hostChanged = true;
+                            document.getElementById("Host"+lastHostCollectSelectionStates.hostIndex).style.backgroundColor = Opts.defaultElemBgColor;
+                            document.getElementById("HostFont"+lastHostCollectSelectionStates.hostIndex).style.color = Opts.defaultElemFontColor;
+                            resetCurCollectionList(); 
+                        } else {
+                         //   To be added
+                        }
+                        document.getElementById("Host"+hostIndex).style.backgroundColor= Opts.selectedElemBgColor;
+                        document.getElementById("HostFont"+hostIndex).style.color = Opts.selectedElemFontColor;
+                        lastHostCollectSelectionStates.hostIndex = hostIndex;
+                        lastHostCollectSelectionStates.collectionIndex = null;
+                        if(isHostAvailable(hostAPI)){
+                            autoLogin(() => {
+                                               initCollectionsList(hostAPI, hostIndex)
+                                             })
+                        } else {
+                           triggerHint("Host not available", "error");
+                        }
+                       //   onSelectedCollection(hostIndex, 1)  // By default select first collection list of the tile
+                      }     
+               })                
+          })
+
+    } 
+
+    
+    onSelectedHost_old = (hostIndex) => {
           let curHostObjEntry = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString());
           setHostObjEntry(curHostObjEntry); // save current selected host info to currentHostCollectSelectionStates.hostObject
           let hostAPI = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
