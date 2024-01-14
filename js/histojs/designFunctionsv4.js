@@ -3420,10 +3420,10 @@
    * @param {number} hostIndex
    */  
 
-    onSelectedHost = async(hostIndex) => {
-          let curHostObjEntry = await findObjectByKeyValueTFJS(Settings.dsaServers, 'id', hostIndex.toString());
+    onSelectedHost = (hostIndex) => {
+          let curHostObjEntry = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString());
           setHostObjEntry(curHostObjEntry); // save current selected host info to currentHostCollectSelectionStates.hostObject
-          let hostAPI = await findObjectByKeyValueTFJS(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
+          let hostAPI = findObjectByKeyValue(Settings.dsaServers, 'id', hostIndex.toString()).hostAPI;
           setHostIndex(hostIndex);  
           if(lastHostCollectSelectionStates.hostIndex != hostIndex){
             if(lastHostCollectSelectionStates.hostIndex != null){
@@ -3831,16 +3831,16 @@
    * @param {number} channelIndex
    */ 
 
-    onChannelCheckboxClick = async(channelIndex) => {
+    onChannelCheckboxClick = (channelIndex) => {
        let item =  getSelectedItem();
        let omeSceneDescription = item.meta.omeSceneDescription;
        // console.log("channel index :", channelIndex);
-       let channelEntry = await findObjectByKeyValueTFJS(omeSceneDescription, 'channel_number', channelIndex)
+       let channelEntry = findObjectByKeyValue(omeSceneDescription, 'channel_number', channelIndex)
        if(!tempSceneSelections.length) {
              tempSceneSelections.push( channelEntry);
              document.getElementById("ChannelCheckboxId"+channelIndex).innerHTML = '<i class="fa fa-check-square" >&nbsp&nbsp</i>';
        } else {
-            let checkExistRecord = await findObjectByKeyValueTFJS(tempSceneSelections, 'channel_number', channelIndex);
+            let checkExistRecord = findObjectByKeyValue(tempSceneSelections, 'channel_number', channelIndex);
 
             if(checkExistRecord) {
               // if exist and clicked --> remove 
