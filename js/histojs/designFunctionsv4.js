@@ -896,7 +896,8 @@
           });
       } catch(err) {
              console.log("err.message :", err.message);
-             triggerHint("Flask app not running", "error", 5000);
+             console.log("Flask app not running");
+             // -- triggerHint("Flask app not running", "error", 5000);
              response = false;
       } 
 
@@ -2986,18 +2987,18 @@
                     pastOmeMetaToInfoPanel(itemObj);
              } else {
 
-                    triggerHint(" No omeSceneDescription metadata", "error", 5000);
+                    triggerHint(" No omeSceneDescription metadata", "error", 10000);
                     let foundCsvData  = loadCsvChannelMetadata();
                     if(foundCsvData) {
                          if( !foundCsvData[0].hasOwnProperty('channel_name') || !foundCsvData[0].hasOwnProperty('channel_number') ) {
-                            // trigerWizard () // 
+                            //-- trigerWizard () // 
                             triggerHint("No 'channel_name' or 'channel_number' columns with " + getCsvChannelMetaDataFileName() + " file" , "error", 5000); 
                          } else {
                              itemObj.meta.omeSceneDescription = foundCsvData;
                              uploadChannelsMetadata("omeSceneDescription", foundCsvData);
                          }
                     } else {
-                        triggerHint("Error reading remote " + getCsvChannelMetaDataFileName() + " file, check if file exists" , "error", 5000); 
+                        triggerHint("Error reading remote " + getCsvChannelMetaDataFileName() + " file, check if file exists" , "error", 10000); 
                     }            
 
              } 
@@ -7269,16 +7270,22 @@
    *   
    */    
     readRemoteCsvFile = (fileName) => { // fileName is the name on host  e.g "TONSIL-1_40X_cellMask.csv"
-         let csvToJson = {};
-         let apiUrl = getHostApi();
-         let requestUrl = "item/" + getRemoteFileId(fileName) + "/download?contentDisposition=attachment";
-         let apiKey = getApiKey();
+        if(isRestApiAvailable()) {
+             let csvToJson = {};
+             let apiUrl = getHostApi();
+             let requestUrl = "item/" + getRemoteFileId(fileName) + "/download?contentDisposition=attachment";
+             let apiKey = getApiKey();
 
-         webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readRemoteCsvFile","baseUrl=" + apiUrl + "&apiKey=" + 
-                                 apiKey + "&requestUrl=" + requestUrl, (result) => {
-                                 csvToJson = JSON.parse(result);
-                                              })
-        return csvToJson ? csvToJson : null;
+             webix.ajax().sync().get("http://127.0.0.1:" + Opts.defaultRestApiPort + "/readRemoteCsvFile","baseUrl=" + apiUrl + "&apiKey=" + 
+                                     apiKey + "&requestUrl=" + requestUrl, (result) => {
+                                     csvToJson = JSON.parse(result);
+                                                  })
+            return csvToJson ? csvToJson : null;
+        } else {
+             
+            let fileContents = getRemoteFileContents(fileName);
+            return fileContents != null ? convertCsv2Json(fileContents) : null;
+        }    
     }
 
   
@@ -7351,7 +7358,7 @@
                    // trigerWizard () // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<----------------------
               } 
          } else {
-           triggerHint("Login to access the remote channels metadata CSV file ", "error", 5000);                
+           triggerHint("Login to access the remote channels metadata CSV file ", "error", 10000);                
          }   
 
          return returnObj;                 
