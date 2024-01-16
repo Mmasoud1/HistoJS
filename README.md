@@ -37,7 +37,8 @@ https://github.com/Mmasoud1/HistoJS/assets/36082112/7598afb0-ef05-40e0-9d53-767f
 
 <div align="center">
 
-https://github.com/Mmasoud1/HistoJS/assets/36082112/95499746-8d97-4d9a-97e1-2ee12d3516d6    
+<!-- https://github.com/Mmasoud1/HistoJS/assets/36082112/95499746-8d97-4d9a-97e1-2ee12d3516d6   -->
+https://github.com/Mmasoud1/HistoJS/assets/36082112/7ba5c733-3b31-47e9-9cc4-e9fb606d42da  
 
 <!-- ![Interface](https://github.com/mmasoud1/HistoJS/blob/main/Demo/AnalysisMode.gif) -->
 
