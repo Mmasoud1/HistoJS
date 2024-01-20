@@ -54,7 +54,7 @@ https://github.com/Mmasoud1/HistoJS/assets/36082112/7ba5c733-3b31-47e9-9cc4-e9fb
 * HistoJS abstract is accepted for poster presentation in the [OHBM](https://www.humanbrainmapping.org/) 2024 Annual Meeting in Seoul, Korea.
 
 <div align="center">
-   <img src="https://github.com/neuroneural/brainchop/blob/master/Demo/News/OHBM_2024.png"  width="40%">
+   <img src="https://github.com/Mmasoud1/HistoJS/blob/main/Demo/News/OHBM_2024.png"  width="40%">
 </div>
 
 <br>
