@@ -23,7 +23,6 @@ HistoJS [Demo](https://mmasoud1.github.io/HistoJS) hosted by Github pages shows 
 
 The analysis mode needs running of the Flask RestAPIs as the steps described [here](https://github.com/Mmasoud1/HistoJS/wiki/Setup-Environment).
 
-<br>
 
 ## News!
 
