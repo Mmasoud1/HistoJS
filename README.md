@@ -7,7 +7,7 @@
  [![MIT-License ](https://img.shields.io/badge/license-MIT-green)](https://github.com/Mmasoud1/HistoJS/blob/main/LICENSE) [![Python ](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue)]()[![JS ](https://img.shields.io/badge/Types-JavaScript-blue)]()
 [![HW ](https://img.shields.io/badge/HardWare-GPU-green)]()
 
-**[Demo](https://mmasoud1.github.io/HistoJS) &emsp;  [Updates](#Updates) &emsp; [Doc](https://github.com/mmasoud1/HistoJS/wiki/) &emsp; [News!](#News!)**
+**[Demo](https://mmasoud1.github.io/HistoJS) &emsp;  [Updates](#Updates) &emsp; [Doc](https://github.com/mmasoud1/HistoJS/wiki/) &emsp; [News!](#News)**
 
 </div>
 
