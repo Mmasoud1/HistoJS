@@ -7,7 +7,7 @@
  [![MIT-License ](https://img.shields.io/badge/license-MIT-green)](https://github.com/Mmasoud1/HistoJS/blob/main/LICENSE) [![Python ](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue)]()[![JS ](https://img.shields.io/badge/Types-JavaScript-blue)]()
 [![HW ](https://img.shields.io/badge/HardWare-GPU-green)]()
 
-**[Demo](https://mmasoud1.github.io/HistoJS) &emsp;  [Updates](#Updates) &emsp; [Doc](https://github.com/mmasoud1/HistoJS/wiki/) &emsp; [News!](#News)**
+**[Demo](https://mmasoud1.github.io/HistoJS) &emsp;  [Updates](#Updates) &emsp; [Doc](https://github.com/mmasoud1/HistoJS/wiki/) &emsp; [News!](#News!)**
 
 </div>
 
@@ -22,6 +22,19 @@ The tool can manage, store, and analyze the multi-channel OME-Tiff files using  
 HistoJS [Demo](https://mmasoud1.github.io/HistoJS) hosted by Github pages shows most core functionalities.  
 
 The analysis mode needs running of the Flask RestAPIs as the steps described [here](https://github.com/Mmasoud1/HistoJS/wiki/Setup-Environment).
+
+<br>
+
+## News!
+
+
+* HistoJS abstract is accepted for poster presentation in the [OHBM](https://www.humanbrainmapping.org/) 2024 Annual Meeting in Seoul, Korea.
+
+<div align="center">
+   <img src="https://github.com/Mmasoud1/HistoJS/blob/main/Demo/News/OHBM_2024.png"  width="40%">
+</div>
+
+<br>
 
 
 ## Updates
@@ -48,17 +61,7 @@ https://github.com/Mmasoud1/HistoJS/assets/36082112/7ba5c733-3b31-47e9-9cc4-e9fb
 
 <br>
 
-## News
 
-
-* HistoJS abstract is accepted for poster presentation in the [OHBM](https://www.humanbrainmapping.org/) 2024 Annual Meeting in Seoul, Korea.
-
-<div align="center">
-   <img src="https://github.com/Mmasoud1/HistoJS/blob/main/Demo/News/OHBM_2024.png"  width="40%">
-</div>
-
-<br>
-<br>
 
 <div align="center">
 
