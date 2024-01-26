@@ -13,7 +13,7 @@
 
 
 <br>
- <img src="https://github.com/Mmasoud1/HistoJS/blob/main/css/logo/hisotjs_logo.svg"  width="25%" align="right">
+ <img src="https://github.com/Mmasoud1/HistoJS/blob/main/css/logo/hisotjs_logo.svg"  width="20%" align="right">
 
  <p align="justify">
  <b><a href="https://mmasoud1.github.io/HistoJS"  style="text-decoration: none"> HistoJS</a></b> is a new web-based interactive tool designed to overcome the challenges of using highly-multiplexed immunofluorescence (HMIF) images for spatial biology research. HistoJS provides open-source and extensible tools for analyzing spatial-molecular patterns, offering a deeper understanding of single-cell spatial relationships. It also features machine learning algorithms in a user-friendly interactive interface for the biomedical community.
