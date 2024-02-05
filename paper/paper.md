@@ -2,7 +2,7 @@
 title: 'HistoJS: Web-Based Analytical Tool for Advancing Multiplexed Images'
 tags:
     - Visualization
-    - Web machine learning
+    - Web Machine Learning
     - Multiplexed Images
     - Spatial Biology
     - Single Cell
@@ -10,6 +10,9 @@ authors:
     - name: Mohamed Masoud^[corresponding author]
       orcid: 0000-0002-5365-242X
       affiliation: 1
+    - name: David Gutman
+      orcid: 0000-0002-1386-8701
+      affiliation: 3      
     - name: Sergey Plis
       orcid: 0000-0003-0040-0365
       affiliation: "1, 2"
@@ -18,6 +21,8 @@ affiliations:
     index: 1
   - name: Department of Computer Science, Georgia State University, Atlanta, United States of America
     index: 2
+  - name: Department of Pathology, Emory University School of Medicine, Atlanta, United States of America
+    index: 3    
 date: 25 December 2023
 bibliography: paper.bib
 ---
@@ -58,6 +63,19 @@ Although the tool is suitable for cluster-based deployment, it can also deployed
 HistoJS source code is publicly accessible in the GitHub repository  ([https://github.com/Mmasoud1/HistoJS] (https://github.com/Mmasoud1/HistoJS)). Multiple DSA online servers can be accessed from HistoJS such as [https://styx.neurology.emory.edu/girder/#](https://styx.neurology.emory.edu/girder/#) to load HMIF data samples and test the tool performance. Researchers could visualize and analyze the expression patterns of key biomarkers associated with diseases and disorders. The platform's interactive features facilitated the identification of disease-specific signatures, providing valuable insights into the molecular basis of diseases.
 
 Detailed step-by-step [documentation](https://github.com/Mmasoud1/HistoJS/wiki) is provided along with HistoJS [live demo](https://Mmasoud1.github.io/HistoJS/).  
+
+
+# Author contributions
+
+We describe contributions to this paper using the CRediT taxonomy [@credit].
+Writing – Original Draft: M.M.; 
+Writing – Review & Editing: M.M., and S.P.;
+Conceptualization and methodology: M.M., and D.G.;
+Software and data curation: M.M.;
+Validation: M.M., and S.P.;
+Resources: D.G.;
+Visualization: M.M.;
+Project Administration: M.M.;
 
 
 # References
