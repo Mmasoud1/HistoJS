@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-Advances in multiplexed imaging technologies enable us to capture spatial single-cell proteomics and transcriptomics data in unprecedented detail and with high spatial resolution. This large volume of image data presents a challenge in accurately isolating and quantifying distinct cell types to understand disease complexity, neurological disorders, potential biomarkers, and targets for drug development. Therefore, there is an incremental demand and challenges to developing and validating cutting-edge quantitative image analysis tools for diagnosis, prognosis, and therapy response prediction and assessment in neurological and oncological diseases. [HistoJS](https://github.com/Mmasoud1/HistoJS) is a newly developed web-based tool that aims to overcome the challenges of utilizing highly-multiplexed immunofluorescence (mIF) images [@lin2015highly] for spatial biology research. It provides open-source and extensible tools for analyzing spatial-molecular patterns, enabling a deeper view of the single-cell spatial relationship, along with machine learning algorithms in an easy-to-use interactive interface for the biomedical community. 
+Advances in multiplexed imaging technologies enable us to capture spatial single-cell proteomics and transcriptomics data in unprecedented detail and with high spatial resolution. This large volume of image data presents a challenge in accurately isolating and quantifying distinct cell types to understand disease complexity, neurological disorders, potential biomarkers, and targets for drug development. Therefore, there is an incremental demand and challenges to developing and validating cutting-edge quantitative image analysis tools for diagnosis, prognosis, and therapy response prediction and assessment in neurological and oncological diseases. [HistoJS](https://github.com/Mmasoud1/HistoJS) is a newly developed web-based tool that aims to overcome the challenges of utilizing highly-multiplexed immunofluorescence (mIF) images [@lin2015highly] for spatial biology research. It provides open-source and extensible tool for analyzing spatial-molecular patterns, enabling a deeper view of the single-cell spatial relationship, along with machine learning algorithms in an easy-to-use interactive interface for the biomedical community. 
 
 
 
@@ -75,7 +75,7 @@ Software and data curation: M.M.;
 Validation: M.M., and S.P.;
 Resources: D.G.;
 Visualization: M.M.;
-Project Administration: M.M.;
+Project Administration: M.M.
 
 
 # References
