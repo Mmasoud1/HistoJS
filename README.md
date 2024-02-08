@@ -49,6 +49,37 @@ The analysis mode needs running of the Flask RestAPIs as the steps described [he
 
 <br>
 
+## Citation
+
+Brainchop [paper](https://joss.theoj.org/papers/10.21105/joss.06317) for v1.1.0 is published on Feb 07, 2024, in the Journal of Open Source Software (JOSS) [![DOI](https://joss.theoj.org/papers/10.21105/joss.06317/status.svg)](https://joss.theoj.org/papers/10.21105/joss.06317) 
+
+
+<br>
+
+For **APA** style, the paper can be **cited** as: 
+
+> Masoud, M., Gutman, D., & Plis, S. (2024). HistoJS: Web-Based Analytical Tool for Advancing Multiplexed Images. Journal of Open Source Software, 9(94), 6317. https://doi.org/10.21105/joss.06317
+
+<br>
+
+For **BibTeX** format that is used by some publishers,  please use: 
+
+```BibTeX: 
+@article{Masoud_HistoJS_Web-Based_Analytical_2024,
+   author = {Masoud, Mohamed and Gutman, David and Plis, Sergey},
+   doi = {10.21105/joss.06317},
+   journal = {Journal of Open Source Software},
+   month = feb,
+   number = {94},
+   pages = {6317},
+   title = {{HistoJS: Web-Based Analytical Tool for Advancing Multiplexed Images}},
+   url = {https://joss.theoj.org/papers/10.21105/joss.06317},
+   volume = {9},
+   year = {2024}
+}
+```
+
+<br>
 
 ## Updates
 
