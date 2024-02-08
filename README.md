@@ -33,6 +33,13 @@ The analysis mode needs running of the Flask RestAPIs as the steps described [he
 
 ## News!
 
+* HistoJS [paper](https://joss.theoj.org/papers/10.21105/joss.06317) is published in the Journal of Open Source Software (JOSS) on Feb 07, 2024.
+
+<div align="center">
+   <a href="https://joss.theoj.org/papers/10.21105/joss.06317"><img src="https://github.com/Mmasoud1/HistoJS/blob/main/Demo/News/JOSS_Logo.png"></a>
+</div>
+
+<br>
 
 * HistoJS abstract is accepted for poster presentation in the [OHBM](https://www.humanbrainmapping.org/) 2024 Annual Meeting in Seoul, Korea.
 
