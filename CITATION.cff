@@ -1,0 +1,44 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Masoud
+  given-names: Mohamed
+  orcid: "https://orcid.org/0000-0002-5365-242X"
+- family-names: Gutman
+  given-names: David
+  orcid: "https://orcid.org/0000-0002-1386-8701"
+- family-names: Plis
+  given-names: Sergey
+  orcid: "https://orcid.org/0000-0003-0040-0365"
+contact:
+- family-names: Masoud
+  given-names: Mohamed
+  orcid: "https://orcid.org/0000-0002-5365-242X"
+doi: 10.5281/zenodo.10626533
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Masoud
+    given-names: Mohamed
+    orcid: "https://orcid.org/0000-0002-5365-242X"
+  - family-names: Gutman
+    given-names: David
+    orcid: "https://orcid.org/0000-0002-1386-8701"
+  - family-names: Plis
+    given-names: Sergey
+    orcid: "https://orcid.org/0000-0003-0040-0365"
+  date-published: 2024-02-07
+  doi: 10.21105/joss.06317
+  issn: 2475-9066
+  issue: 94
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6317
+  title: "HistoJS: Web-Based Analytical Tool for Advancing Multiplexed
+    Images"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06317"
+  volume: 9
+title: "HistoJS: Web-Based Analytical Tool for Advancing Multiplexed
+  Images"
