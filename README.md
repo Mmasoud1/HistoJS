@@ -51,7 +51,7 @@ The analysis mode needs running of the Flask RestAPIs as the steps described [he
 
 ## Citation
 
-Brainchop [paper](https://joss.theoj.org/papers/10.21105/joss.06317) for v1.1.0 is published on Feb 07, 2024, in the Journal of Open Source Software (JOSS) [![DOI](https://joss.theoj.org/papers/10.21105/joss.06317/status.svg)](https://joss.theoj.org/papers/10.21105/joss.06317) 
+HistoJS [paper](https://joss.theoj.org/papers/10.21105/joss.06317) for v1.1.0 is published on Feb 07, 2024, in the Journal of Open Source Software (JOSS) [![DOI](https://joss.theoj.org/papers/10.21105/joss.06317/status.svg)](https://joss.theoj.org/papers/10.21105/joss.06317) 
 
 
 <br>
