@@ -1,4 +1,4 @@
-## HistoJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]()
+## HistoJS [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)]() [![DOI](https://joss.theoj.org/papers/10.21105/joss.06317/status.svg)](https://joss.theoj.org/papers/10.21105/joss.06317) 
 
 <div align="center">
 
