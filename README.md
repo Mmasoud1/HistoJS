@@ -33,6 +33,14 @@ The analysis mode needs running of the Flask RestAPIs as the steps described [he
 
 ## News!
 
+* HistoJS abstract is accepted for poster presentation in the  SIAM 2024 Conference on Imaging Science ([IS24](https://www.siam.org/conferences/cm/conference/is24)) in Atlanta, GA.
+
+<div align="center">
+   <img src="https://github.com/Mmasoud1/HistoJS/blob/main/Demo/News/IS24.png"  width="40%">
+</div>
+
+<br>
+
 * HistoJS [paper](https://joss.theoj.org/papers/10.21105/joss.06317) is published in the Journal of Open Source Software (JOSS) on Feb 07, 2024.
 
 <div align="center">
